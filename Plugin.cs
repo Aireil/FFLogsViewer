@@ -50,78 +50,79 @@ namespace FFLogsViewer
 
         public void Initialize(DalamudPluginInterface pluginInterface)
         {
-            Pi = pluginInterface;
+            this.Pi = pluginInterface;
 
-            _configuration = Pi.GetPluginConfig() as Configuration ?? new Configuration();
-            _configuration.Initialize(Pi);
+            this._configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
+            this._configuration.Initialize(this.Pi);
 
-            _ui = new PluginUi(this, _configuration);
+            this._ui = new PluginUi(this, this._configuration);
 
-            if (_configuration.ButtonInContextMenu)
+            if (this._configuration.ButtonInContextMenu)
             {
-                Common = new XivCommonBase(Pi, Hooks.PartyFinder | Hooks.ContextMenu);
-                ContextMenu = new ContextMenu(this);
+                this.Common = new XivCommonBase(this.Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                this.ContextMenu = new ContextMenu(this);
             }
 
-            Pi.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+            this.Pi.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
                 HelpMessage = "Open the FF Logs viewer window or parse the arguments for a character.",
                 ShowInHelp = true,
             });
 
-            Pi.UiBuilder.OnBuildUi += DrawUi;
-            Pi.UiBuilder.OnOpenConfigUi += (_, _) => ToggleSettingsUi();
+            this.Pi.UiBuilder.OnBuildUi += DrawUi;
+            this.Pi.UiBuilder.OnOpenConfigUi += (_, _) => ToggleSettingsUi();
 
             Task.Run(async () =>
             {
-                _token = await FfLogsClient.GetToken(_configuration.ClientId, _configuration.ClientSecret)
+                this._token = await FfLogsClient
+                    .GetToken(this._configuration.ClientId, this._configuration.ClientSecret)
                     .ConfigureAwait(false);
             });
         }
 
         public void Dispose()
         {
-            Common?.Dispose();
-            ContextMenu?.Dispose();
-            _ui.Dispose();
-            Pi.CommandManager.RemoveHandler(CommandName);
-            Pi.Dispose();
+            this.Common?.Dispose();
+            this.ContextMenu?.Dispose();
+            this._ui.Dispose();
+            this.Pi.CommandManager.RemoveHandler(CommandName);
+            this.Pi.Dispose();
         }
 
         private void OnCommand(string command, string args)
         {
             if (string.IsNullOrEmpty(args))
-                _ui.Visible = !_ui.Visible;
+                this._ui.Visible = !this._ui.Visible;
             else if (args.Equals("config", StringComparison.OrdinalIgnoreCase))
-                _ui.SettingsVisible = !_ui.SettingsVisible;
+                this._ui.SettingsVisible = !this._ui.SettingsVisible;
             else
                 SearchPlayer(args);
         }
 
         private void DrawUi()
         {
-            _ui.Draw();
+            this._ui.Draw();
         }
 
         private void ToggleSettingsUi()
         {
-            _ui.SettingsVisible = !_ui.SettingsVisible;
+            this._ui.SettingsVisible = !this._ui.SettingsVisible;
         }
 
         public void ToggleContextMenuButton(bool enable)
         {
             switch (enable)
             {
-                case true when ContextMenu != null:
-                case false when ContextMenu == null:
+                case true when this.ContextMenu != null:
+                case false when this.ContextMenu == null:
                     return;
                 case true:
-                    Common = new XivCommonBase(Pi, Hooks.PartyFinder | Hooks.ContextMenu);
-                    ContextMenu = new ContextMenu(this);
+                    this.Common = new XivCommonBase(this.Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                    this.ContextMenu = new ContextMenu(this);
                     break;
                 default:
-                    Common?.Dispose();
-                    ContextMenu?.Dispose();
+                    this.Common?.Dispose();
+                    this.ContextMenu?.Dispose();
                     break;
             }
         }
@@ -130,12 +131,12 @@ namespace FFLogsViewer
         {
             try
             {
-                _ui.Visible = true;
-                _ui.SetCharacter(ParseTextForChar(args));
+                this._ui.Visible = true;
+                this._ui.SetCharacter(ParseTextForChar(args));
             }
             catch
             {
-                _ui.SetErrorMessage("Character could not be found.");
+                this._ui.SetErrorMessage("Character could not be found.");
             }
         }
 
@@ -151,7 +152,7 @@ namespace FFLogsViewer
 
         public CharacterData GetTargetCharacter()
         {
-            var target = Pi.ClientState.Targets.CurrentTarget;
+            var target = this.Pi.ClientState.Targets.CurrentTarget;
             if (target is PlayerCharacter targetCharacter && target.ObjectKind != ObjectKind.Companion)
                 return GetPlayerData(targetCharacter);
 
@@ -160,7 +161,7 @@ namespace FFLogsViewer
 
         private bool IsWorldValid(string worldAttempt)
         {
-            var world = Pi.Data.GetExcelSheet<World>()
+            var world = this.Pi.Data.GetExcelSheet<World>()
                 .FirstOrDefault(
                     x => x.Name.ToString().Equals(worldAttempt, StringComparison.InvariantCultureIgnoreCase));
 
@@ -189,9 +190,9 @@ namespace FFLogsViewer
             var words = rawText.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
 
             var index = -1;
-            for (var i = 0; index == -1 && i < _na.Length; i++) index = Array.IndexOf(words, _na[i]);
-            for (var i = 0; index == -1 && i < _eu.Length; i++) index = Array.IndexOf(words, _eu[i]);
-            for (var i = 0; index == -1 && i < _jp.Length; i++) index = Array.IndexOf(words, _jp[i]);
+            for (var i = 0; index == -1 && i < this._na.Length; i++) index = Array.IndexOf(words, this._na[i]);
+            for (var i = 0; index == -1 && i < this._eu.Length; i++) index = Array.IndexOf(words, this._eu[i]);
+            for (var i = 0; index == -1 && i < this._jp.Length; i++) index = Array.IndexOf(words, this._jp[i]);
 
             if (index - 2 >= 0)
             {
@@ -203,7 +204,7 @@ namespace FFLogsViewer
             {
                 character.FirstName = words[0];
                 character.LastName = words[1];
-                character.WorldName = Pi.ClientState.LocalPlayer.HomeWorld.GameData.Name;
+                character.WorldName = this.Pi.ClientState.LocalPlayer.HomeWorld.GameData.Name;
             }
             else
             {
@@ -225,13 +226,13 @@ namespace FFLogsViewer
             characterData.IsDataLoading = true;
             Task.Run(async () =>
             {
-                var logData = await FfLogsClient.GetLogsData(characterData, _token).ConfigureAwait(false);
+                var logData = await FfLogsClient.GetLogsData(characterData, this._token).ConfigureAwait(false);
                 if (logData?.data?.characterData?.character == null)
                 {
                     if (logData?.errors != null)
                     {
                         characterData.IsDataLoading = false;
-                        _ui.SetErrorMessage("Malformed GraphQL query.");
+                        this._ui.SetErrorMessage("Malformed GraphQL query.");
                         PluginLog.Log($"Malformed GraphQL query: {logData}");
                         return;
                     }
@@ -239,13 +240,13 @@ namespace FFLogsViewer
                     if (logData == null)
                     {
                         characterData.IsDataLoading = false;
-                        _ui.SetErrorMessage("Could not reach FF Logs servers.");
+                        this._ui.SetErrorMessage("Could not reach FF Logs servers.");
                         PluginLog.Log("Could not reach FF Logs servers.");
                         return;
                     }
 
                     characterData.IsDataLoading = false;
-                    _ui.SetErrorMessage("Character not found.");
+                    this._ui.SetErrorMessage("Character not found.");
                     return;
                 }
 
@@ -254,7 +255,7 @@ namespace FFLogsViewer
                     if (logData.data.characterData.character.hidden == "true")
                     {
                         characterData.IsDataLoading = false;
-                        _ui.SetErrorMessage(
+                        this._ui.SetErrorMessage(
                             $"{characterData.FirstName} {characterData.LastName}@{characterData.WorldName}'s logs are hidden.");
                         return;
                     }
@@ -270,7 +271,7 @@ namespace FFLogsViewer
                 catch (Exception e)
                 {
                     characterData.IsDataLoading = false;
-                    _ui.SetErrorMessage("Could not load data from FF Logs servers.");
+                    this._ui.SetErrorMessage("Could not load data from FF Logs servers.");
                     PluginLog.LogError(e.Message);
                     PluginLog.LogError(e.StackTrace);
                     return;
@@ -285,7 +286,7 @@ namespace FFLogsViewer
             {
                 if (!t.IsFaulted) return;
                 characterData.IsDataLoading = false;
-                _ui.SetErrorMessage("Networking error, please try again.");
+                this._ui.SetErrorMessage("Networking error, please try again.");
                 if (t.Exception == null) return;
                 foreach (var e in t.Exception.Flatten().InnerExceptions)
                 {
@@ -299,11 +300,11 @@ namespace FFLogsViewer
         {
             if (!IsWorldValid(worldName)) throw new ArgumentException("Invalid world.");
 
-            if (_na.Any(worldName.Contains)) return "NA";
+            if (this._na.Any(worldName.Contains)) return "NA";
 
-            if (_eu.Any(worldName.Contains)) return "EU";
+            if (this._eu.Any(worldName.Contains)) return "EU";
 
-            if (_jp.Any(worldName.Contains)) return "JP";
+            if (this._jp.Any(worldName.Contains)) return "JP";
 
             throw new ArgumentException("World not supported.");
         }

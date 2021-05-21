@@ -35,48 +35,48 @@ namespace FFLogsViewer
 
         public PluginUi(Plugin plugin, Configuration configuration)
         {
-            _plugin = plugin;
-            _configuration = configuration;
+            this._plugin = plugin;
+            this._configuration = configuration;
 
-            _jobColors.Add("Astrologian", new Vector4(255.0f / 255.0f, 231.0f / 255.0f, 74.0f / 255.0f, 1.0f));
-            _jobColors.Add("Bard", new Vector4(145.0f / 255.0f, 150.0f / 255.0f, 186.0f / 255.0f, 1.0f));
-            _jobColors.Add("Black Mage", new Vector4(165.0f / 255.0f, 121.0f / 255.0f, 214.0f / 255.0f, 1.0f));
-            _jobColors.Add("Dancer", new Vector4(226.0f / 255.0f, 176.0f / 255.0f, 175.0f / 255.0f, 1.0f));
-            _jobColors.Add("Dark Knight", new Vector4(209.0f / 255.0f, 38.0f / 255.0f, 204.0f / 255.0f, 1.0f));
-            _jobColors.Add("Dragoon", new Vector4(65.0f / 255.0f, 100.0f / 255.0f, 205.0f / 255.0f, 1.0f));
-            _jobColors.Add("Gunbreaker", new Vector4(121.0f / 255.0f, 109.0f / 255.0f, 48.0f / 255.0f, 1.0f));
-            _jobColors.Add("Machinist", new Vector4(110.0f / 255.0f, 225.0f / 255.0f, 214.0f / 255.0f, 1.0f));
-            _jobColors.Add("Monk", new Vector4(214.0f / 255.0f, 156.0f / 255.0f, 0.0f / 255.0f, 1.0f));
-            _jobColors.Add("Ninja", new Vector4(175.0f / 255.0f, 25.0f / 255.0f, 100.0f / 255.0f, 1.0f));
-            _jobColors.Add("Paladin", new Vector4(168.0f / 255.0f, 210.0f / 255.0f, 230.0f / 255.0f, 1.0f));
-            _jobColors.Add("Red Mage", new Vector4(232.0f / 255.0f, 123.0f / 255.0f, 123.0f / 255.0f, 1.0f));
-            _jobColors.Add("Samurai", new Vector4(228.0f / 255.0f, 109.0f / 255.0f, 4.0f / 255.0f, 1.0f));
-            _jobColors.Add("Scholar", new Vector4(134.0f / 255.0f, 87.0f / 255.0f, 255.0f / 255.0f, 1.0f));
-            _jobColors.Add("Summoner", new Vector4(45.0f / 255.0f, 155.0f / 255.0f, 120.0f / 255.0f, 1.0f));
-            _jobColors.Add("Warrior", new Vector4(207.0f / 255.0f, 38.0f / 255.0f, 33.0f / 255.0f, 1.0f));
-            _jobColors.Add("White Mage", new Vector4(255.0f / 255.0f, 240.0f / 255.0f, 220.0f / 255.0f, 1.0f));
-            _jobColors.Add("Default", _defaultColor);
+            this._jobColors.Add("Astrologian", new Vector4(255.0f / 255.0f, 231.0f / 255.0f, 74.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Bard", new Vector4(145.0f / 255.0f, 150.0f / 255.0f, 186.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Black Mage", new Vector4(165.0f / 255.0f, 121.0f / 255.0f, 214.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Dancer", new Vector4(226.0f / 255.0f, 176.0f / 255.0f, 175.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Dark Knight", new Vector4(209.0f / 255.0f, 38.0f / 255.0f, 204.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Dragoon", new Vector4(65.0f / 255.0f, 100.0f / 255.0f, 205.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Gunbreaker", new Vector4(121.0f / 255.0f, 109.0f / 255.0f, 48.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Machinist", new Vector4(110.0f / 255.0f, 225.0f / 255.0f, 214.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Monk", new Vector4(214.0f / 255.0f, 156.0f / 255.0f, 0.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Ninja", new Vector4(175.0f / 255.0f, 25.0f / 255.0f, 100.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Paladin", new Vector4(168.0f / 255.0f, 210.0f / 255.0f, 230.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Red Mage", new Vector4(232.0f / 255.0f, 123.0f / 255.0f, 123.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Samurai", new Vector4(228.0f / 255.0f, 109.0f / 255.0f, 4.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Scholar", new Vector4(134.0f / 255.0f, 87.0f / 255.0f, 255.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Summoner", new Vector4(45.0f / 255.0f, 155.0f / 255.0f, 120.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Warrior", new Vector4(207.0f / 255.0f, 38.0f / 255.0f, 33.0f / 255.0f, 1.0f));
+            this._jobColors.Add("White Mage", new Vector4(255.0f / 255.0f, 240.0f / 255.0f, 220.0f / 255.0f, 1.0f));
+            this._jobColors.Add("Default", this._defaultColor);
 
-            _logColors.Add("Grey", new Vector4(102.0f / 255.0f, 102.0f / 255.0f, 102.0f / 255.0f, 1.0f));
-            _logColors.Add("Green", new Vector4(30.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f, 1.0f));
-            _logColors.Add("Blue", new Vector4(0.0f / 255.0f, 112.0f / 255.0f, 255.0f / 255.0f, 1.0f));
-            _logColors.Add("Magenta", new Vector4(163.0f / 255.0f, 53.0f / 255.0f, 238.0f / 255.0f, 1.0f));
-            _logColors.Add("Orange", new Vector4(255.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f, 1.0f));
-            _logColors.Add("Pink", new Vector4(226.0f / 255.0f, 104.0f / 255.0f, 168.0f / 255.0f, 1.0f));
-            _logColors.Add("Yellow", new Vector4(229.0f / 255.0f, 204.0f / 255.0f, 128.0f / 255.0f, 1.0f));
-            _logColors.Add("Default", _defaultColor);
+            this._logColors.Add("Grey", new Vector4(102.0f / 255.0f, 102.0f / 255.0f, 102.0f / 255.0f, 1.0f));
+            this._logColors.Add("Green", new Vector4(30.0f / 255.0f, 255.0f / 255.0f, 0.0f / 255.0f, 1.0f));
+            this._logColors.Add("Blue", new Vector4(0.0f / 255.0f, 112.0f / 255.0f, 255.0f / 255.0f, 1.0f));
+            this._logColors.Add("Magenta", new Vector4(163.0f / 255.0f, 53.0f / 255.0f, 238.0f / 255.0f, 1.0f));
+            this._logColors.Add("Orange", new Vector4(255.0f / 255.0f, 128.0f / 255.0f, 0.0f / 255.0f, 1.0f));
+            this._logColors.Add("Pink", new Vector4(226.0f / 255.0f, 104.0f / 255.0f, 168.0f / 255.0f, 1.0f));
+            this._logColors.Add("Yellow", new Vector4(229.0f / 255.0f, 204.0f / 255.0f, 128.0f / 255.0f, 1.0f));
+            this._logColors.Add("Default", this._defaultColor);
         }
 
         public bool Visible
         {
-            get => _visible;
-            set => _visible = value;
+            get => this._visible;
+            set => this._visible = value;
         }
 
         public bool SettingsVisible
         {
-            get => _settingsVisible;
-            set => _settingsVisible = value;
+            get => this._settingsVisible;
+            set => this._settingsVisible = value;
         }
 
         public void Dispose()
@@ -91,19 +91,19 @@ namespace FFLogsViewer
 
         private void DrawSettingsWindow()
         {
-            if (!SettingsVisible) return;
+            if (!this.SettingsVisible) return;
 
             ImGui.SetNextWindowSize(new Vector2(232, 75), ImGuiCond.Always);
-            if (ImGui.Begin("FF Logs Viewer Config", ref _settingsVisible,
+            if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))
             {
-                var configValue = _configuration.ButtonInContextMenu;
+                var configValue = this._configuration.ButtonInContextMenu;
                 if (ImGui.Checkbox("Add button in context menus", ref configValue))
                 {
-                    _plugin.ToggleContextMenuButton(configValue);
-                    _configuration.ButtonInContextMenu = configValue;
-                    _configuration.Save();
+                    this._plugin.ToggleContextMenuButton(configValue);
+                    this._configuration.ButtonInContextMenu = configValue;
+                    this._configuration.Save();
                 }
             }
 
@@ -112,23 +112,23 @@ namespace FFLogsViewer
 
         private void DrawMainWindow()
         {
-            if (!Visible) return;
+            if (!this.Visible) return;
 
             ImGui.SetNextWindowSize(new Vector2(WindowWidth, ReducedWindowHeight), ImGuiCond.FirstUseEver);
-            if (ImGui.Begin("FF Logs Viewer", ref _visible,
+            if (ImGui.Begin("FF Logs Viewer", ref this._visible,
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse))
             {
                 ImGui.Columns(4, "InputColumns", true);
 
                 var buttonsWidth = (ImGui.CalcTextSize("Target") + ImGui.CalcTextSize("Clipboard")).X + 40.0f;
                 var colWidth = (ImGui.GetWindowWidth() - buttonsWidth) / 3.0f;
-                var sizeMin = Math.Max(ImGui.CalcTextSize(_selectedCharacterData.FirstName).X,
-                    Math.Max(ImGui.CalcTextSize(_selectedCharacterData.LastName).X,
-                        ImGui.CalcTextSize(_selectedCharacterData.WorldName).X));
+                var sizeMin = Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.FirstName).X,
+                    Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.LastName).X,
+                        ImGui.CalcTextSize(this._selectedCharacterData.WorldName).X));
                 var idealWindowWidth = sizeMin * 3 + buttonsWidth + 73.0f;
                 if (idealWindowWidth < WindowWidth) idealWindowWidth = WindowWidth;
                 float idealWindowHeight;
-                if (_selectedCharacterData.IsEveryLogsReady && !_hasLoadingFailed)
+                if (this._selectedCharacterData.IsEveryLogsReady && !this._hasLoadingFailed)
                     idealWindowHeight = WindowHeight;
                 else
                     idealWindowHeight = ReducedWindowHeight;
@@ -140,26 +140,26 @@ namespace FFLogsViewer
                 ImGui.SetColumnWidth(3, buttonsWidth);
 
                 ImGui.PushItemWidth(colWidth - 15);
-                _characterInput[0] = _selectedCharacterData.FirstName;
-                ImGui.InputTextWithHint("##FirstName", "First Name", ref _characterInput[0], 256,
+                this._characterInput[0] = this._selectedCharacterData.FirstName;
+                ImGui.InputTextWithHint("##FirstName", "First Name", ref this._characterInput[0], 256,
                     ImGuiInputTextFlags.CharsNoBlank);
-                _selectedCharacterData.FirstName = _characterInput[0];
+                this._selectedCharacterData.FirstName = this._characterInput[0];
                 ImGui.PopItemWidth();
 
                 ImGui.NextColumn();
                 ImGui.PushItemWidth(colWidth - 15);
-                _characterInput[1] = _selectedCharacterData.LastName;
-                ImGui.InputTextWithHint("##LastName", "Last Name", ref _characterInput[1], 256,
+                this._characterInput[1] = this._selectedCharacterData.LastName;
+                ImGui.InputTextWithHint("##LastName", "Last Name", ref this._characterInput[1], 256,
                     ImGuiInputTextFlags.CharsNoBlank);
-                _selectedCharacterData.LastName = _characterInput[1];
+                this._selectedCharacterData.LastName = this._characterInput[1];
                 ImGui.PopItemWidth();
 
                 ImGui.NextColumn();
                 ImGui.PushItemWidth(colWidth - 14);
-                _characterInput[2] = _selectedCharacterData.WorldName;
-                ImGui.InputTextWithHint("##WorldName", "World Name", ref _characterInput[2], 256,
+                this._characterInput[2] = this._selectedCharacterData.WorldName;
+                ImGui.InputTextWithHint("##WorldName", "World Name", ref this._characterInput[2], 256,
                     ImGuiInputTextFlags.CharsNoBlank);
-                _selectedCharacterData.WorldName = _characterInput[2];
+                this._selectedCharacterData.WorldName = this._characterInput[2];
 
                 ImGui.PopItemWidth();
 
@@ -167,42 +167,42 @@ namespace FFLogsViewer
                 if (ImGui.Button("Clipboard"))
                     try
                     {
-                        _selectedCharacterData = _plugin.GetClipboardCharacter();
-                        _errorMessage = "";
-                        _hasLoadingFailed = false;
+                        this._selectedCharacterData = this._plugin.GetClipboardCharacter();
+                        this._errorMessage = "";
+                        this._hasLoadingFailed = false;
                         try
                         {
-                            _plugin.FetchLogs(_selectedCharacterData);
+                            this._plugin.FetchLogs(this._selectedCharacterData);
                         }
                         catch
                         {
-                            _errorMessage = "World not supported or invalid.";
+                            this._errorMessage = "World not supported or invalid.";
                         }
                     }
                     catch
                     {
-                        _errorMessage = "No character found in the clipboard.";
+                        this._errorMessage = "No character found in the clipboard.";
                     }
 
                 ImGui.SameLine();
                 if (ImGui.Button("Target"))
                     try
                     {
-                        _selectedCharacterData = _plugin.GetTargetCharacter();
-                        _errorMessage = "";
-                        _hasLoadingFailed = false;
+                        this._selectedCharacterData = this._plugin.GetTargetCharacter();
+                        this._errorMessage = "";
+                        this._hasLoadingFailed = false;
                         try
                         {
-                            _plugin.FetchLogs(_selectedCharacterData);
+                            this._plugin.FetchLogs(this._selectedCharacterData);
                         }
                         catch
                         {
-                            _errorMessage = "World not supported or invalid.";
+                            this._errorMessage = "World not supported or invalid.";
                         }
                     }
                     catch
                     {
-                        _errorMessage = "Invalid target.";
+                        this._errorMessage = "Invalid target.";
                     }
 
                 ImGui.Columns();
@@ -211,36 +211,36 @@ namespace FFLogsViewer
 
                 if (ImGui.Button("Clear"))
                 {
-                    _selectedCharacterData = new CharacterData();
-                    _errorMessage = "";
-                    _hasLoadingFailed = false;
+                    this._selectedCharacterData = new CharacterData();
+                    this._errorMessage = "";
+                    this._hasLoadingFailed = false;
                 }
 
                 ImGui.SameLine();
-                if (_errorMessage == "")
+                if (this._errorMessage == "")
                 {
-                    if (_selectedCharacterData.IsEveryLogsReady)
+                    if (this._selectedCharacterData.IsEveryLogsReady)
                     {
                         var nameVector =
                             ImGui.CalcTextSize(
-                                $"Viewing logs of {_selectedCharacterData.LoadedFirstName} {_selectedCharacterData.LoadedLastName}@{_selectedCharacterData.LoadedWorldName}.");
+                                $"Viewing logs of {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}.");
                         ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - nameVector.X / 2);
                         nameVector.X -= 7; // A bit too large on right side
                         nameVector.Y += 1;
                         ImGui.Selectable(
-                            $"Viewing {_selectedCharacterData.LoadedFirstName} {_selectedCharacterData.LoadedLastName}@{_selectedCharacterData.LoadedWorldName}'s logs.",
-                            ref _isLinkClicked, ImGuiSelectableFlags.None, nameVector);
+                            $"Viewing {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}'s logs.",
+                            ref this._isLinkClicked, ImGuiSelectableFlags.None, nameVector);
 
                         if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to open on FF Logs.");
 
-                        if (_isLinkClicked)
+                        if (this._isLinkClicked)
                         {
                             Process.Start(
-                                $"https://www.fflogs.com/character/{_selectedCharacterData.RegionName}/{_selectedCharacterData.WorldName}/{_selectedCharacterData.FirstName} {_selectedCharacterData.LastName}");
-                            _isLinkClicked = false;
+                                $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}");
+                            this._isLinkClicked = false;
                         }
                     }
-                    else if (_selectedCharacterData.IsDataLoading)
+                    else if (this._selectedCharacterData.IsDataLoading)
                     {
                         ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Loading...").X / 2);
                         ImGui.TextUnformatted("Loading...");
@@ -253,8 +253,8 @@ namespace FFLogsViewer
                 }
                 else
                 {
-                    ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(_errorMessage).X / 2);
-                    ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), _errorMessage);
+                    ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(this._errorMessage).X / 2);
+                    ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), this._errorMessage);
                 }
 
                 ImGui.SameLine();
@@ -263,41 +263,42 @@ namespace FFLogsViewer
 
                 if (ImGui.Button("Search"))
                 {
-                    if (_selectedCharacterData.IsCharacterReady())
+                    if (this._selectedCharacterData.IsCharacterReady())
                     {
-                        _errorMessage = "";
+                        this._errorMessage = "";
                         try
                         {
-                            _plugin.FetchLogs(_selectedCharacterData);
+                            this._plugin.FetchLogs(this._selectedCharacterData);
                         }
                         catch
                         {
-                            _errorMessage = "World not supported or invalid.";
+                            this._errorMessage = "World not supported or invalid.";
                         }
 
-                        _hasLoadingFailed = false;
+                        this._hasLoadingFailed = false;
                     }
                     else
                     {
-                        _errorMessage = "One of the inputs is empty.";
+                        this._errorMessage = "One of the inputs is empty.";
                     }
                 }
 
-                if (_selectedCharacterData.IsEveryLogsReady && !_hasLoadingFailed)
+                if (this._selectedCharacterData.IsEveryLogsReady && !this._hasLoadingFailed)
                 {
                     ImGui.Separator();
 
                     ImGui.Columns(5, "LogsDisplay", true);
 
-                    _bossesColumnWidth =
+                    this._bossesColumnWidth =
                         ImGui.CalcTextSize("Cloud of Darkness").X + 17.5f; // Biggest text in first column
-                    _jobsColumnWidth = ImGui.CalcTextSize("Dark Knight").X + 17.5f; // Biggest job name
-                    _logsColumnWidth = (ImGui.GetWindowWidth() - _bossesColumnWidth - _jobsColumnWidth) / 3.0f;
-                    ImGui.SetColumnWidth(0, _bossesColumnWidth);
-                    ImGui.SetColumnWidth(1, _logsColumnWidth);
-                    ImGui.SetColumnWidth(2, _logsColumnWidth);
-                    ImGui.SetColumnWidth(3, _logsColumnWidth);
-                    ImGui.SetColumnWidth(4, _jobsColumnWidth);
+                    this._jobsColumnWidth = ImGui.CalcTextSize("Dark Knight").X + 17.5f; // Biggest job name
+                    this._logsColumnWidth = (ImGui.GetWindowWidth() - this._bossesColumnWidth - this._jobsColumnWidth) /
+                                            3.0f;
+                    ImGui.SetColumnWidth(0, this._bossesColumnWidth);
+                    ImGui.SetColumnWidth(1, this._logsColumnWidth);
+                    ImGui.SetColumnWidth(2, this._logsColumnWidth);
+                    ImGui.SetColumnWidth(3, this._logsColumnWidth);
+                    ImGui.SetColumnWidth(4, this._jobsColumnWidth);
 
                     PrintTextColumn(1, "Eden's Promise");
                     ImGui.Spacing();
@@ -429,10 +430,10 @@ namespace FFLogsViewer
                     }
                     catch (Exception e)
                     {
-                        _errorMessage = "Logs could not be loaded.";
+                        this._errorMessage = "Logs could not be loaded.";
                         PluginLog.LogError(e.Message);
                         PluginLog.LogError(e.StackTrace);
-                        _hasLoadingFailed = true;
+                        this._hasLoadingFailed = true;
                     }
                 }
             }
@@ -448,27 +449,27 @@ namespace FFLogsViewer
             switch (dataType)
             {
                 case CharacterData.DataType.Best:
-                    if (!_selectedCharacterData.Bests.TryGetValue((int) bossId, out log))
+                    if (!this._selectedCharacterData.Bests.TryGetValue((int) bossId, out log))
                         throw new ArgumentNullException($"Best log not found for boss ({bossId}).");
                     text = log == 0 ? "-" : log.ToString();
                     color = GetLogColor(log);
                     break;
 
                 case CharacterData.DataType.Median:
-                    if (!_selectedCharacterData.Medians.TryGetValue((int) bossId, out log))
+                    if (!this._selectedCharacterData.Medians.TryGetValue((int) bossId, out log))
                         throw new ArgumentNullException($"Median log not found for boss ({bossId}).");
                     text = log == 0 ? "-" : log.ToString();
                     color = GetLogColor(log);
                     break;
                 case CharacterData.DataType.Kills:
-                    if (!_selectedCharacterData.Kills.TryGetValue((int) bossId, out log))
+                    if (!this._selectedCharacterData.Kills.TryGetValue((int) bossId, out log))
                         throw new ArgumentNullException($"Median log not found for boss ({bossId}).");
                     text = log == 0 ? "-" : log.ToString();
                     break;
                 case CharacterData.DataType.Job:
-                    if (!_selectedCharacterData.Jobs.TryGetValue((int) bossId, out var job))
+                    if (!this._selectedCharacterData.Jobs.TryGetValue((int) bossId, out var job))
                         throw new ArgumentNullException($"Job not found for boss ({bossId}).");
-                    if (!_jobColors.TryGetValue(job, out color)) color = _jobColors["Default"];
+                    if (!this._jobColors.TryGetValue(job, out color)) color = this._jobColors["Default"];
                     text = job;
                     break;
                 default:
@@ -484,9 +485,10 @@ namespace FFLogsViewer
             var position = column switch
             {
                 1 => 8.0f,
-                2 or 3 or 4 => _bossesColumnWidth + _logsColumnWidth / 2.0f + _logsColumnWidth * (column - 2) -
+                2 or 3 or 4 => this._bossesColumnWidth + this._logsColumnWidth / 2.0f +
+                               this._logsColumnWidth * (column - 2) -
                                ImGui.CalcTextSize(text).X / 2.0f,
-                _ => _bossesColumnWidth + _jobsColumnWidth / 2.0f + _logsColumnWidth * (column - 2) -
+                _ => this._bossesColumnWidth + this._jobsColumnWidth / 2.0f + this._logsColumnWidth * (column - 2) -
                      ImGui.CalcTextSize(text).X / 2.0f,
             };
 
@@ -496,44 +498,44 @@ namespace FFLogsViewer
 
         private void PrintTextColumn(int column, string text)
         {
-            PrintTextColumn(column, text, _defaultColor);
+            PrintTextColumn(column, text, this._defaultColor);
         }
 
         private Vector4 GetLogColor(int log)
         {
             return log switch
             {
-                0 => _logColors["Default"],
-                < 25 => _logColors["Grey"],
-                < 50 => _logColors["Green"],
-                < 75 => _logColors["Blue"],
-                < 95 => _logColors["Magenta"],
-                < 99 => _logColors["Orange"],
-                99 => _logColors["Pink"],
-                100 => _logColors["Yellow"],
-                _ => _logColors["Default"],
+                0 => this._logColors["Default"],
+                < 25 => this._logColors["Grey"],
+                < 50 => this._logColors["Green"],
+                < 75 => this._logColors["Blue"],
+                < 95 => this._logColors["Magenta"],
+                < 99 => this._logColors["Orange"],
+                99 => this._logColors["Pink"],
+                100 => this._logColors["Yellow"],
+                _ => this._logColors["Default"],
             };
         }
 
         public void SetCharacter(CharacterData character)
         {
-            _selectedCharacterData = character;
-            _errorMessage = "";
-            _hasLoadingFailed = false;
+            this._selectedCharacterData = character;
+            this._errorMessage = "";
+            this._hasLoadingFailed = false;
             try
             {
-                _plugin.FetchLogs(_selectedCharacterData);
+                this._plugin.FetchLogs(this._selectedCharacterData);
             }
             catch (Exception e)
             {
-                _errorMessage = "World not supported or invalid.";
+                this._errorMessage = "World not supported or invalid.";
                 PluginLog.LogError(e.Message);
             }
         }
 
         public void SetErrorMessage(string errorMessage)
         {
-            _errorMessage = errorMessage;
+            this._errorMessage = errorMessage;
         }
     }
 }

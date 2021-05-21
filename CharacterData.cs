@@ -49,9 +49,9 @@ namespace FFLogsViewer
 
         public CharacterData(string firstName, string lastName, string worldName)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            WorldName = worldName;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.WorldName = worldName;
         }
 
         public string FirstName { get; set; } = "";
@@ -69,18 +69,18 @@ namespace FFLogsViewer
 
         public bool IsCharacterReady()
         {
-            return FirstName != ""
-                   && LastName != ""
-                   && WorldName != "";
+            return this.FirstName != ""
+                   && this.LastName != ""
+                   && this.WorldName != "";
         }
 
         internal void ResetLogs()
         {
-            IsEveryLogsReady = false;
-            Bests = new Dictionary<int, int>();
-            Medians = new Dictionary<int, int>();
-            Kills = new Dictionary<int, int>();
-            Jobs = new Dictionary<int, string>();
+            this.IsEveryLogsReady = false;
+            this.Bests = new Dictionary<int, int>();
+            this.Medians = new Dictionary<int, int>();
+            this.Kills = new Dictionary<int, int>();
+            this.Jobs = new Dictionary<int, string>();
         }
     }
 }

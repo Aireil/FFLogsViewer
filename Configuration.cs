@@ -18,12 +18,12 @@ namespace FFLogsViewer
 
         public void Initialize(DalamudPluginInterface pluginInterface)
         {
-            PluginInterface = pluginInterface;
+            this.PluginInterface = pluginInterface;
         }
 
         public void Save()
         {
-            PluginInterface.SavePluginConfig(this);
+            this.PluginInterface.SavePluginConfig(this);
         }
     }
 }

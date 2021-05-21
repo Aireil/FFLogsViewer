@@ -9,16 +9,16 @@ namespace FFLogsViewer
     {
         internal ContextMenu(Plugin plugin)
         {
-            Plugin = plugin;
+            this.Plugin = plugin;
 
-            Plugin.Common.Functions.ContextMenu.OpenContextMenu += OnOpenContextMenu;
+            this.Plugin.Common.Functions.ContextMenu.OpenContextMenu += OnOpenContextMenu;
         }
 
         private Plugin Plugin { get; }
 
         public void Dispose()
         {
-            Plugin.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
+            this.Plugin.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
         }
 
         private void OnOpenContextMenu(ContextMenuOpenArgs args)
@@ -34,7 +34,7 @@ namespace FFLogsViewer
             if (!IsMenuValid(args))
                 return;
 
-            var world = Plugin.Pi.Data.GetExcelSheet<World>()
+            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
                 .FirstOrDefault(x => x.RowId == args.ActorWorld);
 
             if (world == null)
@@ -42,7 +42,7 @@ namespace FFLogsViewer
 
             var playerName = $"{args.Text}@{world.Name}";
 
-            Plugin.SearchPlayer(playerName);
+            this.Plugin.SearchPlayer(playerName);
         }
 
         private static bool IsMenuValid(BaseContextMenuArgs args)
