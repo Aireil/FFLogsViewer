@@ -13,6 +13,7 @@ namespace FFLogsViewer
         private const float ReducedWindowHeight = 88;
         private const float WindowWidth = 407;
         private readonly string[] _characterInput = new string[3];
+        private readonly Configuration _configuration;
         private readonly Vector4 _defaultColor = new(1.0f, 1.0f, 1.0f, 1.0f);
         private readonly Dictionary<string, Vector4> _jobColors = new();
         private readonly Dictionary<string, Vector4> _logColors = new();
@@ -28,11 +29,14 @@ namespace FFLogsViewer
         private float _jobsColumnWidth;
         private float _logsColumnWidth;
         private CharacterData _selectedCharacterData = new();
+        private bool _settingsVisible;
+
         private bool _visible;
 
-        public PluginUi(Plugin plugin)
+        public PluginUi(Plugin plugin, Configuration configuration)
         {
             _plugin = plugin;
+            _configuration = configuration;
 
             _jobColors.Add("Astrologian", new Vector4(255.0f / 255.0f, 231.0f / 255.0f, 74.0f / 255.0f, 1.0f));
             _jobColors.Add("Bard", new Vector4(145.0f / 255.0f, 150.0f / 255.0f, 186.0f / 255.0f, 1.0f));
@@ -69,13 +73,41 @@ namespace FFLogsViewer
             set => _visible = value;
         }
 
+        public bool SettingsVisible
+        {
+            get => _settingsVisible;
+            set => _settingsVisible = value;
+        }
+
         public void Dispose()
         {
         }
 
         public void Draw()
         {
+            DrawSettingsWindow();
             DrawMainWindow();
+        }
+
+        private void DrawSettingsWindow()
+        {
+            if (!SettingsVisible) return;
+
+            ImGui.SetNextWindowSize(new Vector2(232, 75), ImGuiCond.Always);
+            if (ImGui.Begin("FF Logs Viewer Config", ref _settingsVisible,
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoScrollWithMouse))
+            {
+                var configValue = _configuration.ButtonInContextMenu;
+                if (ImGui.Checkbox("Add button in context menus", ref configValue))
+                {
+                    _plugin.ToggleContextMenuButton(configValue);
+                    _configuration.ButtonInContextMenu = configValue;
+                    _configuration.Save();
+                }
+            }
+
+            ImGui.End();
         }
 
         private void DrawMainWindow()

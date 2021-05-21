@@ -23,14 +23,7 @@ namespace FFLogsViewer
 
         private void OnOpenContextMenu(ContextMenuOpenArgs args)
         {
-            // foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(args))
-            // {
-            //     var name=descriptor.Name;
-            //     var value=descriptor.GetValue(args);
-            //     PluginLog.Information("{0}={1}",name,value);
-            // }
-
-            if (!IsValid(args))
+            if (!IsMenuValid(args))
                 return;
 
             args.Items.Add(new NormalContextMenuItem("Search on FF Logs", Search));
@@ -38,33 +31,21 @@ namespace FFLogsViewer
 
         private void Search(ContextMenuItemSelectedArgs args)
         {
-            if (!IsValid(args))
+            if (!IsMenuValid(args))
                 return;
 
-            var playerName = string.Empty;
-            switch (args.ParentAddonName)
-            {
-                case null: // Nameplate/Model menu
-                case "LookingForGroup":
-                case "PartyMemberList":
-                case "FriendList":
-                case "SocialList":
-                case "ContactList":
-                case "ChatLog":
-                    var world = Plugin.Pi.Data.GetExcelSheet<World>()
-                        .FirstOrDefault(x => x.RowId == args.ActorWorld);
+            var world = Plugin.Pi.Data.GetExcelSheet<World>()
+                .FirstOrDefault(x => x.RowId == args.ActorWorld);
 
-                    if (world == null)
-                        return;
+            if (world == null)
+                return;
 
-                    playerName = $"{args.Text}@{world.Name}";
-                    break;
-            }
+            var playerName = $"{args.Text}@{world.Name}";
 
             Plugin.SearchPlayer(playerName);
         }
 
-        private static bool IsValid(BaseContextMenuArgs args)
+        private static bool IsMenuValid(BaseContextMenuArgs args)
         {
             switch (args.ParentAddonName)
             {

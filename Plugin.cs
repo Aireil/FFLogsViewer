@@ -52,13 +52,16 @@ namespace FFLogsViewer
         {
             Pi = pluginInterface;
 
-            Common = new XivCommonBase(Pi, Hooks.PartyFinder | Hooks.ContextMenu);
-            ContextMenu = new ContextMenu(this);
-
             _configuration = Pi.GetPluginConfig() as Configuration ?? new Configuration();
             _configuration.Initialize(Pi);
 
-            _ui = new PluginUi(this);
+            _ui = new PluginUi(this, _configuration);
+
+            if (_configuration.ButtonInContextMenu)
+            {
+                Common = new XivCommonBase(Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                ContextMenu = new ContextMenu(this);
+            }
 
             Pi.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
@@ -67,7 +70,7 @@ namespace FFLogsViewer
             });
 
             Pi.UiBuilder.OnBuildUi += DrawUi;
-            Pi.UiBuilder.OnOpenConfigUi += (_, _) => DisplayUi();
+            Pi.UiBuilder.OnOpenConfigUi += (_, _) => ToggleSettingsUi();
 
             Task.Run(async () =>
             {
@@ -78,8 +81,8 @@ namespace FFLogsViewer
 
         public void Dispose()
         {
-            Common.Dispose();
-            ContextMenu.Dispose();
+            Common?.Dispose();
+            ContextMenu?.Dispose();
             _ui.Dispose();
             Pi.CommandManager.RemoveHandler(CommandName);
             Pi.Dispose();
@@ -89,6 +92,8 @@ namespace FFLogsViewer
         {
             if (string.IsNullOrEmpty(args))
                 _ui.Visible = !_ui.Visible;
+            else if (args.Equals("config", StringComparison.OrdinalIgnoreCase))
+                _ui.SettingsVisible = !_ui.SettingsVisible;
             else
                 SearchPlayer(args);
         }
@@ -98,9 +103,27 @@ namespace FFLogsViewer
             _ui.Draw();
         }
 
-        private void DisplayUi()
+        private void ToggleSettingsUi()
         {
-            _ui.Visible = true;
+            _ui.SettingsVisible = !_ui.SettingsVisible;
+        }
+
+        public void ToggleContextMenuButton(bool enable)
+        {
+            switch (enable)
+            {
+                case true when ContextMenu != null:
+                case false when ContextMenu == null:
+                    return;
+                case true:
+                    Common = new XivCommonBase(Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                    ContextMenu = new ContextMenu(this);
+                    break;
+                default:
+                    Common?.Dispose();
+                    ContextMenu?.Dispose();
+                    break;
+            }
         }
 
         public void SearchPlayer(string args)
@@ -159,7 +182,7 @@ namespace FFLogsViewer
 
             rawText = rawText.Replace("You join", " ");
             rawText = Regex.Replace(rawText, "\\[.*?\\]", " ");
-            rawText = Regex.Replace(rawText, "[^A-Za-z ']", " ");
+            rawText = Regex.Replace(rawText, "[^A-Za-z '-]", " ");
             rawText = string.Concat(rawText.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
             rawText = Regex.Replace(rawText, @"\s+", " ");
 
