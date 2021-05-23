@@ -62,8 +62,7 @@ namespace FFLogsViewer
             }
             catch (Exception e)
             {
-                PluginLog.LogError(e.Message);
-                PluginLog.LogError(e.StackTrace);
+                PluginLog.LogError(e, "Error while fetching logs.");
                 return null;
             }
         }

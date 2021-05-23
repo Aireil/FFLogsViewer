@@ -93,16 +93,23 @@ namespace FFLogsViewer
         {
             if (!this.SettingsVisible) return;
 
-            ImGui.SetNextWindowSize(new Vector2(232, 75), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(300, 90), ImGuiCond.Always);
             if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
-                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))
             {
-                var configValue = this._configuration.ButtonInContextMenu;
-                if (ImGui.Checkbox("Add button in context menus", ref configValue))
+                var buttonInContextMenu = this._configuration.ButtonInContextMenu;
+                if (ImGui.Checkbox("Add button in context menus", ref buttonInContextMenu))
                 {
-                    this._plugin.ToggleContextMenuButton(configValue);
-                    this._configuration.ButtonInContextMenu = configValue;
+                    this._plugin.ToggleContextMenuButton(buttonInContextMenu);
+                    this._configuration.ButtonInContextMenu = buttonInContextMenu;
+                    this._configuration.Save();
+                }
+
+                var buttonName = this._configuration.ButtonName;
+                if (ImGui.InputText("Button name", ref buttonName, 50))
+                {
+                    this._configuration.ButtonName = buttonName;
                     this._configuration.Save();
                 }
             }
@@ -431,8 +438,7 @@ namespace FFLogsViewer
                     catch (Exception e)
                     {
                         this._errorMessage = "Logs could not be loaded.";
-                        PluginLog.LogError(e.Message);
-                        PluginLog.LogError(e.StackTrace);
+                        PluginLog.LogError(e, "Logs could not be loaded.");
                         this._hasLoadingFailed = true;
                     }
                 }
@@ -529,7 +535,7 @@ namespace FFLogsViewer
             catch (Exception e)
             {
                 this._errorMessage = "World not supported or invalid.";
-                PluginLog.LogError(e.Message);
+                PluginLog.LogError(e, "World not supported or invalid.");
             }
         }
 

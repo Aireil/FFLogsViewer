@@ -38,7 +38,7 @@ namespace FFLogsViewer
             "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera",
         };
 
-        private Configuration _configuration;
+        public Configuration Configuration;
         private FfLogsClient.Token _token;
         private PluginUi _ui;
 
@@ -52,14 +52,14 @@ namespace FFLogsViewer
         {
             this.Pi = pluginInterface;
 
-            this._configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
-            this._configuration.Initialize(this.Pi);
+            this.Configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
+            this.Configuration.Initialize(this.Pi);
 
-            this._ui = new PluginUi(this, this._configuration);
+            this._ui = new PluginUi(this, this.Configuration);
 
-            if (this._configuration.ButtonInContextMenu)
+            if (this.Configuration.ButtonInContextMenu)
             {
-                this.Common = new XivCommonBase(this.Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                this.Common = new XivCommonBase(this.Pi, Hooks.ContextMenu);
                 this.ContextMenu = new ContextMenu(this);
             }
 
@@ -75,7 +75,7 @@ namespace FFLogsViewer
             Task.Run(async () =>
             {
                 this._token = await FfLogsClient
-                    .GetToken(this._configuration.ClientId, this._configuration.ClientSecret)
+                    .GetToken(this.Configuration.ClientId, this.Configuration.ClientSecret)
                     .ConfigureAwait(false);
             });
         }
@@ -272,8 +272,7 @@ namespace FFLogsViewer
                 {
                     characterData.IsDataLoading = false;
                     this._ui.SetErrorMessage("Could not load data from FF Logs servers.");
-                    PluginLog.LogError(e.Message);
-                    PluginLog.LogError(e.StackTrace);
+                    PluginLog.LogError(e, "Could not load data from FF Logs servers.");
                     return;
                 }
 
@@ -290,8 +289,7 @@ namespace FFLogsViewer
                 if (t.Exception == null) return;
                 foreach (var e in t.Exception.Flatten().InnerExceptions)
                 {
-                    PluginLog.LogError(e.Message);
-                    PluginLog.LogError(e.StackTrace);
+                    PluginLog.LogError(e, "Networking error.");
                 }
             });
         }

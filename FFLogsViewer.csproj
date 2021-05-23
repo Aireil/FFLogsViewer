@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FFLogsViewer</RootNamespace>
-    <AssemblyName>FFLogsViewerNoDeps</AssemblyName>
+    <AssemblyName>FFLogsViewer</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -55,6 +55,13 @@
       <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+	    <Reference Include="XivCommon">
+      <HintPath>C:\Code\FFXIV\Plugins\XivCommonTest\XivCommon.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -79,14 +86,6 @@
     <Compile Include="PluginUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="XivCommon" Version="1.5.0" />
-	<PackageReference Include="ILMerge" Version="3.0.41" />
-  </ItemGroup>
-    <Target Name="ILMerge" AfterTargets="PostBuildEvent">
-    <Exec Command="$(ILMergeConsolePath) /target:library /out:$(TargetDir)/../FFLogsViewer.dll /log /lib:$(APPDATA)\XIVLauncher\addon\Hooks\dev $(TargetDir)FFLogsViewerNoDeps.dll $(TargetDir)XivCommon.dll&#xD;&#xA;powershell -Command &quot;Remove-Item '$(TargetDir)\*.*';Move-Item '$(TargetDir)\..\FFLogsViewer.*' -Destination '$(TargetDir)';&quot;" />
-  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

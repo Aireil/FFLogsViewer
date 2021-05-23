@@ -1,5 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Text;
+using System.Web.UI.WebControls;
+using Dalamud.Game.Text;
+using Dalamud.Plugin;
 using Lumina.Excel.GeneratedSheets;
 using XivCommon.Functions.ContextMenu;
 
@@ -21,28 +27,53 @@ namespace FFLogsViewer
             this.Plugin.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
         }
 
+        [HandleProcessCorruptedStateExceptions]
         private void OnOpenContextMenu(ContextMenuOpenArgs args)
         {
-            if (!IsMenuValid(args))
-                return;
+            try
+            {
+                if (!IsMenuValid(args))
+                    return;
 
-            args.Items.Add(new NormalContextMenuItem("Search on FF Logs", Search));
+                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search));
+            }catch (Exception e)
+            {
+                PluginLog.Error(e, "Exception hello from open");
+                this.Plugin.Pi.Framework.Gui.Chat.PrintChat(new XivChatEntry {
+                    MessageBytes = Encoding.UTF8.GetBytes("ContextMenuOpen died, check log."),
+                    Type = XivChatType.Urgent,
+                });
+                throw;
+            }
         }
 
+        [HandleProcessCorruptedStateExceptions]
         private void Search(ContextMenuItemSelectedArgs args)
         {
-            if (!IsMenuValid(args))
-                return;
+            try
+            {
+                if (!IsMenuValid(args))
+                    return;
 
-            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
-                .FirstOrDefault(x => x.RowId == args.ActorWorld);
+                var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
+                    .FirstOrDefault(x => x.RowId == args.ActorWorld);
 
-            if (world == null)
-                return;
+                if (world == null)
+                    return;
 
-            var playerName = $"{args.Text}@{world.Name}";
+                var playerName = $"{args.Text}@{world.Name}";
 
-            this.Plugin.SearchPlayer(playerName);
+                this.Plugin.SearchPlayer(playerName);
+            }
+            catch (Exception e)
+            {
+                PluginLog.Error(e, "Exception hello from search");
+                this.Plugin.Pi.Framework.Gui.Chat.PrintChat(new XivChatEntry {
+                    MessageBytes = Encoding.UTF8.GetBytes("ContextMenuSearch died, check log."),
+                    Type = XivChatType.Urgent,
+                });
+                throw;
+            }
         }
 
         private static bool IsMenuValid(BaseContextMenuArgs args)
@@ -56,6 +87,9 @@ namespace FFLogsViewer
                 case "SocialList":
                 case "ContactList":
                 case "ChatLog":
+                case "_PartyList":
+                case "LinkShell":
+                case "CrossWorldLinkshell":
                     return args.Text != null && args.ActorWorld != 0 && args.ActorWorld != 65535;
 
                 default:
