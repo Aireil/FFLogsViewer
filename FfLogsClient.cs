@@ -11,7 +11,36 @@ namespace FFLogsViewer
 {
     public class FfLogsClient
     {
-        public static async Task<Token> GetToken(string clientId, string clientSecret)
+        private readonly Plugin _plugin;
+        private Token _token;
+        private readonly HttpClient _httpClient;
+
+        public class Token
+        {
+            [JsonProperty("access_token")] public string AccessToken { get; set; }
+
+            [JsonProperty("token_type")] public string TokenType { get; set; }
+
+            [JsonProperty("expires_in")] public int ExpiresIn { get; set; }
+        }
+
+        public FfLogsClient(Plugin plugin)
+        {
+            this._plugin = plugin;
+            this._httpClient = new HttpClient();
+
+            Task.Run(async () =>
+            {
+                this._token = await FfLogsClient
+                    .GetToken(this._plugin.Configuration.ClientId, this._plugin.Configuration.ClientSecret)
+                    .ConfigureAwait(false);
+
+                this._httpClient.DefaultRequestHeaders.Authorization
+                    = new AuthenticationHeaderValue("Bearer", this._token.AccessToken);
+            });
+        }
+
+        private static async Task<Token> GetToken(string clientId, string clientSecret)
         {
             var client = new HttpClient();
             const string baseAddress = @"https://www.fflogs.com/oauth/token";
@@ -31,29 +60,21 @@ namespace FFLogsViewer
             return tok;
         }
 
-        public static async Task<dynamic> GetLogsData(CharacterData characterData, Token token)
+        public async Task<dynamic> GetLogs(CharacterData characterData)
         {
-            var client = new HttpClient();
+
             const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
-            client.DefaultRequestHeaders.Authorization
-                = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-
             var query =
-                $"{{\"query\":\"query {{characterData{{character(name: \\\"{characterData.FirstName} {characterData.LastName}\\\"serverSlug: \\\"{characterData.WorldName}\\\"serverRegion: \\\"{characterData.RegionName}\\\"){{"
-                + "hidden "
-                + "EdenPromise: zoneRankings(zoneID: 38, , difficulty: 101)"
-                + "EdenVerse: zoneRankings(zoneID: 33, , difficulty: 101)"
-                + "ExtremesII: zoneRankings(zoneID: 34)"
-                + "ExtremesIII: zoneRankings(zoneID: 37)"
-                + "Unreal: zoneRankings(zoneID: 36)"
-                + "UltimatesShB: zoneRankings(zoneID: 32)"
-                + "UltimatesSB: zoneRankings(zoneID: 30)"
-                + "}}}\"}";
+                $"{{\"query\":\"query {{characterData{{character(name: \\\"{characterData.FirstName} {characterData.LastName}\\\"serverSlug: \\\"{characterData.WorldName}\\\"serverRegion: \\\"{characterData.RegionName}\\\"){{" +
+                "hidden " + "EdenPromise: zoneRankings(zoneID: 38, , difficulty: 101)" +
+                "EdenVerse: zoneRankings(zoneID: 33, , difficulty: 101)" + "ExtremesII: zoneRankings(zoneID: 34)" +
+                "ExtremesIII: zoneRankings(zoneID: 37)" + "Unreal: zoneRankings(zoneID: 36)" +
+                "UltimatesShB: zoneRankings(zoneID: 32)" + "UltimatesSB: zoneRankings(zoneID: 30)" + "}}}\"}";
 
             var content = new StringContent(query, Encoding.UTF8, "application/json");
 
-            var dataResponse = await client.PostAsync(baseAddress, content);
+            var dataResponse = await this._httpClient.PostAsync(baseAddress, content);
             try
             {
                 var jsonContent = await dataResponse.Content.ReadAsStringAsync();
@@ -62,18 +83,30 @@ namespace FFLogsViewer
             }
             catch (Exception e)
             {
-                PluginLog.LogError(e, "Error while fetching logs.");
+                PluginLog.LogError(e, "Error while fetching data.");
                 return null;
             }
         }
 
-        public class Token
+        public async Task<LogsData> GetData()
         {
-            [JsonProperty("access_token")] public string AccessToken { get; set; }
+            const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
-            [JsonProperty("token_type")] public string TokenType { get; set; }
+            const string query = @"{""query"":""{worldData {expansions {name id zones {name id difficulties {name id} encounters {name id}}}}}""}";
 
-            [JsonProperty("expires_in")] public int ExpiresIn { get; set; }
+            var content = new StringContent(query, Encoding.UTF8, "application/json");
+
+            var dataResponse = await this._httpClient.PostAsync(baseAddress, content);
+            try
+            {
+                var jsonContent = await dataResponse.Content.ReadAsStringAsync();
+                return LogsData.FromJson(jsonContent);
+            }
+            catch (Exception e)
+            {
+                PluginLog.LogError(e, "Error while fetching data.");
+                return null;
+            }
         }
     }
 }

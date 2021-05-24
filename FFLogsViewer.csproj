@@ -82,6 +82,7 @@
     <Compile Include="ContextMenu.cs" />
     <Compile Include="FfLogsClient.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="LogsData.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="PluginUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

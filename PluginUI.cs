@@ -13,7 +13,6 @@ namespace FFLogsViewer
         private const float ReducedWindowHeight = 88;
         private const float WindowWidth = 407;
         private readonly string[] _characterInput = new string[3];
-        private readonly Configuration _configuration;
         private readonly Vector4 _defaultColor = new(1.0f, 1.0f, 1.0f, 1.0f);
         private readonly Dictionary<string, Vector4> _jobColors = new();
         private readonly Dictionary<string, Vector4> _logColors = new();
@@ -33,10 +32,9 @@ namespace FFLogsViewer
 
         private bool _visible;
 
-        public PluginUi(Plugin plugin, Configuration configuration)
+        public PluginUi(Plugin plugin)
         {
             this._plugin = plugin;
-            this._configuration = configuration;
 
             this._jobColors.Add("Astrologian", new Vector4(255.0f / 255.0f, 231.0f / 255.0f, 74.0f / 255.0f, 1.0f));
             this._jobColors.Add("Bard", new Vector4(145.0f / 255.0f, 150.0f / 255.0f, 186.0f / 255.0f, 1.0f));
@@ -98,19 +96,19 @@ namespace FFLogsViewer
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))
             {
-                var buttonInContextMenu = this._configuration.ButtonInContextMenu;
+                var buttonInContextMenu = this._plugin.Configuration.ButtonInContextMenu;
                 if (ImGui.Checkbox("Add button in context menus", ref buttonInContextMenu))
                 {
                     this._plugin.ToggleContextMenuButton(buttonInContextMenu);
-                    this._configuration.ButtonInContextMenu = buttonInContextMenu;
-                    this._configuration.Save();
+                    this._plugin.Configuration.ButtonInContextMenu = buttonInContextMenu;
+                    this._plugin.Configuration.Save();
                 }
 
-                var buttonName = this._configuration.ButtonName;
+                var buttonName = this._plugin.Configuration.ButtonName;
                 if (ImGui.InputText("Button name", ref buttonName, 50))
                 {
-                    this._configuration.ButtonName = buttonName;
-                    this._configuration.Save();
+                    this._plugin.Configuration.ButtonName = buttonName;
+                    this._plugin.Configuration.Save();
                 }
             }
 

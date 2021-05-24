@@ -39,7 +39,7 @@ namespace FFLogsViewer
         };
 
         public Configuration Configuration;
-        private FfLogsClient.Token _token;
+        private FfLogsClient _ffLogsClient;
         private PluginUi _ui;
 
         public DalamudPluginInterface Pi;
@@ -55,7 +55,9 @@ namespace FFLogsViewer
             this.Configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.Pi);
 
-            this._ui = new PluginUi(this, this.Configuration);
+            this._ffLogsClient = new FfLogsClient(this);
+
+            this._ui = new PluginUi(this);
 
             if (this.Configuration.ButtonInContextMenu)
             {
@@ -71,13 +73,6 @@ namespace FFLogsViewer
 
             this.Pi.UiBuilder.OnBuildUi += DrawUi;
             this.Pi.UiBuilder.OnOpenConfigUi += (_, _) => ToggleSettingsUi();
-
-            Task.Run(async () =>
-            {
-                this._token = await FfLogsClient
-                    .GetToken(this.Configuration.ClientId, this.Configuration.ClientSecret)
-                    .ConfigureAwait(false);
-            });
         }
 
         public void Dispose()
@@ -226,7 +221,7 @@ namespace FFLogsViewer
             characterData.IsDataLoading = true;
             Task.Run(async () =>
             {
-                var logData = await FfLogsClient.GetLogsData(characterData, this._token).ConfigureAwait(false);
+                var logData = await this._ffLogsClient.GetLogs(characterData).ConfigureAwait(false);
                 if (logData?.data?.characterData?.character == null)
                 {
                     if (logData?.errors != null)
@@ -340,6 +335,52 @@ namespace FFLogsViewer
                 characterData.Kills.Add(bossId, kills);
                 characterData.Jobs.Add(bossId, job);
             }
+        }
+
+        private void FetchLogsData()
+        {
+            Task.Run(async () =>
+            {
+                var logData = await this._ffLogsClient.GetData().ConfigureAwait(false);
+                try
+                {
+                    foreach (var expansion in logData.Data.WorldData.Expansions)
+                    {
+                        PluginLog.Information(expansion.Name);
+                        PluginLog.Information(expansion.Id.ToString());
+                        foreach (var zone in expansion.Zones)
+                        {
+                            PluginLog.Information(zone.Name);
+                            PluginLog.Information(zone.Id.ToString());
+                            foreach (var difficulty in zone.Difficulties)
+                            {
+                                PluginLog.Information(difficulty.Name);
+                                PluginLog.Information(difficulty.Id.ToString());
+                            }
+
+                            foreach (var encounter in zone.Encounters)
+                            {
+                                PluginLog.Information(encounter.Name);
+                                PluginLog.Information(encounter.Id.ToString());
+                            }
+
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    PluginLog.LogError(e, "Could not load data from FF Logs servers.");
+                }
+
+            }).ContinueWith(t =>
+            {
+                if (!t.IsFaulted) return;
+                if (t.Exception == null) return;
+                foreach (var e in t.Exception.Flatten().InnerExceptions)
+                {
+                    PluginLog.LogError(e, "Networking error.");
+                }
+            });
         }
     }
 }

@@ -45,10 +45,19 @@ namespace FFLogsViewer
         public List<Difficulty> Difficulties { get; set; }
 
         [JsonProperty("encounters")]
-        public List<Difficulty> Encounters { get; set; }
+        public List<Encounter> Encounters { get; set; }
     }
 
     public partial class Difficulty
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("id")]
+        public int Id { get; set; }
+    }
+
+    public partial class Encounter
     {
         [JsonProperty("name")]
         public string Name { get; set; }
