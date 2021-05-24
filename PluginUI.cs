@@ -91,7 +91,7 @@ namespace FFLogsViewer
         {
             if (!this.SettingsVisible) return;
 
-            ImGui.SetNextWindowSize(new Vector2(300, 90), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(255, 62), ImGuiCond.Always);
             if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))

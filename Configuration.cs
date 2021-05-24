@@ -7,12 +7,12 @@ namespace FFLogsViewer
     [Serializable]
     internal class Configuration : IPluginConfiguration
     {
-        [NonSerialized] internal DalamudPluginInterface PluginInterface;
-        internal string ClientId { get; set; } = "91907adb-5234-4e8d-bb78-7010587b4e87";
+        [NonSerialized] public DalamudPluginInterface PluginInterface;
+        public string ClientId { get; set; } = "91907adb-5234-4e8d-bb78-7010587b4e87";
 
-        internal string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
+        public string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
 
-        internal bool ContextMenu { get; set; } = true;
+        public bool ContextMenu { get; set; } = true;
         //internal string ButtonName { get; set; } = "Search FF Logs"; // TODO ContextMenu
 
         public int Version { get; set; } = 0;
