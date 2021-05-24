@@ -5,24 +5,24 @@ using Dalamud.Plugin;
 namespace FFLogsViewer
 {
     [Serializable]
-    public class Configuration : IPluginConfiguration
+    internal class Configuration : IPluginConfiguration
     {
-        [NonSerialized] public DalamudPluginInterface PluginInterface;
-        public string ClientId { get; set; } = "91907adb-5234-4e8d-bb78-7010587b4e87";
+        [NonSerialized] internal DalamudPluginInterface PluginInterface;
+        internal string ClientId { get; set; } = "91907adb-5234-4e8d-bb78-7010587b4e87";
 
-        public string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
+        internal string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
 
-        public bool ButtonInContextMenu { get; set; } = true;
-        public string ButtonName { get; set; } = "Search FF Logs";
+        internal bool ContextMenu { get; set; } = true;
+        //internal string ButtonName { get; set; } = "Search FF Logs"; // TODO ContextMenu
 
         public int Version { get; set; } = 0;
 
-        public void Initialize(DalamudPluginInterface pluginInterface)
+        internal void Initialize(DalamudPluginInterface pluginInterface)
         {
             this.PluginInterface = pluginInterface;
         }
 
-        public void Save()
+        internal void Save()
         {
             this.PluginInterface.SavePluginConfig(this);
         }

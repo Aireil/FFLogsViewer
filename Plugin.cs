@@ -38,12 +38,12 @@ namespace FFLogsViewer
             "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera",
         };
 
-        public Configuration Configuration;
+        internal Configuration Configuration;
         private FfLogsClient _ffLogsClient;
-        private PluginUi _ui;
+        internal PluginUi _ui;
 
-        public DalamudPluginInterface Pi;
-        public XivCommonBase Common { get; private set; }
+        internal DalamudPluginInterface Pi;
+        internal XivCommonBase Common { get; private set; }
         private ContextMenu ContextMenu { get; set; }
 
         public string Name => "FF Logs Viewer";
@@ -59,7 +59,7 @@ namespace FFLogsViewer
 
             this._ui = new PluginUi(this);
 
-            if (this.Configuration.ButtonInContextMenu)
+            if (this.Configuration.ContextMenu)
             {
                 this.Common = new XivCommonBase(this.Pi, Hooks.ContextMenu);
                 this.ContextMenu = new ContextMenu(this);
@@ -104,7 +104,7 @@ namespace FFLogsViewer
             this._ui.SettingsVisible = !this._ui.SettingsVisible;
         }
 
-        public void ToggleContextMenuButton(bool enable)
+        internal void ToggleContextMenuButton(bool enable)
         {
             switch (enable)
             {
@@ -112,7 +112,7 @@ namespace FFLogsViewer
                 case false when this.ContextMenu == null:
                     return;
                 case true:
-                    this.Common = new XivCommonBase(this.Pi, Hooks.PartyFinder | Hooks.ContextMenu);
+                    this.Common = new XivCommonBase(this.Pi, Hooks.ContextMenu);
                     this.ContextMenu = new ContextMenu(this);
                     break;
                 default:
@@ -122,12 +122,12 @@ namespace FFLogsViewer
             }
         }
 
-        public void SearchPlayer(string args)
+        internal void SearchPlayer(string args)
         {
             try
             {
                 this._ui.Visible = true;
-                this._ui.SetCharacter(ParseTextForChar(args));
+                this._ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
             }
             catch
             {
@@ -145,7 +145,7 @@ namespace FFLogsViewer
             };
         }
 
-        public CharacterData GetTargetCharacter()
+        internal CharacterData GetTargetCharacter()
         {
             var target = this.Pi.ClientState.Targets.CurrentTarget;
             if (target is PlayerCharacter targetCharacter && target.ObjectKind != ObjectKind.Companion)
@@ -163,7 +163,7 @@ namespace FFLogsViewer
             return world != null;
         }
 
-        public CharacterData GetClipboardCharacter()
+        internal CharacterData GetClipboardCharacter()
         {
             if (!Clipboard.ContainsText(TextDataFormat.Text)) throw new ArgumentException("Invalid clipboard.");
 
@@ -212,11 +212,21 @@ namespace FFLogsViewer
             return character;
         }
 
-        public void FetchLogs(CharacterData characterData)
+        internal void FetchLogs(CharacterData characterData)
         {
             if (characterData.IsEveryLogsReady) characterData.ResetLogs();
 
-            characterData.RegionName = GetRegionName(characterData.WorldName);
+            try
+            {
+                characterData.RegionName = GetRegionName(characterData.WorldName);
+            }
+            catch (Exception e)
+            {
+                this._ui.SetErrorMessage("World not supported or invalid.");
+                PluginLog.LogError(e, "World not supported or invalid.");
+                return;
+            }
+
 
             characterData.IsDataLoading = true;
             Task.Run(async () =>

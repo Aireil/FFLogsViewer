@@ -32,7 +32,7 @@ namespace FFLogsViewer
 
         private bool _visible;
 
-        public PluginUi(Plugin plugin)
+        internal PluginUi(Plugin plugin)
         {
             this._plugin = plugin;
 
@@ -65,13 +65,13 @@ namespace FFLogsViewer
             this._logColors.Add("Default", this._defaultColor);
         }
 
-        public bool Visible
+        internal bool Visible
         {
             get => this._visible;
             set => this._visible = value;
         }
 
-        public bool SettingsVisible
+        internal bool SettingsVisible
         {
             get => this._settingsVisible;
             set => this._settingsVisible = value;
@@ -81,7 +81,7 @@ namespace FFLogsViewer
         {
         }
 
-        public void Draw()
+        internal void Draw()
         {
             DrawSettingsWindow();
             DrawMainWindow();
@@ -96,20 +96,21 @@ namespace FFLogsViewer
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))
             {
-                var buttonInContextMenu = this._plugin.Configuration.ButtonInContextMenu;
-                if (ImGui.Checkbox("Add button in context menus", ref buttonInContextMenu))
+                var contextMenu = this._plugin.Configuration.ContextMenu;
+                if (ImGui.Checkbox("Search when opening context menus", ref contextMenu))
                 {
-                    this._plugin.ToggleContextMenuButton(buttonInContextMenu);
-                    this._plugin.Configuration.ButtonInContextMenu = buttonInContextMenu;
+                    this._plugin.ToggleContextMenuButton(contextMenu);
+                    this._plugin.Configuration.ContextMenu = contextMenu;
                     this._plugin.Configuration.Save();
                 }
 
-                var buttonName = this._plugin.Configuration.ButtonName;
-                if (ImGui.InputText("Button name", ref buttonName, 50))
-                {
-                    this._plugin.Configuration.ButtonName = buttonName;
-                    this._plugin.Configuration.Save();
-                }
+                // TODO ContextMenu
+                // var buttonName = this._plugin.Configuration.ButtonName;
+                // if (ImGui.InputText("Button name", ref buttonName, 50))
+                // {
+                //     this._plugin.Configuration.ButtonName = buttonName;
+                //     this._plugin.Configuration.Save();
+                // }
             }
 
             ImGui.End();
@@ -521,23 +522,15 @@ namespace FFLogsViewer
             };
         }
 
-        public void SetCharacter(CharacterData character)
+        internal void SetCharacterAndFetchLogs(CharacterData character)
         {
             this._selectedCharacterData = character;
             this._errorMessage = "";
             this._hasLoadingFailed = false;
-            try
-            {
-                this._plugin.FetchLogs(this._selectedCharacterData);
-            }
-            catch (Exception e)
-            {
-                this._errorMessage = "World not supported or invalid.";
-                PluginLog.LogError(e, "World not supported or invalid.");
-            }
+            this._plugin.FetchLogs(this._selectedCharacterData);
         }
 
-        public void SetErrorMessage(string errorMessage)
+        internal void SetErrorMessage(string errorMessage)
         {
             this._errorMessage = errorMessage;
         }

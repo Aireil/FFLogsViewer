@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FFLogsViewer</RootNamespace>
-    <AssemblyName>FFLogsViewer</AssemblyName>
+    <AssemblyName>FFLogsViewerNoDeps</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -87,6 +87,12 @@
     <Compile Include="PluginUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ILMerge" Version="3.0.41" />
+  </ItemGroup>
+  <Target Name="ILMerge" AfterTargets="PostBuildEvent">
+    <Exec Command="$(ILMergeConsolePath) /target:library /out:$(TargetDir)/../FFLogsViewer.dll /log /lib:$(APPDATA)\XIVLauncher\addon\Hooks\dev $(TargetDir)FFLogsViewerNoDeps.dll $(TargetDir)XivCommon.dll&#xD;&#xA;powershell -Command &quot;Remove-Item '$(TargetDir)\*.*';Move-Item '$(TargetDir)\..\FFLogsViewer.*' -Destination '$(TargetDir)';&quot;" />
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

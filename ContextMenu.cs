@@ -11,7 +11,7 @@ using XivCommon.Functions.ContextMenu;
 
 namespace FFLogsViewer
 {
-    public class ContextMenu : IDisposable
+    internal class ContextMenu : IDisposable
     {
         internal ContextMenu(Plugin plugin)
         {
@@ -30,12 +30,25 @@ namespace FFLogsViewer
         [HandleProcessCorruptedStateExceptions]
         private void OnOpenContextMenu(ContextMenuOpenArgs args)
         {
+            if (!this.Plugin._ui.Visible) // TODO ContextMenu
+                return;
+
             try
             {
                 if (!IsMenuValid(args))
                     return;
 
-                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search));
+                var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
+                    .FirstOrDefault(x => x.RowId == args.ActorWorld);
+
+                if (world == null)
+                    return;
+
+                var playerName = $"{args.Text}@{world.Name}";
+
+                this.Plugin.SearchPlayer(playerName);
+
+                //args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search)); // TODO ContextMenu
             }catch (Exception e)
             {
                 PluginLog.Error(e, "Exception hello from open");

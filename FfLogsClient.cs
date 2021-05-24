@@ -9,22 +9,22 @@ using Newtonsoft.Json;
 
 namespace FFLogsViewer
 {
-    public class FfLogsClient
+    internal class FfLogsClient
     {
         private readonly Plugin _plugin;
         private Token _token;
         private readonly HttpClient _httpClient;
 
-        public class Token
+        internal class Token
         {
-            [JsonProperty("access_token")] public string AccessToken { get; set; }
+            [JsonProperty("access_token")] internal string AccessToken { get; set; }
 
-            [JsonProperty("token_type")] public string TokenType { get; set; }
+            [JsonProperty("token_type")] internal string TokenType { get; set; }
 
-            [JsonProperty("expires_in")] public int ExpiresIn { get; set; }
+            [JsonProperty("expires_in")] internal int ExpiresIn { get; set; }
         }
 
-        public FfLogsClient(Plugin plugin)
+        internal FfLogsClient(Plugin plugin)
         {
             this._plugin = plugin;
             this._httpClient = new HttpClient();
@@ -60,7 +60,7 @@ namespace FFLogsViewer
             return tok;
         }
 
-        public async Task<dynamic> GetLogs(CharacterData characterData)
+        internal async Task<dynamic> GetLogs(CharacterData characterData)
         {
 
             const string baseAddress = @"https://www.fflogs.com/api/v2/client";
@@ -88,7 +88,7 @@ namespace FFLogsViewer
             }
         }
 
-        public async Task<LogsData> GetData()
+        internal async Task<LogsData> GetData()
         {
             const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 

@@ -2,9 +2,9 @@
 
 namespace FFLogsViewer
 {
-    public class CharacterData
+    internal class CharacterData
     {
-        public enum BossesId
+        internal enum BossesId
         {
             Ramuh = 69,
             IfritAndGaruda = 70,
@@ -30,7 +30,7 @@ namespace FFLogsViewer
             UwU = 1048,
         }
 
-        public enum DataType
+        internal enum DataType
         {
             Best,
             Median,
@@ -38,36 +38,36 @@ namespace FFLogsViewer
             Job,
         }
 
-        public Dictionary<int, int> Bests = new();
-        public Dictionary<int, string> Jobs = new();
-        public Dictionary<int, int> Kills = new();
-        public Dictionary<int, int> Medians = new();
+        internal Dictionary<int, int> Bests = new();
+        internal Dictionary<int, string> Jobs = new();
+        internal Dictionary<int, int> Kills = new();
+        internal Dictionary<int, int> Medians = new();
 
-        public CharacterData()
+        internal CharacterData()
         {
         }
 
-        public CharacterData(string firstName, string lastName, string worldName)
+        internal CharacterData(string firstName, string lastName, string worldName)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
             this.WorldName = worldName;
         }
 
-        public string FirstName { get; set; } = "";
-        public string LastName { get; set; } = "";
-        public string WorldName { get; set; } = "";
+        internal string FirstName { get; set; } = "";
+        internal string LastName { get; set; } = "";
+        internal string WorldName { get; set; } = "";
 
-        public string LoadedFirstName { get; set; } = "";
-        public string LoadedLastName { get; set; } = "";
-        public string LoadedWorldName { get; set; } = "";
+        internal string LoadedFirstName { get; set; } = "";
+        internal string LoadedLastName { get; set; } = "";
+        internal string LoadedWorldName { get; set; } = "";
 
-        public string RegionName { get; set; } = "";
+        internal string RegionName { get; set; } = "";
 
-        public bool IsEveryLogsReady { get; set; }
-        public bool IsDataLoading { get; set; }
+        internal bool IsEveryLogsReady { get; set; }
+        internal bool IsDataLoading { get; set; }
 
-        public bool IsCharacterReady()
+        internal bool IsCharacterReady()
         {
             return this.FirstName != ""
                    && this.LastName != ""
