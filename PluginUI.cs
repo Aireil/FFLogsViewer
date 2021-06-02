@@ -91,7 +91,7 @@ namespace FFLogsViewer
         {
             if (!this.SettingsVisible) return;
 
-            ImGui.SetNextWindowSize(new Vector2(255, 62), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(400, 120), ImGuiCond.Always);
             if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse))
@@ -103,14 +103,6 @@ namespace FFLogsViewer
                     this._plugin.Configuration.ContextMenu = contextMenu;
                     this._plugin.Configuration.Save();
                 }
-
-                // TODO ContextMenu
-                // var buttonName = this._plugin.Configuration.ButtonName;
-                // if (ImGui.InputText("Button name", ref buttonName, 50))
-                // {
-                //     this._plugin.Configuration.ButtonName = buttonName;
-                //     this._plugin.Configuration.Save();
-                // }
             }
 
             ImGui.End();

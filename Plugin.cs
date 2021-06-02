@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Forms;
 using Dalamud.Game.ClientState.Actors;
 using Dalamud.Game.ClientState.Actors.Types;
 using Dalamud.Game.Command;
@@ -97,6 +97,11 @@ namespace FFLogsViewer
         private void DrawUi()
         {
             this._ui.Draw();
+        }
+
+        public bool IsConfigSetup()
+        {
+            return this.Configuration.ClientId != null && this.Configuration.ClientSecret != null;
         }
 
         private void ToggleSettingsUi()

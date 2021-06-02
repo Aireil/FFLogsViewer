@@ -13,7 +13,8 @@ namespace FFLogsViewer
         public string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
 
         public bool ContextMenu { get; set; } = true;
-        //internal string ButtonName { get; set; } = "Search FF Logs"; // TODO ContextMenu
+
+        public string ButtonName { get; set; } = "Search FF Logs";
 
         public int Version { get; set; } = 0;
 
