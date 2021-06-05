@@ -15,6 +15,7 @@ namespace FFLogsViewer
     public class Plugin : IDalamudPlugin
     {
         private const string CommandName = "/fflogs";
+        private const string SettingsCommandName = "/fflogsconfig";
 
         private readonly string[] _eu =
         {
@@ -39,7 +40,7 @@ namespace FFLogsViewer
         };
 
         internal Configuration Configuration;
-        private FfLogsClient _ffLogsClient;
+        internal FfLogsClient FfLogsClient;
         internal PluginUi _ui;
 
         internal DalamudPluginInterface Pi;
@@ -55,7 +56,7 @@ namespace FFLogsViewer
             this.Configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.Pi);
 
-            this._ffLogsClient = new FfLogsClient(this);
+            this.FfLogsClient = new FfLogsClient(this);
 
             this._ui = new PluginUi(this);
 
@@ -67,7 +68,13 @@ namespace FFLogsViewer
 
             this.Pi.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open the FF Logs viewer window or parse the arguments for a character.",
+                HelpMessage = "Open the FF Logs Viewer window or parse the arguments for a character.",
+                ShowInHelp = true,
+            });
+
+            this.Pi.CommandManager.AddHandler(SettingsCommandName, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "Open the FF Logs Viewer config window.",
                 ShowInHelp = true,
             });
 
@@ -81,17 +88,27 @@ namespace FFLogsViewer
             this.ContextMenu?.Dispose();
             this._ui.Dispose();
             this.Pi.CommandManager.RemoveHandler(CommandName);
+            this.Pi.CommandManager.RemoveHandler(SettingsCommandName);
             this.Pi.Dispose();
         }
 
         private void OnCommand(string command, string args)
         {
-            if (string.IsNullOrEmpty(args))
-                this._ui.Visible = !this._ui.Visible;
-            else if (args.Equals("config", StringComparison.OrdinalIgnoreCase))
-                this._ui.SettingsVisible = !this._ui.SettingsVisible;
-            else
-                SearchPlayer(args);
+            switch (command)
+            {
+                case SettingsCommandName:
+                    this._ui.SettingsVisible = !this._ui.SettingsVisible;
+                    break;
+                case CommandName when string.IsNullOrEmpty(args):
+                    this._ui.Visible = !this._ui.Visible;
+                    break;
+                case CommandName when args.Equals("config", StringComparison.OrdinalIgnoreCase):
+                    this._ui.SettingsVisible = !this._ui.SettingsVisible;
+                    break;
+                case CommandName:
+                    SearchPlayer(args);
+                    break;
+            }
         }
 
         private void DrawUi()
@@ -236,7 +253,7 @@ namespace FFLogsViewer
             characterData.IsDataLoading = true;
             Task.Run(async () =>
             {
-                var logData = await this._ffLogsClient.GetLogs(characterData).ConfigureAwait(false);
+                var logData = await this.FfLogsClient.GetLogs(characterData).ConfigureAwait(false);
                 if (logData?.data?.characterData?.character == null)
                 {
                     if (logData?.errors != null)
@@ -244,6 +261,14 @@ namespace FFLogsViewer
                         characterData.IsDataLoading = false;
                         this._ui.SetErrorMessage("Malformed GraphQL query.");
                         PluginLog.Log($"Malformed GraphQL query: {logData}");
+                        return;
+                    }
+
+                    if (logData?.error != null && logData.error == "Unauthenticated.")
+                    {
+                        characterData.IsDataLoading = false;
+                        this._ui.SetErrorMessage("API Client not valid, check config.");
+                        PluginLog.Log($"Unauthenticated: {logData}");
                         return;
                     }
 
@@ -356,7 +381,7 @@ namespace FFLogsViewer
         {
             Task.Run(async () =>
             {
-                var logData = await this._ffLogsClient.GetData().ConfigureAwait(false);
+                var logData = await this.FfLogsClient.GetData().ConfigureAwait(false);
                 try
                 {
                     foreach (var expansion in logData.Data.WorldData.Expansions)

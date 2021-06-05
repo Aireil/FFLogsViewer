@@ -14,6 +14,7 @@ namespace FFLogsViewer
         private readonly Plugin _plugin;
         private Token _token;
         private readonly HttpClient _httpClient;
+        internal bool IsTokenValid = false;
 
         internal class Token
         {
@@ -22,6 +23,8 @@ namespace FFLogsViewer
             [JsonProperty("token_type")] internal string TokenType { get; set; }
 
             [JsonProperty("expires_in")] internal int ExpiresIn { get; set; }
+
+            [JsonProperty("error")] internal string Error { get; set; }
         }
 
         internal FfLogsClient(Plugin plugin)
@@ -29,18 +32,33 @@ namespace FFLogsViewer
             this._plugin = plugin;
             this._httpClient = new HttpClient();
 
+            SetToken();
+        }
+
+        internal void SetToken()
+        {
+            if (this._plugin.Configuration.ClientId == null ||
+                this._plugin.Configuration.ClientSecret == null) return;
+
+            this.IsTokenValid = false;
+            this._token = null;
+
             Task.Run(async () =>
             {
-                this._token = await FfLogsClient
-                    .GetToken(this._plugin.Configuration.ClientId, this._plugin.Configuration.ClientSecret)
+                this._token = await GetToken()
                     .ConfigureAwait(false);
 
-                this._httpClient.DefaultRequestHeaders.Authorization
-                    = new AuthenticationHeaderValue("Bearer", this._token.AccessToken);
+                if (this._token is {Error: null})
+                {
+                    this._httpClient.DefaultRequestHeaders.Authorization
+                        = new AuthenticationHeaderValue("Bearer", this._token.AccessToken);
+
+                    this.IsTokenValid = true;
+                }
             });
         }
 
-        private static async Task<Token> GetToken(string clientId, string clientSecret)
+        private async Task<Token> GetToken()
         {
             var client = new HttpClient();
             const string baseAddress = @"https://www.fflogs.com/oauth/token";
@@ -50,8 +68,8 @@ namespace FFLogsViewer
             var form = new Dictionary<string, string>
             {
                 {"grant_type", grantType},
-                {"client_id", clientId},
-                {"client_secret", clientSecret},
+                {"client_id", this._plugin.Configuration.ClientId},
+                {"client_secret", this._plugin.Configuration.ClientSecret},
             };
 
             var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form));
@@ -62,6 +80,7 @@ namespace FFLogsViewer
 
         internal async Task<dynamic> GetLogs(CharacterData characterData)
         {
+            if (this._token == null) return null;
 
             const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
@@ -90,6 +109,8 @@ namespace FFLogsViewer
 
         internal async Task<LogsData> GetData()
         {
+            if (this._token == null) return null;
+
             const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
             const string query = @"{""query"":""{worldData {expansions {name id zones {name id difficulties {name id} encounters {name id}}}}}""}";

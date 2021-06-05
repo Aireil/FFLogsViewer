@@ -8,11 +8,13 @@ namespace FFLogsViewer
     internal class Configuration : IPluginConfiguration
     {
         [NonSerialized] public DalamudPluginInterface PluginInterface;
-        public string ClientId { get; set; } = "91907adb-5234-4e8d-bb78-7010587b4e87";
+        public string ClientId { get; set; }
 
-        public string ClientSecret { get; set; } = "TllDOR1ra0bXndHVWBJaShElu9DIgD3OcLkhtEjC";
+        public string ClientSecret { get; set; }
 
         public bool ContextMenu { get; set; } = true;
+
+        public bool ContextMenuTest { get; set; } = false;
 
         public string ButtonName { get; set; } = "Search FF Logs";
 

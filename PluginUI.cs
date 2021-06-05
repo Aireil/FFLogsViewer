@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Windows.Forms;
 using Dalamud.Plugin;
 using ImGuiNET;
 
@@ -25,6 +26,7 @@ namespace FFLogsViewer
         private bool _hasLoadingFailed;
 
         private bool _isLinkClicked;
+        private bool _isConfigClicked;
         private float _jobsColumnWidth;
         private float _logsColumnWidth;
         private CharacterData _selectedCharacterData = new();
@@ -91,10 +93,10 @@ namespace FFLogsViewer
         {
             if (!this.SettingsVisible) return;
 
-            ImGui.SetNextWindowSize(new Vector2(400, 120), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(415, 315 + 30), ImGuiCond.Always);
             if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoScrollWithMouse))
+                ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoResize))
             {
                 var contextMenu = this._plugin.Configuration.ContextMenu;
                 if (ImGui.Checkbox("Search when opening context menus", ref contextMenu))
@@ -103,6 +105,75 @@ namespace FFLogsViewer
                     this._plugin.Configuration.ContextMenu = contextMenu;
                     this._plugin.Configuration.Save();
                 }
+
+                if (ImGui.IsItemHovered()) ImGui.SetTooltip("When the FF Logs Viewer window is open, opening a context menu" +
+                                                            "\nwill automatically search for the selected player." +
+                                                            "\nShould work everywhere where there is a name.");
+
+                var contextMenuTest = this._plugin.Configuration.ContextMenuTest;
+                if (ImGui.Checkbox(@"Display the button in the context menu /!\ MAY CRASH", ref contextMenuTest))
+                {
+                    this._plugin.Configuration.ContextMenuTest = contextMenuTest;
+                    this._plugin.Configuration.Save();
+                }
+
+                var configurationClientId = this._plugin.Configuration.ClientId ?? string.Empty;
+                if (ImGui.InputText("Client ID##ClientId", ref configurationClientId, 50))
+                {
+                    this._plugin.Configuration.ClientId = configurationClientId;
+                    this._plugin.FfLogsClient.SetToken();
+                    this._plugin.Configuration.Save();
+                }
+
+                var configurationClientSecret = this._plugin.Configuration.ClientSecret ?? string.Empty;
+                if (ImGui.InputText("Client secret##ClientSecret", ref configurationClientSecret, 50))
+                {
+                    this._plugin.Configuration.ClientSecret = configurationClientSecret;
+                    this._plugin.FfLogsClient.SetToken();
+                    this._plugin.Configuration.Save();
+                }
+
+                if (this._plugin.FfLogsClient.IsTokenValid)
+                    ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "This client is valid.");
+                else
+                    ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), "This client is NOT valid.");
+
+                ImGui.Text("How to get a client ID and a client secret:");
+
+                ImGui.Bullet();
+                ImGui.Text("Open https://www.fflogs.com/api/clients/ or");
+                ImGui.SameLine();
+                if (ImGui.Button("Click here##APIClientLink"))
+                {
+                    Process.Start("https://www.fflogs.com/api/clients/");
+                }
+
+                ImGui.Bullet();
+                ImGui.Text("Create a new client");
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 7);
+
+                ImGui.Bullet();
+                ImGui.Text("Choose any name, for example: \"Plugin\"");
+                ImGui.SameLine();
+                if (ImGui.Button("Copy##APIClientCopyName"))
+                {
+                    Clipboard.SetText("Plugin");
+                }
+
+                ImGui.Bullet();
+                ImGui.Text("Enter any URL, for example: \"https://www.example.com\"");
+                ImGui.SameLine();
+                if (ImGui.Button("Copy##APIClientCopyURL"))
+                {
+                    Clipboard.SetText("https://www.example.com");
+                }
+
+                ImGui.Bullet();
+                ImGui.Text("Do NOT check the Public Client option");
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 7);
+
+                ImGui.Bullet();
+                ImGui.Text("Paste both client ID and secret above");
             }
 
             ImGui.End();
@@ -215,45 +286,67 @@ namespace FFLogsViewer
                 }
 
                 ImGui.SameLine();
-                if (this._errorMessage == "")
+                if (!this._plugin.FfLogsClient.IsTokenValid)
                 {
-                    if (this._selectedCharacterData.IsEveryLogsReady)
-                    {
-                        var nameVector =
-                            ImGui.CalcTextSize(
-                                $"Viewing logs of {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}.");
-                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - nameVector.X / 2);
-                        nameVector.X -= 7; // A bit too large on right side
-                        nameVector.Y += 1;
-                        ImGui.Selectable(
-                            $"Viewing {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}'s logs.",
-                            ref this._isLinkClicked, ImGuiSelectableFlags.None, nameVector);
+                    var message = !this._plugin.IsConfigSetup() ? "Config not setup, click to open settings." : "API client not valid, check config.";
+                    var messageSize = ImGui.CalcTextSize(message);
+                    ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - messageSize.X / 2);
+                    messageSize.X -= 7; // A bit too large on right side
+                    messageSize.Y += 1;
+                    ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+                    ImGui.Selectable(
+                        message,
+                        ref this._isConfigClicked, ImGuiSelectableFlags.None, messageSize);
+                    ImGui.PopStyleColor();
 
-                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to open on FF Logs.");
-
-                        if (this._isLinkClicked)
-                        {
-                            Process.Start(
-                                $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}");
-                            this._isLinkClicked = false;
-                        }
-                    }
-                    else if (this._selectedCharacterData.IsDataLoading)
+                    if (this._isConfigClicked)
                     {
-                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Loading...").X / 2);
-                        ImGui.TextUnformatted("Loading...");
-                    }
-                    else
-                    {
-                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Waiting...").X / 2);
-                        ImGui.TextUnformatted("Waiting...");
+                        this.SettingsVisible = true;
+                        this._isConfigClicked = false;
                     }
                 }
                 else
                 {
-                    ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(this._errorMessage).X / 2);
-                    ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), this._errorMessage);
+                    if (this._errorMessage == "")
+                    {
+                        if (this._selectedCharacterData.IsEveryLogsReady)
+                        {
+                            var message = $"Viewing {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}'s logs.";
+                            var messageSize = ImGui.CalcTextSize(message);
+                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - messageSize.X / 2);
+                            messageSize.X -= 7; // A bit too large on right side
+                            messageSize.Y += 1;
+                            ImGui.Selectable(
+                                message,
+                                ref this._isLinkClicked, ImGuiSelectableFlags.None, messageSize);
+
+                            if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to open on FF Logs.");
+
+                            if (this._isLinkClicked)
+                            {
+                                Process.Start(
+                                    $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}");
+                                this._isLinkClicked = false;
+                            }
+                        }
+                        else if (this._selectedCharacterData.IsDataLoading)
+                        {
+                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Loading...").X / 2);
+                            ImGui.TextUnformatted("Loading...");
+                        }
+                        else
+                        {
+                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Waiting...").X / 2);
+                            ImGui.TextUnformatted("Waiting...");
+                        }
+                    }
+                    else
+                    {
+                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(this._errorMessage).X / 2);
+                        ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), this._errorMessage);
+                    }
                 }
+
 
                 ImGui.SameLine();
 

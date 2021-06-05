@@ -23,23 +23,28 @@ namespace FFLogsViewer
 
         private void OnOpenContextMenu(ContextMenuOpenArgs args)
         {
-            if (!this.Plugin._ui.Visible) // TODO ContextMenu
+            if (!IsMenuValid(args))
                 return;
 
-            if (!IsMenuValid(args))
+            if (this.Plugin.Configuration.ContextMenuTest)
+            {
+                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search)); // TODO ContextMenu
+            }
+            else
+            {
+                if (!this.Plugin._ui.Visible) // TODO ContextMenu
                     return;
 
-            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
-                .FirstOrDefault(x => x.RowId == args.ActorWorld);
+                var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
+                    .FirstOrDefault(x => x.RowId == args.ActorWorld);
 
-            if (world == null)
-                return;
+                if (world == null)
+                    return;
 
-            var playerName = $"{args.Text}@{world.Name}";
+                var playerName = $"{args.Text}@{world.Name}";
 
-            this.Plugin.SearchPlayer(playerName);
-
-            // args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search)); // TODO ContextMenu
+                this.Plugin.SearchPlayer(playerName);
+            }
         }
 
         private void Search(ContextMenuItemSelectedArgs args)
