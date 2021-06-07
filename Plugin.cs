@@ -140,6 +140,8 @@ namespace FFLogsViewer
                 default:
                     this.Common?.Dispose();
                     this.ContextMenu?.Dispose();
+                    this.ContextMenu = null;
+                    this.Common = null;
                     break;
             }
         }

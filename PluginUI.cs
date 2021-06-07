@@ -93,29 +93,47 @@ namespace FFLogsViewer
         {
             if (!this.SettingsVisible) return;
 
-            ImGui.SetNextWindowSize(new Vector2(415, 315 + 30), ImGuiCond.Always);
+            ImGui.SetNextWindowSize(new Vector2(0, 0), ImGuiCond.Always);
             if (ImGui.Begin("FF Logs Viewer Config", ref this._settingsVisible,
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoResize))
             {
                 var contextMenu = this._plugin.Configuration.ContextMenu;
-                if (ImGui.Checkbox("Search when opening context menus", ref contextMenu))
+                if (ImGui.Checkbox("Search in context menus##ContextMenu", ref contextMenu))
                 {
                     this._plugin.ToggleContextMenuButton(contextMenu);
                     this._plugin.Configuration.ContextMenu = contextMenu;
                     this._plugin.Configuration.Save();
                 }
 
-                if (ImGui.IsItemHovered()) ImGui.SetTooltip("When the FF Logs Viewer window is open, opening a context menu" +
-                                                            "\nwill automatically search for the selected player." +
-                                                            "\nShould work everywhere where there is a name.");
+                if (ImGui.IsItemHovered()) ImGui.SetTooltip("Add a button to search characters in most context menus.");
 
-                var contextMenuTest = this._plugin.Configuration.ContextMenuTest;
-                if (ImGui.Checkbox(@"Display the button in the context menu /!\ MAY CRASH", ref contextMenuTest))
+                if (this._plugin.Configuration.ContextMenu)
                 {
-                    this._plugin.Configuration.ContextMenuTest = contextMenuTest;
-                    this._plugin.Configuration.Save();
+                    if (!this._plugin.Configuration.ContextMenuStreamer)
+                    {
+                        var contextMenuName = this._plugin.Configuration.ContextMenuName ?? string.Empty;
+                        if (ImGui.InputText("Context menu name##ContextMenuName", ref contextMenuName, 50))
+                        {
+                            this._plugin.Configuration.ContextMenuName = contextMenuName;
+                            this._plugin.Configuration.Save();
+                        }
+
+                    }
+
+                    var contextMenuStreamer = this._plugin.Configuration.ContextMenuStreamer;
+                    if (ImGui.Checkbox(@"Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
+                    {
+                        this._plugin.Configuration.ContextMenuStreamer = contextMenuStreamer;
+                        this._plugin.Configuration.Save();
+                    }
+
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("When the FF Logs Viewer window is open, opening a context menu" +
+                                                                "\nwill automatically search for the selected player." +
+                                                                "\nThis mode does not add a button to the context menu.");
                 }
+
+                ImGui.Text("API client:");
 
                 var configurationClientId = this._plugin.Configuration.ClientId ?? string.Empty;
                 if (ImGui.InputText("Client ID##ClientId", ref configurationClientId, 50))

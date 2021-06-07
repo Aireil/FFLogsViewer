@@ -26,24 +26,16 @@ namespace FFLogsViewer
             if (!IsMenuValid(args))
                 return;
 
-            if (this.Plugin.Configuration.ContextMenuTest)
+            if (this.Plugin.Configuration.ContextMenuStreamer)
             {
-                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ButtonName, Search)); // TODO ContextMenu
+                if (!this.Plugin._ui.Visible)
+                    return;
+
+                this.SearchPlayerFromMenu(args);
             }
             else
             {
-                if (!this.Plugin._ui.Visible) // TODO ContextMenu
-                    return;
-
-                var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
-                    .FirstOrDefault(x => x.RowId == args.ActorWorld);
-
-                if (world == null)
-                    return;
-
-                var playerName = $"{args.Text}@{world.Name}";
-
-                this.Plugin.SearchPlayer(playerName);
+                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ContextMenuName, Search));
             }
         }
 
@@ -52,15 +44,7 @@ namespace FFLogsViewer
             if (!IsMenuValid(args))
                     return;
 
-            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
-                .FirstOrDefault(x => x.RowId == args.ActorWorld);
-
-            if (world == null)
-                return;
-
-            var playerName = $"{args.Text}@{world.Name}";
-
-            this.Plugin.SearchPlayer(playerName);
+            this.SearchPlayerFromMenu(args);
         }
 
         private static bool IsMenuValid(BaseContextMenuArgs args)
@@ -77,12 +61,25 @@ namespace FFLogsViewer
                 case "_PartyList":
                 case "LinkShell":
                 case "CrossWorldLinkshell":
-                case "ContentMemberList":
+                case "ContentMemberList": // Eureka/Bozja/...
                     return args.Text != null && args.ActorWorld != 0 && args.ActorWorld != 65535;
 
                 default:
                     return false;
             }
+        }
+
+        private void SearchPlayerFromMenu(BaseContextMenuArgs args)
+        {
+            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
+                .FirstOrDefault(x => x.RowId == args.ActorWorld);
+
+            if (world == null)
+                return;
+
+            var playerName = $"{args.Text}@{world.Name}";
+
+            this.Plugin.SearchPlayer(playerName);
         }
     }
 }
