@@ -35,7 +35,7 @@ namespace FFLogsViewer
             }
             else
             {
-                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ContextMenuName, Search));
+                args.Items.Add(new NormalContextMenuItem(this.Plugin.Configuration.ContextMenuButtonName, Search));
             }
         }
 

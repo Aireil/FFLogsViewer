@@ -99,7 +99,7 @@ namespace FFLogsViewer
                 ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoResize))
             {
                 var contextMenu = this._plugin.Configuration.ContextMenu;
-                if (ImGui.Checkbox("Search in context menus##ContextMenu", ref contextMenu))
+                if (ImGui.Checkbox("Search button in context menus##ContextMenu", ref contextMenu))
                 {
                     this._plugin.ToggleContextMenuButton(contextMenu);
                     this._plugin.Configuration.ContextMenu = contextMenu;
@@ -112,10 +112,10 @@ namespace FFLogsViewer
                 {
                     if (!this._plugin.Configuration.ContextMenuStreamer)
                     {
-                        var contextMenuName = this._plugin.Configuration.ContextMenuName ?? string.Empty;
-                        if (ImGui.InputText("Context menu name##ContextMenuName", ref contextMenuName, 50))
+                        var contextMenuButtonName = this._plugin.Configuration.ContextMenuButtonName ?? string.Empty;
+                        if (ImGui.InputText("Button name##ContextMenuButtonName", ref contextMenuButtonName, 50))
                         {
-                            this._plugin.Configuration.ContextMenuName = contextMenuName;
+                            this._plugin.Configuration.ContextMenuButtonName = contextMenuButtonName;
                             this._plugin.Configuration.Save();
                         }
 
