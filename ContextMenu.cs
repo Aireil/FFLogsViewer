@@ -79,7 +79,10 @@ namespace FFLogsViewer
 
             var playerName = $"{args.Text}@{world.Name}";
 
-            this.Plugin.SearchPlayer(playerName);
+            if (this.Plugin.Configuration.OpenInBrowser)
+                this.Plugin.OpenPlayerInBrowser(playerName);
+            else
+                this.Plugin.SearchPlayer(playerName);
         }
     }
 }

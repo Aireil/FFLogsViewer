@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -152,6 +153,21 @@ namespace FFLogsViewer
             {
                 this._ui.Visible = true;
                 this._ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
+            }
+            catch
+            {
+                this._ui.SetErrorMessage("Character could not be found.");
+            }
+        }
+
+        internal void OpenPlayerInBrowser(string args)
+        {
+            try
+            {
+                var character = ParseTextForChar(args);
+                Process.Start(
+                    $"https://www.fflogs.com/character/{GetRegionName(character.WorldName)}/{character.WorldName}/{character.FirstName} {character.LastName}");
+
             }
             catch
             {

@@ -16,6 +16,8 @@ namespace FFLogsViewer
 
         public bool ContextMenuStreamer { get; set; } = false;
 
+        public bool OpenInBrowser { get; set; } = false;
+
         public string ContextMenuButtonName { get; set; } = "Search FF Logs";
 
         public int Version { get; set; } = 0;

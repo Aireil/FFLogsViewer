@@ -110,6 +110,17 @@ namespace FFLogsViewer
 
                 if (this._plugin.Configuration.ContextMenu)
                 {
+                    var openInBrowser = this._plugin.Configuration.OpenInBrowser;
+                    if (ImGui.Checkbox(@"Open in browser##OpenInBrowser", ref openInBrowser))
+                    {
+                        this._plugin.Configuration.OpenInBrowser = openInBrowser;
+                        this._plugin.Configuration.Save();
+                    }
+
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("The button in context menus opens" +
+                                                                "\nFFLogs in your default browser instead" +
+                                                                "\nof opening the plugin window.");
+
                     if (!this._plugin.Configuration.ContextMenuStreamer)
                     {
                         var contextMenuButtonName = this._plugin.Configuration.ContextMenuButtonName ?? string.Empty;
