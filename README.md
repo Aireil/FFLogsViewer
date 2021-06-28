@@ -21,4 +21,4 @@ Setting in config to open the character page in your default browser instead of 
 ![image](https://i.imgur.com/8tENK5Y.png)
 
 ## Note
-Code is a fiesta, free free to bully me.
+Code is a fiesta, feel free to bully me.
