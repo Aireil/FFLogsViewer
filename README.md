@@ -21,4 +21,4 @@ Setting in config to open the character page in your default browser instead of 
 ![image](https://i.imgur.com/8tENK5Y.png)
 
 ## Note
-I want to eventually rewrite the entire code, not proud of it, no bully.
+Code is a fiesta, free free to bully me.
