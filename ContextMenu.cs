@@ -55,6 +55,7 @@ namespace FFLogsViewer
                 case "LookingForGroup":
                 case "PartyMemberList":
                 case "FriendList":
+                case "FreeCompany":
                 case "SocialList":
                 case "ContactList":
                 case "ChatLog":
