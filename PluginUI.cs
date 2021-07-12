@@ -174,7 +174,11 @@ namespace FFLogsViewer
                 ImGui.SameLine();
                 if (ImGui.Button("Click here##APIClientLink"))
                 {
-                    Process.Start("https://www.fflogs.com/api/clients/");
+                    Process.Start(new ProcessStartInfo()
+                    {
+                        FileName = "https://www.fflogs.com/api/clients/",
+                        UseShellExecute = true,
+                    });
                 }
 
                 ImGui.Bullet();
@@ -353,8 +357,11 @@ namespace FFLogsViewer
 
                             if (this._isLinkClicked)
                             {
-                                Process.Start(
-                                    $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}");
+                                Process.Start(new ProcessStartInfo()
+                                {
+                                    FileName = $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
+                                    UseShellExecute = true,
+                                });
                                 this._isLinkClicked = false;
                             }
                         }

@@ -1,6 +1,6 @@
 {
   "Author": "Aireil",
   "Name": "FF Logs Viewer",
-  "Description": "View FF Logs ranking percentiles in-game.\n\nChangelog:\n1.3.0.0: Added open in browser setting for context menu.\n1.3.1.0: Added context menu button to free company",
+  "Description": "View FF Logs ranking percentiles in-game.\n\nChangelog:\n1.3.0.0: Added open in browser setting for context menu.\n1.3.1.0: Added context menu button to free company.",
   "RepoUrl": "https://github.com/Aireil/FFLogsViewer"
 }
