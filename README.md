@@ -2,7 +2,7 @@
 
 Small plugin to view FF Logs ranking percentiles in-game.
 
-[Available in my repo.](https://github.com/Aireil/MyDalamudPlugins)
+To install, add `https://github.com/Aireil/MyDalamudPlugins/raw/master/pluginmaster.json` under "Custom Plugin Repositories" in the "Experimental" tab of Dalamud's in game settings, and then install it through the plugin installer.
 
 /fflogs to open the plugin window.  
 /fflogsconfig to open the plugin config.
