@@ -1,6 +1,14 @@
 {
   "Author": "Aireil",
   "Name": "FF Logs Viewer",
-  "Description": "View FF Logs ranking percentiles in-game.\n\nChangelog:\n1.3.0.0: Added open in browser setting for context menu.\n1.3.1.0: Added context menu button to free company.",
-  "RepoUrl": "https://github.com/Aireil/FFLogsViewer"
+  "Description": "View FF Logs ranking percentiles in-game. Add a context menu to open someone's logs.",
+  "Punchline": "View FF Logs ranking percentiles in-game.",
+  "RepoUrl": "https://github.com/Aireil/FFLogsViewer",
+  "IconUrl": "https://github.com/Aireil/FFLogsViewer/raw/master/res/icon.png",
+   "ImageUrls": [
+    "https://github.com/Aireil/FFLogsViewer/raw/master/res/ui.png",
+    "https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu1.png",
+	"https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu2.png"
+  ],
+  "Changelog": "New Dalamud version update."
 }

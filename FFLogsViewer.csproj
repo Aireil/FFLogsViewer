@@ -15,11 +15,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FFLogsViewer</RootNamespace>
     <AssemblyName>FFLogsViewer</AssemblyName>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Platforms>x64</Platforms>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <LangVersion>9</LangVersion>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,10 +54,6 @@
       <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\ImGui.NET.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ImGuiScene">
-      <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\ImGuiScene.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Lumina">
       <HintPath>$(APPDATA)\XIVLauncher\addon\Hooks\dev\Lumina.dll</HintPath>
       <Private>False</Private>
@@ -63,13 +62,10 @@
       <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Lumina.Excel.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -77,9 +73,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DalamudLinter" Version="1.0.3" />
     <PackageReference Include="ILRepack" Version="2.0.18" />
-    <PackageReference Include="DalamudPackager" Version="1.2.1" />
-    <PackageReference Include="XivCommon" Version="2.0.0" />
+    <PackageReference Include="DalamudPackager" Version="2.1.2" />
+    <PackageReference Include="XivCommon" Version="3.0.2" />
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">
@@ -103,5 +100,6 @@
     <Exec Command="if not exist $(TargetDir)LPL ( mkdir $(TargetDir)LPL )" />
     <Exec Command="copy $(TargetPath) $(TargetDir)LPL\$(TargetFileName)" />
     <Exec Command="copy $(TargetDir)*.pdb $(TargetDir)LPL\" />
+    <Exec Command="copy $(TargetDir)*.json $(TargetDir)LPL\" />
   </Target>
 </Project>

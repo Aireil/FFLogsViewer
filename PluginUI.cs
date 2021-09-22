@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
-using System.Windows.Forms;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiNET;
 
@@ -17,7 +17,7 @@ namespace FFLogsViewer
         private readonly Vector4 _defaultColor = new(1.0f, 1.0f, 1.0f, 1.0f);
         private readonly Dictionary<string, Vector4> _jobColors = new();
         private readonly Dictionary<string, Vector4> _logColors = new();
-        private readonly Plugin _plugin;
+        private readonly FFLogsViewer _plugin;
 
         private float _bossesColumnWidth;
 
@@ -34,7 +34,7 @@ namespace FFLogsViewer
 
         private bool _visible;
 
-        internal PluginUi(Plugin plugin)
+        internal PluginUi(FFLogsViewer plugin)
         {
             this._plugin = plugin;
 
@@ -190,7 +190,7 @@ namespace FFLogsViewer
                 ImGui.SameLine();
                 if (ImGui.Button("Copy##APIClientCopyName"))
                 {
-                    Clipboard.SetText("Plugin");
+                    ImGui.SetClipboardText("Plugin");
                 }
 
                 ImGui.Bullet();
@@ -198,7 +198,7 @@ namespace FFLogsViewer
                 ImGui.SameLine();
                 if (ImGui.Button("Copy##APIClientCopyURL"))
                 {
-                    Clipboard.SetText("https://www.example.com");
+                    ImGui.SetClipboardText("https://www.example.com");
                 }
 
                 ImGui.Bullet();

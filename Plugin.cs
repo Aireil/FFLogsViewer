@@ -3,17 +3,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Dalamud.Game.ClientState.Actors;
-using Dalamud.Game.ClientState.Actors.Types;
+using System.Windows;
+using Dalamud.Game.ClientState.Objects.Enums;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Command;
+using Dalamud.Logging;
 using Dalamud.Plugin;
+using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using XivCommon;
 
 namespace FFLogsViewer
 {
-    public class Plugin : IDalamudPlugin
+    public class FFLogsViewer : IDalamudPlugin
     {
         private const string CommandName = "/fflogs";
         private const string SettingsCommandName = "/fflogsconfig";
@@ -40,57 +42,60 @@ namespace FFLogsViewer
             "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera",
         };
 
-        internal Configuration Configuration;
-        internal FfLogsClient FfLogsClient;
-        internal PluginUi _ui;
+        internal readonly Configuration Configuration;
+        internal readonly FfLogsClient FfLogsClient;
+        internal readonly PluginUi Ui;
 
-        internal DalamudPluginInterface Pi;
+        private readonly DalamudPluginInterface _pi;
+        private readonly CommandManager _commandManager;
         internal XivCommonBase Common { get; private set; }
         private ContextMenu ContextMenu { get; set; }
 
         public string Name => "FF Logs Viewer";
 
-        public void Initialize(DalamudPluginInterface pluginInterface)
+        public FFLogsViewer(DalamudPluginInterface pluginInterface, CommandManager commandManager)
         {
-            this.Pi = pluginInterface;
+            this._pi = pluginInterface;
+            this._pi.Create<DalamudApi>();
+            this._commandManager = commandManager;
 
-            this.Configuration = this.Pi.GetPluginConfig() as Configuration ?? new Configuration();
-            this.Configuration.Initialize(this.Pi);
+            this.Configuration = this._pi.GetPluginConfig() as Configuration ?? new Configuration();
+            this.Configuration.Initialize(this._pi);
 
             this.FfLogsClient = new FfLogsClient(this);
 
-            this._ui = new PluginUi(this);
+            this.Ui = new PluginUi(this);
 
             if (this.Configuration.ContextMenu)
             {
-                this.Common = new XivCommonBase(this.Pi, Hooks.ContextMenu);
+                this.Common = new XivCommonBase(Hooks.ContextMenu);
                 this.ContextMenu = new ContextMenu(this);
             }
 
-            this.Pi.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
+            this._commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
                 HelpMessage = "Open the FF Logs Viewer window or parse the arguments for a character.",
                 ShowInHelp = true,
             });
 
-            this.Pi.CommandManager.AddHandler(SettingsCommandName, new CommandInfo(OnCommand)
+            this._commandManager.AddHandler(SettingsCommandName, new CommandInfo(OnCommand)
             {
                 HelpMessage = "Open the FF Logs Viewer config window.",
                 ShowInHelp = true,
             });
 
-            this.Pi.UiBuilder.OnBuildUi += DrawUi;
-            this.Pi.UiBuilder.OnOpenConfigUi += (_, _) => ToggleSettingsUi();
+            this._pi.UiBuilder.Draw += DrawUi;
+            this._pi.UiBuilder.OpenConfigUi += ToggleSettingsUi;
         }
 
         public void Dispose()
         {
             this.Common?.Dispose();
             this.ContextMenu?.Dispose();
-            this._ui.Dispose();
-            this.Pi.CommandManager.RemoveHandler(CommandName);
-            this.Pi.CommandManager.RemoveHandler(SettingsCommandName);
-            this.Pi.Dispose();
+            this.Ui.Dispose();
+            this._commandManager.RemoveHandler(CommandName);
+            this._commandManager.RemoveHandler(SettingsCommandName);
+            this._pi.Dispose();
         }
 
         private void OnCommand(string command, string args)
@@ -98,13 +103,13 @@ namespace FFLogsViewer
             switch (command)
             {
                 case SettingsCommandName:
-                    this._ui.SettingsVisible = !this._ui.SettingsVisible;
+                    this.Ui.SettingsVisible = !this.Ui.SettingsVisible;
                     break;
                 case CommandName when string.IsNullOrEmpty(args):
-                    this._ui.Visible = !this._ui.Visible;
+                    this.Ui.Visible = !this.Ui.Visible;
                     break;
                 case CommandName when args.Equals("config", StringComparison.OrdinalIgnoreCase):
-                    this._ui.SettingsVisible = !this._ui.SettingsVisible;
+                    this.Ui.SettingsVisible = !this.Ui.SettingsVisible;
                     break;
                 case CommandName:
                     SearchPlayer(args);
@@ -114,7 +119,7 @@ namespace FFLogsViewer
 
         private void DrawUi()
         {
-            this._ui.Draw();
+            this.Ui.Draw();
         }
 
         public bool IsConfigSetup()
@@ -124,7 +129,7 @@ namespace FFLogsViewer
 
         private void ToggleSettingsUi()
         {
-            this._ui.SettingsVisible = !this._ui.SettingsVisible;
+            this.Ui.SettingsVisible = !this.Ui.SettingsVisible;
         }
 
         internal void ToggleContextMenuButton(bool enable)
@@ -135,7 +140,7 @@ namespace FFLogsViewer
                 case false when this.ContextMenu == null:
                     return;
                 case true:
-                    this.Common = new XivCommonBase(this.Pi, Hooks.ContextMenu);
+                    this.Common = new XivCommonBase(Hooks.ContextMenu);
                     this.ContextMenu = new ContextMenu(this);
                     break;
                 default:
@@ -151,12 +156,12 @@ namespace FFLogsViewer
         {
             try
             {
-                this._ui.Visible = true;
-                this._ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
+                this.Ui.Visible = true;
+                this.Ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
             }
             catch
             {
-                this._ui.SetErrorMessage("Character could not be found.");
+                this.Ui.SetErrorMessage("Character could not be found.");
             }
         }
 
@@ -174,7 +179,7 @@ namespace FFLogsViewer
             }
             catch
             {
-                this._ui.SetErrorMessage("Character could not be found.");
+                this.Ui.SetErrorMessage("Character could not be found.");
             }
         }
 
@@ -182,25 +187,25 @@ namespace FFLogsViewer
         {
             return new()
             {
-                FirstName = playerCharacter.Name.Split(' ')[0],
-                LastName = playerCharacter.Name.Split(' ')[1],
+                FirstName = playerCharacter.Name.TextValue.Split(' ')[0],
+                LastName = playerCharacter.Name.TextValue.Split(' ')[1],
                 WorldName = playerCharacter.HomeWorld.GameData.Name,
             };
         }
 
         internal CharacterData GetTargetCharacter()
         {
-            var target = this.Pi.ClientState.Targets.CurrentTarget;
+            var target = DalamudApi.TargetManager.Target;
             if (target is PlayerCharacter targetCharacter && target.ObjectKind != ObjectKind.Companion)
                 return GetPlayerData(targetCharacter);
 
             throw new ArgumentException("Not a valid target.");
         }
 
-        private bool IsWorldValid(string worldAttempt)
+        private static bool IsWorldValid(string worldAttempt)
         {
-            var world = this.Pi.Data.GetExcelSheet<World>()
-                .FirstOrDefault(
+            var world = DalamudApi.DataManager.GetExcelSheet<World>()
+                ?.FirstOrDefault(
                     x => x.Name.ToString().Equals(worldAttempt, StringComparison.InvariantCultureIgnoreCase));
 
             return world != null;
@@ -208,9 +213,9 @@ namespace FFLogsViewer
 
         internal CharacterData GetClipboardCharacter()
         {
-            if (!Clipboard.ContainsText(TextDataFormat.Text)) throw new ArgumentException("Invalid clipboard.");
+            if (ImGui.GetClipboardText() == null) throw new ArgumentException("Invalid clipboard.");
 
-            var clipboardRawText = Clipboard.GetText(TextDataFormat.Text);
+            var clipboardRawText = ImGui.GetClipboardText();
             return ParseTextForChar(clipboardRawText);
         }
 
@@ -242,7 +247,7 @@ namespace FFLogsViewer
             {
                 character.FirstName = words[0];
                 character.LastName = words[1];
-                character.WorldName = this.Pi.ClientState.LocalPlayer.HomeWorld.GameData.Name;
+                character.WorldName = DalamudApi.ClientState.LocalPlayer?.HomeWorld.GameData.Name;
             }
             else
             {
@@ -265,7 +270,7 @@ namespace FFLogsViewer
             }
             catch (Exception e)
             {
-                this._ui.SetErrorMessage("World not supported or invalid.");
+                this.Ui.SetErrorMessage("World not supported or invalid.");
                 PluginLog.LogError(e, "World not supported or invalid.");
                 return;
             }
@@ -280,7 +285,7 @@ namespace FFLogsViewer
                     if (logData?.errors != null)
                     {
                         characterData.IsDataLoading = false;
-                        this._ui.SetErrorMessage("Malformed GraphQL query.");
+                        this.Ui.SetErrorMessage("Malformed GraphQL query.");
                         PluginLog.Log($"Malformed GraphQL query: {logData}");
                         return;
                     }
@@ -288,7 +293,7 @@ namespace FFLogsViewer
                     if (logData?.error != null && logData.error == "Unauthenticated.")
                     {
                         characterData.IsDataLoading = false;
-                        this._ui.SetErrorMessage("API Client not valid, check config.");
+                        this.Ui.SetErrorMessage("API Client not valid, check config.");
                         PluginLog.Log($"Unauthenticated: {logData}");
                         return;
                     }
@@ -296,13 +301,13 @@ namespace FFLogsViewer
                     if (logData == null)
                     {
                         characterData.IsDataLoading = false;
-                        this._ui.SetErrorMessage("Could not reach FF Logs servers.");
+                        this.Ui.SetErrorMessage("Could not reach FF Logs servers.");
                         PluginLog.Log("Could not reach FF Logs servers.");
                         return;
                     }
 
                     characterData.IsDataLoading = false;
-                    this._ui.SetErrorMessage("Character not found.");
+                    this.Ui.SetErrorMessage("Character not found.");
                     return;
                 }
 
@@ -311,7 +316,7 @@ namespace FFLogsViewer
                     if (logData.data.characterData.character.hidden == "true")
                     {
                         characterData.IsDataLoading = false;
-                        this._ui.SetErrorMessage(
+                        this.Ui.SetErrorMessage(
                             $"{characterData.FirstName} {characterData.LastName}@{characterData.WorldName}'s logs are hidden.");
                         return;
                     }
@@ -327,7 +332,7 @@ namespace FFLogsViewer
                 catch (Exception e)
                 {
                     characterData.IsDataLoading = false;
-                    this._ui.SetErrorMessage("Could not load data from FF Logs servers.");
+                    this.Ui.SetErrorMessage("Could not load data from FF Logs servers.");
                     PluginLog.LogError(e, "Could not load data from FF Logs servers.");
                     return;
                 }
@@ -341,7 +346,7 @@ namespace FFLogsViewer
             {
                 if (!t.IsFaulted) return;
                 characterData.IsDataLoading = false;
-                this._ui.SetErrorMessage("Networking error, please try again.");
+                this.Ui.SetErrorMessage("Networking error, please try again.");
                 if (t.Exception == null) return;
                 foreach (var e in t.Exception.Flatten().InnerExceptions)
                 {

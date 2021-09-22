@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using Newtonsoft.Json;
 
@@ -11,7 +12,7 @@ namespace FFLogsViewer
 {
     internal class FfLogsClient
     {
-        private readonly Plugin _plugin;
+        private readonly FFLogsViewer _plugin;
         private Token _token;
         private readonly HttpClient _httpClient;
         internal bool IsTokenValid = false;
@@ -27,7 +28,7 @@ namespace FFLogsViewer
             [JsonProperty("error")] internal string Error { get; set; }
         }
 
-        internal FfLogsClient(Plugin plugin)
+        internal FfLogsClient(FFLogsViewer plugin)
         {
             this._plugin = plugin;
             this._httpClient = new HttpClient();

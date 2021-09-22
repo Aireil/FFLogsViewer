@@ -68,12 +68,12 @@ namespace FFLogsViewer
 
     public partial class LogsData
     {
-        public static LogsData FromJson(string json) => JsonConvert.DeserializeObject<LogsData>(json, FFLogsViewer.Converter.Settings);
+        public static LogsData FromJson(string json) => JsonConvert.DeserializeObject<LogsData>(json);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this LogsData self) => JsonConvert.SerializeObject(self, FFLogsViewer.Converter.Settings);
+        public static string ToJson(this LogsData self) => JsonConvert.SerializeObject(self);
     }
 
     internal static class Converter

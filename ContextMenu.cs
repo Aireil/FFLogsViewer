@@ -7,14 +7,14 @@ namespace FFLogsViewer
 {
     internal class ContextMenu : IDisposable
     {
-        internal ContextMenu(Plugin plugin)
+        internal ContextMenu(FFLogsViewer plugin)
         {
             this.Plugin = plugin;
 
             this.Plugin.Common.Functions.ContextMenu.OpenContextMenu += OnOpenContextMenu;
         }
 
-        private Plugin Plugin { get; }
+        private FFLogsViewer Plugin { get; }
 
         public void Dispose()
         {
@@ -28,7 +28,7 @@ namespace FFLogsViewer
 
             if (this.Plugin.Configuration.ContextMenuStreamer)
             {
-                if (!this.Plugin._ui.Visible)
+                if (!this.Plugin.Ui.Visible)
                     return;
 
                 this.SearchPlayerFromMenu(args);
@@ -63,7 +63,7 @@ namespace FFLogsViewer
                 case "LinkShell":
                 case "CrossWorldLinkshell":
                 case "ContentMemberList": // Eureka/Bozja/...
-                    return args.Text != null && args.ActorWorld != 0 && args.ActorWorld != 65535;
+                    return args.Text != null && args.ObjectWorld != 0 && args.ObjectWorld != 65535;
 
                 default:
                     return false;
@@ -72,8 +72,8 @@ namespace FFLogsViewer
 
         private void SearchPlayerFromMenu(BaseContextMenuArgs args)
         {
-            var world = this.Plugin.Pi.Data.GetExcelSheet<World>()
-                .FirstOrDefault(x => x.RowId == args.ActorWorld);
+            var world = DalamudApi.DataManager.GetExcelSheet<World>()
+                ?.FirstOrDefault(x => x.RowId == args.ObjectWorld);
 
             if (world == null)
                 return;
