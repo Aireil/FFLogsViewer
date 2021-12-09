@@ -28,6 +28,8 @@ namespace FFLogsViewer
             Tea = 1050,
             UCoB = 1047,
             UwU = 1048,
+            Zodiark = 1058,
+            Hydaelyn = 1059,
         }
 
         internal enum DataType

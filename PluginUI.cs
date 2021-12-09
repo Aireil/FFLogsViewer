@@ -10,7 +10,7 @@ namespace FFLogsViewer
 {
     internal class PluginUi : IDisposable
     {
-        private const float WindowHeight = 458;
+        private const float WindowHeight = 387;
         private const float ReducedWindowHeight = 88;
         private const float WindowWidth = 407;
         private readonly string[] _characterInput = new string[3];
@@ -98,6 +98,14 @@ namespace FFLogsViewer
                 ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoResize))
             {
+                var showSpoilers = this._plugin.Configuration.ShowSpoilers;
+                if (ImGui.Checkbox("Show spoilers##ShowSpoilers", ref showSpoilers))
+                {
+                    this._plugin.ToggleContextMenuButton(showSpoilers);
+                    this._plugin.Configuration.ShowSpoilers = showSpoilers;
+                    this._plugin.Configuration.Save();
+                }
+
                 var contextMenu = this._plugin.Configuration.ContextMenu;
                 if (ImGui.Checkbox("Search button in context menus##ContextMenu", ref contextMenu))
                 {
@@ -443,13 +451,19 @@ namespace FFLogsViewer
                     ImGui.Spacing();
                     PrintTextColumn(1, "Trials (Extreme)");
                     ImGui.Spacing();
-                    PrintTextColumn(1, "The Emerald I");
-                    PrintTextColumn(1, "The Emerald II");
-                    PrintTextColumn(1, "The Diamond");
-                    ImGui.Spacing();
-                    PrintTextColumn(1, "Unreal");
-                    ImGui.Spacing();
-                    PrintTextColumn(1, "Leviathan");
+                    if (this._plugin.Configuration.ShowSpoilers)
+                    {
+                        PrintTextColumn(1, "Zodiark");
+                        PrintTextColumn(1, "Hydaelyn");
+                    }
+                    else
+                    {
+                        PrintTextColumn(1, "Trial 1 (?)");
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, display by enabling \"Show spoilers\" in settings (/fflogs config).");
+                        PrintTextColumn(1, "Trial 2 (?)");
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, display by enabling \"Show spoilers\" in settings (/fflogs config).");
+
+                    }
 
                     try
                     {
@@ -470,13 +484,8 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponI, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponIi, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.TheDiamondWeapon, CharacterData.DataType.Best, 2);
-                        ImGui.Spacing();
-                        PrintTextColumn(2, "Best");
-                        ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.LeviathanUnreal, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Best, 2);
 
                         ImGui.NextColumn();
                         PrintTextColumn(3, "Med.");
@@ -495,13 +504,8 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponI, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponIi, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.TheDiamondWeapon, CharacterData.DataType.Median, 3);
-                        ImGui.Spacing();
-                        PrintTextColumn(3, "Med.");
-                        ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.LeviathanUnreal, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Median, 3);
 
                         ImGui.NextColumn();
                         PrintTextColumn(4, "Kills");
@@ -520,13 +524,8 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponI, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponIi, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.TheDiamondWeapon, CharacterData.DataType.Kills, 4);
-                        ImGui.Spacing();
-                        PrintTextColumn(4, "Kills");
-                        ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.LeviathanUnreal, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Kills, 4);
 
                         ImGui.NextColumn();
                         PrintTextColumn(5, "Job");
@@ -545,13 +544,8 @@ namespace FFLogsViewer
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponI, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.TheEmeraldWeaponIi, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.TheDiamondWeapon, CharacterData.DataType.Job, 5);
-                        ImGui.Separator();
-                        PrintTextColumn(5, "Job");
-                        ImGui.Separator();
-                        PrintDataColumn(CharacterData.BossesId.LeviathanUnreal, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Job, 5);
 
                         ImGui.Columns();
                     }

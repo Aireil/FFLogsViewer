@@ -327,6 +327,7 @@ namespace FFLogsViewer
                     ParseLogs(characterData, logData.data.characterData.character.UltimatesSB);
                     ParseLogs(characterData, logData.data.characterData.character.ExtremesII);
                     ParseLogs(characterData, logData.data.characterData.character.ExtremesIII);
+                    ParseLogs(characterData, logData.data.characterData.character.ExtremesEW);
                     ParseLogs(characterData, logData.data.characterData.character.Unreal);
                 }
                 catch (Exception e)
