@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FFLogsViewer</PackageId>
-    <Version>1.4.0.0</Version>
+    <Version>1.5.0.0</Version>
     <Authors>Aireil</Authors>
     <Company>-</Company>
   </PropertyGroup>
@@ -75,8 +75,8 @@
   <ItemGroup>
     <PackageReference Include="DalamudLinter" Version="1.0.3" />
     <PackageReference Include="ILRepack" Version="2.0.18" />
-    <PackageReference Include="DalamudPackager" Version="2.1.2" />
-    <PackageReference Include="XivCommon" Version="3.0.2" />
+    <PackageReference Include="DalamudPackager" Version="2.1.5" />
+    <PackageReference Include="XivCommon" Version="4.0.0-alpha.1" />
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">

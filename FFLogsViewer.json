@@ -6,9 +6,7 @@
   "RepoUrl": "https://github.com/Aireil/FFLogsViewer",
   "IconUrl": "https://github.com/Aireil/FFLogsViewer/raw/master/res/icon.png",
    "ImageUrls": [
-    "https://github.com/Aireil/FFLogsViewer/raw/master/res/ui.png",
-    "https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu1.png",
-	"https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu2.png"
+    "https://github.com/Aireil/FFLogsViewer/raw/master/res/banner.png"
   ],
-  "Changelog": "New Dalamud version update."
+  "Changelog": "Updated for Endwalker. Will show values for the trials when FFLogs website is updated."
 }
