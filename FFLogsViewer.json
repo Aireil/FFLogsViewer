@@ -8,5 +8,11 @@
    "ImageUrls": [
     "https://github.com/Aireil/FFLogsViewer/raw/master/res/banner.png"
   ],
-  "Changelog": "Updated for Endwalker. Will show values for the trials when FFLogs website is updated."
+  "Tags": [
+    "FFLogs",
+    "FFLog",
+    "FFLo",
+    "FFL"
+  ],
+  "Changelog": "Add support for Asphodelos + band-aid fix for scaling issues."
 }
