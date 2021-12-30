@@ -23,7 +23,9 @@ namespace FFLogsViewer
         private bool _hasLoadingFailed;
 
         private bool _isLinkClicked;
+        private bool _isRaidButtonClicked;
         private bool _isConfigClicked;
+        private bool _isSpoilerClicked;
         private float _jobsColumnWidth;
         private float _logsColumnWidth;
         private CharacterData _selectedCharacterData = new();
@@ -221,9 +223,13 @@ namespace FFLogsViewer
         {
             if (!this.Visible) return;
 
-            var windowHeight = 287 * ImGui.GetIO().FontGlobalScale + 100;
+            var windowHeight = 267 * ImGui.GetIO().FontGlobalScale + 100;
             var reducedWindowHeight = 58 * ImGui.GetIO().FontGlobalScale + 30;
             var windowWidth = 407 * ImGui.GetIO().FontGlobalScale;
+            if (this._plugin.Configuration.DisplayOldRaid)
+            {
+                windowHeight += 20 * ImGui.GetIO().FontGlobalScale;
+            }
 
             ImGui.SetNextWindowSize(new Vector2(windowWidth, reducedWindowHeight), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("FF Logs Viewer", ref this._visible,
@@ -436,13 +442,36 @@ namespace FFLogsViewer
                     ImGui.SetColumnWidth(3, this._logsColumnWidth);
                     ImGui.SetColumnWidth(4, this._jobsColumnWidth);
 
-                    PrintTextColumn(1, "Eden's Promise");
+                    var raidName = this._plugin.Configuration.DisplayOldRaid ? "Eden's Promise (?)" : "Asphodelos (?)";
+                    ImGui.SetCursorPosX(8.0f);
+                    ImGui.Selectable(
+                        raidName,
+                        ref this._isRaidButtonClicked, ImGuiSelectableFlags.None);
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to switch to " + (this._plugin.Configuration.DisplayOldRaid ? "Asphodelos." : "Eden's Promise."));
+
+                    if (this._isRaidButtonClicked)
+                    {
+                        this._plugin.Configuration.DisplayOldRaid = !this._plugin.Configuration.DisplayOldRaid;
+                        this._plugin.Configuration.Save();
+                        this._isRaidButtonClicked = false;
+                    }
+
                     ImGui.Spacing();
-                    PrintTextColumn(1, "Cloud of Darkness");
-                    PrintTextColumn(1, "Shadowkeeper");
-                    PrintTextColumn(1, "Fatebreaker");
-                    PrintTextColumn(1, "Eden's Promise");
-                    PrintTextColumn(1, "Oracle of Darkness");
+                    if (this._plugin.Configuration.DisplayOldRaid)
+                    {
+                        PrintTextColumn(1, "Cloud of Darkness");
+                        PrintTextColumn(1, "Shadowkeeper");
+                        PrintTextColumn(1, "Fatebreaker");
+                        PrintTextColumn(1, "Eden's Promise");
+                        PrintTextColumn(1, "Oracle of Darkness");
+                    }
+                    else
+                    {
+                        PrintTextColumn(1, "Erichthonios");
+                        PrintTextColumn(1, "Hippokampos");
+                        PrintTextColumn(1, "Phoinix");
+                        PrintTextColumn(1, "Hesperos");
+                    }
                     ImGui.Spacing();
                     PrintTextColumn(1, "Ultimates");
                     ImGui.Spacing();
@@ -459,10 +488,24 @@ namespace FFLogsViewer
                     }
                     else
                     {
-                        PrintTextColumn(1, "Trial 1 (?)");
-                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, display by enabling \"Show spoilers\" in settings (/fflogs config).");
-                        PrintTextColumn(1, "Trial 2 (?)");
-                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, display by enabling \"Show spoilers\" in settings (/fflogs config).");
+                        ImGui.SetCursorPosX(8.0f);
+                        ImGui.Selectable(
+                            "Trial 1 (?)",
+                            ref this._isSpoilerClicked, ImGuiSelectableFlags.None);
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, click to display.");
+
+                        ImGui.SetCursorPosX(8.0f);
+                        ImGui.Selectable(
+                            "Trial 2 (?)",
+                            ref this._isSpoilerClicked, ImGuiSelectableFlags.None);
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Big MSQ spoiler, click to display.");
+
+                        if (this._isSpoilerClicked)
+                        {
+                            this._plugin.Configuration.ShowSpoilers = !this._plugin.Configuration.ShowSpoilers;
+                            this._plugin.Configuration.Save();
+                            this._isSpoilerClicked = false;
+                        }
 
                     }
 
@@ -471,11 +514,14 @@ namespace FFLogsViewer
                         ImGui.NextColumn();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.CloudOfDarkness, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.Shadowkeeper, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.Fatebreaker, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.EdensPromise, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.CloudOfDarkness : CharacterData.BossesId.Erichthonios, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Best, 2);
+                        if (this._plugin.Configuration.DisplayOldRaid)
+                        {
+                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Best, 2);
+                        }
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
@@ -491,11 +537,14 @@ namespace FFLogsViewer
                         ImGui.NextColumn();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.CloudOfDarkness, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.Shadowkeeper, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.Fatebreaker, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.EdensPromise, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.CloudOfDarkness : CharacterData.BossesId.Erichthonios, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Median, 3);
+                        if (this._plugin.Configuration.DisplayOldRaid)
+                        {
+                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Median, 3);
+                        }
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
@@ -511,11 +560,14 @@ namespace FFLogsViewer
                         ImGui.NextColumn();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.CloudOfDarkness, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.Shadowkeeper, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.Fatebreaker, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.EdensPromise, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.CloudOfDarkness : CharacterData.BossesId.Erichthonios, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Kills, 4);
+                        if (this._plugin.Configuration.DisplayOldRaid)
+                        {
+                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Kills, 4);
+                        }
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
@@ -531,11 +583,14 @@ namespace FFLogsViewer
                         ImGui.NextColumn();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
-                        PrintDataColumn(CharacterData.BossesId.CloudOfDarkness, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.Shadowkeeper, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.Fatebreaker, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.EdensPromise, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.CloudOfDarkness : CharacterData.BossesId.Erichthonios, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Job, 5);
+                        if (this._plugin.Configuration.DisplayOldRaid)
+                        {
+                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Job, 5);
+                        }
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();

@@ -22,6 +22,8 @@ namespace FFLogsViewer
 
         public bool ShowSpoilers { get; set; } = false;
 
+        public bool DisplayOldRaid { get; set; } = false;
+
         public int Version { get; set; } = 0;
 
         internal void Initialize(DalamudPluginInterface pluginInterface)

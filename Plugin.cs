@@ -323,6 +323,7 @@ namespace FFLogsViewer
 
                     ParseLogs(characterData, logData.data.characterData.character.EdenPromise);
                     ParseLogs(characterData, logData.data.characterData.character.EdenVerse);
+                    ParseLogs(characterData, logData.data.characterData.character.Asphodelos);
                     ParseLogs(characterData, logData.data.characterData.character.UltimatesShB);
                     ParseLogs(characterData, logData.data.characterData.character.UltimatesSB);
                     ParseLogs(characterData, logData.data.characterData.character.ExtremesII);

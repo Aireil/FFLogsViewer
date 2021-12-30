@@ -90,6 +90,7 @@ namespace FFLogsViewer
                 "hidden " +
                 "EdenPromise: zoneRankings(zoneID: 38, , difficulty: 101)" +
                 "EdenVerse: zoneRankings(zoneID: 33, , difficulty: 101)" +
+                "Asphodelos: zoneRankings(zoneID: 44, difficulty: 101)" +
                 "ExtremesII: zoneRankings(zoneID: 34)" +
                 "ExtremesIII: zoneRankings(zoneID: 37)" +
                 "ExtremesEW: zoneRankings(zoneID: 42)" +
