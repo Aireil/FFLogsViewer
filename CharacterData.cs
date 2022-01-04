@@ -19,6 +19,7 @@ namespace FFLogsViewer
             Hippokampos = 79,
             Phoinix = 80,
             Hesperos = 81,
+            HesperosII = 82,
             TheRubyWeaponI = 1051,
             TheRubyWeaponIi = 1052,
             VarisYaeGalvus = 1053,

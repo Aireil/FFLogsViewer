@@ -225,11 +225,7 @@ namespace FFLogsViewer
 
             var windowHeight = 267 * ImGui.GetIO().FontGlobalScale + 100;
             var reducedWindowHeight = 58 * ImGui.GetIO().FontGlobalScale + 30;
-            var windowWidth = 407 * ImGui.GetIO().FontGlobalScale;
-            if (this._plugin.Configuration.DisplayOldRaid)
-            {
-                windowHeight += 20 * ImGui.GetIO().FontGlobalScale;
-            }
+            var windowWidth = 427 * ImGui.GetIO().FontGlobalScale;
 
             ImGui.SetNextWindowSize(new Vector2(windowWidth, reducedWindowHeight), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("FF Logs Viewer", ref this._visible,
@@ -336,7 +332,7 @@ namespace FFLogsViewer
                 ImGui.SameLine();
                 if (!this._plugin.FfLogsClient.IsTokenValid)
                 {
-                    var message = !this._plugin.IsConfigSetup() ? "Config not setup, click to open settings." : "API client not valid, check config.";
+                    var message = !this._plugin.IsConfigSetup() ? "Config not setup, click to open settings." : "API client not valid, click to open settings.";
                     var messageSize = ImGui.CalcTextSize(message);
                     ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - messageSize.X / 2);
                     messageSize.X -= 7; // A bit too large on right side
@@ -471,6 +467,7 @@ namespace FFLogsViewer
                         PrintTextColumn(1, "Hippokampos");
                         PrintTextColumn(1, "Phoinix");
                         PrintTextColumn(1, "Hesperos");
+                        PrintTextColumn(1, "Hesperos II");
                     }
                     ImGui.Spacing();
                     PrintTextColumn(1, "Ultimates");
@@ -518,10 +515,7 @@ namespace FFLogsViewer
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Best, 2);
-                        if (this._plugin.Configuration.DisplayOldRaid)
-                        {
-                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Best, 2);
-                        }
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.OracleOfDarkness : CharacterData.BossesId.HesperosII, CharacterData.DataType.Best, 2);
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
@@ -541,10 +535,7 @@ namespace FFLogsViewer
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Median, 3);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Median, 3);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Median, 3);
-                        if (this._plugin.Configuration.DisplayOldRaid)
-                        {
-                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Median, 3);
-                        }
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.OracleOfDarkness : CharacterData.BossesId.HesperosII, CharacterData.DataType.Median, 3);
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
@@ -564,10 +555,7 @@ namespace FFLogsViewer
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Kills, 4);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Kills, 4);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Kills, 4);
-                        if (this._plugin.Configuration.DisplayOldRaid)
-                        {
-                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Kills, 4);
-                        }
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.OracleOfDarkness : CharacterData.BossesId.HesperosII, CharacterData.DataType.Kills, 4);
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
@@ -587,10 +575,7 @@ namespace FFLogsViewer
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Shadowkeeper : CharacterData.BossesId.Hippokampos, CharacterData.DataType.Job, 5);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.Fatebreaker : CharacterData.BossesId.Phoinix, CharacterData.DataType.Job, 5);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.EdensPromise : CharacterData.BossesId.Hesperos, CharacterData.DataType.Job, 5);
-                        if (this._plugin.Configuration.DisplayOldRaid)
-                        {
-                            PrintDataColumn(CharacterData.BossesId.OracleOfDarkness, CharacterData.DataType.Job, 5);
-                        }
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldRaid ? CharacterData.BossesId.OracleOfDarkness : CharacterData.BossesId.HesperosII, CharacterData.DataType.Job, 5);
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
@@ -619,41 +604,63 @@ namespace FFLogsViewer
 
         private void PrintDataColumn(CharacterData.BossesId bossId, CharacterData.DataType dataType, int column)
         {
-            string text;
+            string text = null;
             var color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
             int log;
             switch (dataType)
             {
                 case CharacterData.DataType.Best:
-                    if (!this._selectedCharacterData.Bests.TryGetValue((int) bossId, out log))
-                        throw new ArgumentNullException($"Best log not found for boss ({bossId}).");
-                    text = log == 0 ? "-" : log.ToString();
-                    color = GetLogColor(log);
+                    if (this._selectedCharacterData.Bests.TryGetValue((int)bossId, out log))
+                    {
+                        text = log == 0 ? "-" : log.ToString();
+                        color = GetLogColor(log);
+                    }
+
                     break;
 
                 case CharacterData.DataType.Median:
-                    if (!this._selectedCharacterData.Medians.TryGetValue((int) bossId, out log))
-                        throw new ArgumentNullException($"Median log not found for boss ({bossId}).");
-                    text = log == 0 ? "-" : log.ToString();
-                    color = GetLogColor(log);
+                    if (this._selectedCharacterData.Medians.TryGetValue((int)bossId, out log))
+                    {
+                        text = log == 0 ? "-" : log.ToString();
+                        color = GetLogColor(log);
+                    }
+
                     break;
+
                 case CharacterData.DataType.Kills:
-                    if (!this._selectedCharacterData.Kills.TryGetValue((int) bossId, out log))
-                        throw new ArgumentNullException($"Median log not found for boss ({bossId}).");
-                    text = log == 0 ? "-" : log.ToString();
+                    if (this._selectedCharacterData.Kills.TryGetValue((int)bossId, out log))
+                    {
+                        text = log == 0 ? "-" : log.ToString();
+                    }
+
                     break;
+
                 case CharacterData.DataType.Job:
-                    if (!this._selectedCharacterData.Jobs.TryGetValue((int) bossId, out var job))
-                        throw new ArgumentNullException($"Job not found for boss ({bossId}).");
-                    if (!this._jobColors.TryGetValue(job, out color)) color = this._jobColors["Default"];
-                    text = job;
+                    if (this._selectedCharacterData.Jobs.TryGetValue((int)bossId, out var job))
+                    {
+                        text = job;
+                        if (!this._jobColors.TryGetValue(job, out color))
+                        {
+                            color = this._jobColors["Default"];
+                        }
+                    }
+
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dataType), dataType, null);
             }
 
+            if (text != null)
+            {
+                PrintTextColumn(column, text, color);
+            }
+            else
+            {
+                PrintTextColumn(column, "N/A", color);
+                if (ImGui.IsItemHovered()) ImGui.SetTooltip("Data not available. This is expected if the boss is not yet on FF Logs.");
+            }
 
-            PrintTextColumn(column, text, color);
         }
 
         private void PrintTextColumn(int column, string text, Vector4 color)
