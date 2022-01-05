@@ -223,9 +223,9 @@ namespace FFLogsViewer
         {
             if (!this.Visible) return;
 
-            var windowHeight = 267 * ImGui.GetIO().FontGlobalScale + 100;
+            var windowHeight = 287 * ImGui.GetIO().FontGlobalScale + 100;
             var reducedWindowHeight = 58 * ImGui.GetIO().FontGlobalScale + 30;
-            var windowWidth = 427 * ImGui.GetIO().FontGlobalScale;
+            var windowWidth = 407 * ImGui.GetIO().FontGlobalScale;
 
             ImGui.SetNextWindowSize(new Vector2(windowWidth, reducedWindowHeight), ImGuiCond.FirstUseEver);
             if (ImGui.Begin("FF Logs Viewer", ref this._visible,
