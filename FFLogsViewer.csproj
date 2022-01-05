@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FFLogsViewer</PackageId>
-    <Version>1.5.2.0</Version>
+    <Version>1.5.2.1</Version>
     <Authors>Aireil</Authors>
     <Company>-</Company>
   </PropertyGroup>
