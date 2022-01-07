@@ -322,14 +322,14 @@ namespace FFLogsViewer
                     }
 
                     ParseLogs(characterData, logData.data.characterData.character.EdenPromise);
-                    ParseLogs(characterData, logData.data.characterData.character.EdenVerse);
+                    //ParseLogs(characterData, logData.data.characterData.character.EdenVerse);
                     ParseLogs(characterData, logData.data.characterData.character.Asphodelos);
                     ParseLogs(characterData, logData.data.characterData.character.UltimatesShB);
                     ParseLogs(characterData, logData.data.characterData.character.UltimatesSB);
-                    ParseLogs(characterData, logData.data.characterData.character.ExtremesII);
-                    ParseLogs(characterData, logData.data.characterData.character.ExtremesIII);
+                    //ParseLogs(characterData, logData.data.characterData.character.ExtremesII);
+                    //ParseLogs(characterData, logData.data.characterData.character.ExtremesIII);
                     ParseLogs(characterData, logData.data.characterData.character.ExtremesEW);
-                    ParseLogs(characterData, logData.data.characterData.character.Unreal);
+                    //ParseLogs(characterData, logData.data.characterData.character.Unreal);
                 }
                 catch (Exception e)
                 {
