@@ -612,7 +612,7 @@ namespace FFLogsViewer
                 case CharacterData.DataType.Best:
                     if (this._selectedCharacterData.Bests.TryGetValue((int)bossId, out log))
                     {
-                        text = log == 0 ? "-" : log.ToString();
+                        text = log == -1 ? "-" : log.ToString();
                         color = GetLogColor(log);
                     }
 
@@ -621,7 +621,7 @@ namespace FFLogsViewer
                 case CharacterData.DataType.Median:
                     if (this._selectedCharacterData.Medians.TryGetValue((int)bossId, out log))
                     {
-                        text = log == 0 ? "-" : log.ToString();
+                        text = log == -1 ? "-" : log.ToString();
                         color = GetLogColor(log);
                     }
 
@@ -630,7 +630,7 @@ namespace FFLogsViewer
                 case CharacterData.DataType.Kills:
                     if (this._selectedCharacterData.Kills.TryGetValue((int)bossId, out log))
                     {
-                        text = log == 0 ? "-" : log.ToString();
+                        text = log == -1 ? "-" : log.ToString();
                     }
 
                     break;
@@ -688,7 +688,7 @@ namespace FFLogsViewer
         {
             return log switch
             {
-                0 => this._logColors["Default"],
+                < 0 => this._logColors["Default"],
                 < 25 => this._logColors["Grey"],
                 < 50 => this._logColors["Green"],
                 < 75 => this._logColors["Blue"],

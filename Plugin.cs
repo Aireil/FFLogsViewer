@@ -95,7 +95,6 @@ namespace FFLogsViewer
             this.Ui.Dispose();
             this._commandManager.RemoveHandler(CommandName);
             this._commandManager.RemoveHandler(SettingsCommandName);
-            this._pi.Dispose();
         }
 
         private void OnCommand(string command, string args)
@@ -385,9 +384,9 @@ namespace FFLogsViewer
                 string job;
                 if (fight.spec == null)
                 {
-                    best = 0;
-                    median = 0;
-                    kills = 0;
+                    best = -1;
+                    median = -1;
+                    kills = -1;
                     job = "-";
                 }
                 else
