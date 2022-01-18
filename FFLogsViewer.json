@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "Fix window size."
+  "Changelog": "Support for 0 percentile, and reduce points usage."
 }
