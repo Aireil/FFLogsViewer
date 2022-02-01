@@ -42,6 +42,11 @@ namespace FFLogsViewer
             "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera",
         };
 
+        private readonly string[] _oc =
+        {
+            "Bismarck", "Ravana", "Sephirot", "Sophia", "Zurvan",
+        };
+
         internal readonly Configuration Configuration;
         internal readonly FfLogsClient FfLogsClient;
         internal readonly PluginUi Ui;
@@ -235,6 +240,7 @@ namespace FFLogsViewer
             for (var i = 0; index == -1 && i < this._na.Length; i++) index = Array.IndexOf(words, this._na[i]);
             for (var i = 0; index == -1 && i < this._eu.Length; i++) index = Array.IndexOf(words, this._eu[i]);
             for (var i = 0; index == -1 && i < this._jp.Length; i++) index = Array.IndexOf(words, this._jp[i]);
+            for (var i = 0; index == -1 && i < this._oc.Length; i++) index = Array.IndexOf(words, this._oc[i]);
 
             if (index - 2 >= 0)
             {
@@ -246,7 +252,7 @@ namespace FFLogsViewer
             {
                 character.FirstName = words[0];
                 character.LastName = words[1];
-                character.WorldName = DalamudApi.ClientState.LocalPlayer?.HomeWorld.GameData.Name;
+                character.WorldName = DalamudApi.ClientState.LocalPlayer?.HomeWorld.GameData?.Name;
             }
             else
             {
@@ -360,11 +366,13 @@ namespace FFLogsViewer
         {
             if (!IsWorldValid(worldName)) throw new ArgumentException("Invalid world.");
 
-            if (this._na.Any(worldName.Contains)) return "NA";
+            if (this._na.Contains(worldName)) return "NA";
 
-            if (this._eu.Any(worldName.Contains)) return "EU";
+            if (this._eu.Contains(worldName)) return "EU";
 
-            if (this._jp.Any(worldName.Contains)) return "JP";
+            if (this._jp.Contains(worldName)) return "JP";
+
+            if (this._oc.Contains(worldName)) return "OC";
 
             throw new ArgumentException("World not supported.");
         }
