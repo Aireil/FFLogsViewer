@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "Add support for Oceanian DC."
+  "Changelog": "Add support for most placeholders with the /fflogs command."
 }
