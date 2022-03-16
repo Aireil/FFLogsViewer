@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Command;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Logging;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using XivCommon;
@@ -79,7 +83,7 @@ namespace FFLogsViewer
 
             this._commandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
             {
-                HelpMessage = "Open the FF Logs Viewer window or parse the arguments for a character.",
+                HelpMessage = "Open the FF Logs Viewer window or parse the arguments for a character, support most placeholders.",
                 ShowInHelp = true,
             });
 
@@ -116,6 +120,7 @@ namespace FFLogsViewer
                     this.Ui.SettingsVisible = !this.Ui.SettingsVisible;
                     break;
                 case CommandName:
+                    this.Ui.Visible = true;
                     SearchPlayer(args);
                     break;
             }
@@ -160,7 +165,6 @@ namespace FFLogsViewer
         {
             try
             {
-                this.Ui.Visible = true;
                 this.Ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
             }
             catch
@@ -189,11 +193,11 @@ namespace FFLogsViewer
 
         private static CharacterData GetPlayerData(PlayerCharacter playerCharacter)
         {
-            return new()
+            return new CharacterData
             {
                 FirstName = playerCharacter.Name.TextValue.Split(' ')[0],
                 LastName = playerCharacter.Name.TextValue.Split(' ')[1],
-                WorldName = playerCharacter.HomeWorld.GameData.Name,
+                WorldName = playerCharacter.HomeWorld.GameData?.Name,
             };
         }
 
@@ -223,9 +227,52 @@ namespace FFLogsViewer
             return ParseTextForChar(clipboardRawText);
         }
 
+        private static unsafe SeString ReadSeString(byte* ptr) {
+            var offset = 0;
+            while (true) {
+                var b = *(ptr + offset);
+                if (b == 0) {
+                    break;
+                }
+                offset += 1;
+            }
+            var bytes = new byte[offset];
+            Marshal.Copy(new IntPtr(ptr), bytes, 0, offset);
+            return SeString.Parse(bytes);
+        }
+
+        private static unsafe string? FindPlaceholder(string text)
+        {
+            var placeholder = Framework.Instance()->GetUiModule()->GetPronounModule()->ResolvePlaceholder(text, 0, 0);
+            if (placeholder != null && placeholder->IsCharacter())
+            {
+                var character = (Character*)placeholder;
+
+                if (placeholder->Name != null && character->HomeWorld != 0 && character->HomeWorld != 65535)
+                {
+                    var world = DalamudApi.DataManager.GetExcelSheet<World>()
+                        ?.FirstOrDefault(x => x.RowId == character->HomeWorld);
+
+                    if (world != null)
+                    {
+                        var name = $"{ReadSeString(placeholder->Name)}@{world.Name}";
+                        return name;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private CharacterData ParseTextForChar(string rawText)
         {
             var character = new CharacterData();
+            var placeholder = FindPlaceholder(rawText);
+            if (placeholder != null)
+            {
+                rawText = placeholder;
+            }
+
             rawText = rawText.Replace("'s party for", " ");
 
             rawText = rawText.Replace("You join", " ");
