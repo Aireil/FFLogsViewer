@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -149,6 +150,13 @@ namespace FFLogsViewer
                     if (ImGui.IsItemHovered()) ImGui.SetTooltip("When the FF Logs Viewer window is open, opening a context menu" +
                                                                 "\nwill automatically search for the selected player." +
                                                                 "\nThis mode does not add a button to the context menu.");
+
+                    var hideInCombat = this._plugin.Configuration.HideInCombat;
+                    if (ImGui.Checkbox(@"Hide in combat##HideInCombat", ref hideInCombat))
+                    {
+                        this._plugin.Configuration.HideInCombat = hideInCombat;
+                        this._plugin.Configuration.Save();
+                    }
                 }
 
                 ImGui.Text("API client:");
@@ -221,7 +229,9 @@ namespace FFLogsViewer
 
         private void DrawMainWindow()
         {
-            if (!this.Visible) return;
+            if (!this.Visible
+                || (this._plugin.Configuration.HideInCombat && DalamudApi.Condition[ConditionFlag.InCombat]))
+                return;
 
             var windowHeight = 287 * ImGui.GetIO().FontGlobalScale + 100;
             var reducedWindowHeight = 58 * ImGui.GetIO().FontGlobalScale + 30;
