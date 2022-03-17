@@ -120,7 +120,6 @@ namespace FFLogsViewer
                     this.Ui.SettingsVisible = !this.Ui.SettingsVisible;
                     break;
                 case CommandName:
-                    this.Ui.Visible = true;
                     SearchPlayer(args);
                     break;
             }
@@ -165,6 +164,7 @@ namespace FFLogsViewer
         {
             try
             {
+                this.Ui.Visible = true;
                 this.Ui.SetCharacterAndFetchLogs(ParseTextForChar(args));
             }
             catch
