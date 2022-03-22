@@ -480,12 +480,13 @@ namespace FFLogsViewer
                         PrintTextColumn(1, "Hesperos");
                         PrintTextColumn(1, "Hesperos II");
                     }
-                    var ultimateName = this._plugin.Configuration.DisplayOldUltimate ? "Ultimates (SHB) (?)" : "Ultimates (EW) (?)";
+                    ImGui.Spacing();
+                    var ultimateName = this._plugin.Configuration.DisplayOldUltimate ? "Ultimates (ShB) (?)" : "Ultimates (EW) (?)";
                     ImGui.SetCursorPosX(8.0f);
                     ImGui.Selectable(
                         ultimateName,
                         ref this._isUltimateButtonClicked, ImGuiSelectableFlags.None);
-                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to switch to " + (this._plugin.Configuration.DisplayOldUltimate ? "Endwalker ultimate's." : "Shadowbringer ultimate's."));
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to switch to " + (this._plugin.Configuration.DisplayOldUltimate ? "Endwalker ultimates." : "Shadowbringers ultimates."));
 
                     if (this._isUltimateButtonClicked)
                     {
@@ -541,7 +542,7 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
-                                                PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Best, 2);
                         ImGui.Spacing();
