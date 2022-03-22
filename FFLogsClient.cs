@@ -97,6 +97,7 @@ namespace FFLogsViewer
                 //"Unreal: zoneRankings(zoneID: 36)" +
                 "UltimatesShB: zoneRankings(zoneID: 32)" +
                 "UltimatesSB: zoneRankings(zoneID: 30)" +
+                "Ultimates: zoneRankings(zoneID: 43)" +
                 "}}}\"}";
 
             var content = new StringContent(query, Encoding.UTF8, "application/json");

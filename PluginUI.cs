@@ -25,6 +25,7 @@ namespace FFLogsViewer
 
         private bool _isLinkClicked;
         private bool _isRaidButtonClicked;
+        private bool _isUltimateButtonClicked;
         private bool _isConfigClicked;
         private bool _isSpoilerClicked;
         private float _jobsColumnWidth;
@@ -479,12 +480,23 @@ namespace FFLogsViewer
                         PrintTextColumn(1, "Hesperos");
                         PrintTextColumn(1, "Hesperos II");
                     }
-                    ImGui.Spacing();
-                    PrintTextColumn(1, "Ultimates");
+                    var ultimateName = this._plugin.Configuration.DisplayOldUltimate ? "Ultimates (SHB) (?)" : "Ultimates (EW) (?)";
+                    ImGui.SetCursorPosX(8.0f);
+                    ImGui.Selectable(
+                        ultimateName,
+                        ref this._isUltimateButtonClicked, ImGuiSelectableFlags.None);
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to switch to " + (this._plugin.Configuration.DisplayOldUltimate ? "Endwalker ultimate's." : "Shadowbringer ultimate's."));
+
+                    if (this._isUltimateButtonClicked)
+                    {
+                        this._plugin.Configuration.DisplayOldUltimate = !this._plugin.Configuration.DisplayOldUltimate;
+                        this._plugin.Configuration.Save();
+                        this._isUltimateButtonClicked = false;
+                    }
                     ImGui.Spacing();
                     PrintTextColumn(1, "TEA");
-                    PrintTextColumn(1, "UwU");
                     PrintTextColumn(1, "UCoB");
+                    PrintTextColumn(1, "UwU");
                     ImGui.Spacing();
                     PrintTextColumn(1, "Trials (Extreme)");
                     ImGui.Spacing();
@@ -529,9 +541,9 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.UwU, CharacterData.DataType.Best, 2);
-                        PrintDataColumn(CharacterData.BossesId.UCoB, CharacterData.DataType.Best, 2);
+                                                PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Best, 2);
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
@@ -549,9 +561,9 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.Tea, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.UwU, CharacterData.DataType.Median, 3);
-                        PrintDataColumn(CharacterData.BossesId.UCoB, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Median, 3);
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
@@ -569,9 +581,9 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
-                        PrintDataColumn(CharacterData.BossesId.Tea, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.UwU, CharacterData.DataType.Kills, 4);
-                        PrintDataColumn(CharacterData.BossesId.UCoB, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Kills, 4);
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
@@ -589,9 +601,9 @@ namespace FFLogsViewer
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
-                        PrintDataColumn(CharacterData.BossesId.Tea, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.UwU, CharacterData.DataType.Job, 5);
-                        PrintDataColumn(CharacterData.BossesId.UCoB, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Job, 5);
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
