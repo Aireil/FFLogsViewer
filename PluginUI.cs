@@ -245,7 +245,6 @@ namespace FFLogsViewer
                 ImGui.Columns(4, "InputColumns", true);
 
                 var buttonsWidth = ((ImGui.CalcTextSize("Target") + ImGui.CalcTextSize("Clipboard")).X + (40.0f * ImGui.GetIO().FontGlobalScale));
-                var colWidth = ((windowWidth - buttonsWidth) / 3.0f);
                 var sizeMin = Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.FirstName).X,
                     Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.LastName).X,
                         ImGui.CalcTextSize(this._selectedCharacterData.WorldName).X));
@@ -256,6 +255,7 @@ namespace FFLogsViewer
                     idealWindowHeight = windowHeight;
                 else
                     idealWindowHeight = reducedWindowHeight;
+                var colWidth = ((idealWindowWidth - buttonsWidth) / 3.0f);
                 ImGui.SetWindowSize(new Vector2(idealWindowWidth, idealWindowHeight));
 
                 ImGui.SetColumnWidth(0, colWidth);
