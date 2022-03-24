@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,32 +25,7 @@ namespace FFLogsViewer
         private const string CommandName = "/fflogs";
         private const string SettingsCommandName = "/fflogsconfig";
 
-        private readonly string[] _eu =
-        {
-            "Cerberus", "Louisoix", "Moogle", "Omega", "Ragnarok", "Spriggan",
-            "Lich", "Odin", "Phoenix", "Shiva", "Zodiark", "Twintania",
-        };
-
-        private readonly string[] _jp =
-        {
-            "Aegis", "Atomos", "Carbuncle", "Garuda", "Gungnir", "Kujata", "Ramuh", "Tonberry", "Typhon", "Unicorn",
-            "Alexander", "Bahamut", "Durandal", "Fenrir", "Ifrit", "Ridill", "Tiamat", "Ultima", "Valefor", "Yojimbo",
-            "Zeromus",
-            "Anima", "Asura", "Belias", "Chocobo", "Hades", "Ixion", "Mandragora", "Masamune", "Pandaemonium",
-            "Shinryu", "Titan",
-        };
-
-        private readonly string[] _na =
-        {
-            "Adamantoise", "Cactuar", "Faerie", "Gilgamesh", "Jenova", "Midgardsormr", "Sargatanas", "Siren",
-            "Behemoth", "Excalibur", "Exodus", "Famfrit", "Hyperion", "Lamia", "Leviathan", "Ultros",
-            "Balmung", "Brynhildr", "Coeurl", "Diabolos", "Goblin", "Malboro", "Mateus", "Zalera",
-        };
-
-        private readonly string[] _oc =
-        {
-            "Bismarck", "Ravana", "Sephirot", "Sophia", "Zurvan",
-        };
+        private readonly string[] _validWorlds;
 
         internal readonly Configuration Configuration;
         internal readonly FfLogsClient FfLogsClient;
@@ -92,6 +68,15 @@ namespace FFLogsViewer
                 HelpMessage = "Open the FF Logs Viewer config window.",
                 ShowInHelp = true,
             });
+
+            var worlds = DalamudApi.DataManager.GetExcelSheet<World>()?.Where(world => world.IsPublic && world.DataCenter?.Value?.Region != 0);
+
+            if (worlds == null)
+            {
+                throw new InvalidOperationException("Sheets weren't ready.");
+            }
+
+            this._validWorlds = worlds.Select(world => world.Name.RawString).ToArray();
 
             this._pi.UiBuilder.Draw += DrawUi;
             this._pi.UiBuilder.OpenConfigUi += ToggleSettingsUi;
@@ -210,15 +195,6 @@ namespace FFLogsViewer
             throw new ArgumentException("Not a valid target.");
         }
 
-        private static bool IsWorldValid(string worldAttempt)
-        {
-            var world = DalamudApi.DataManager.GetExcelSheet<World>()
-                ?.FirstOrDefault(
-                    x => x.Name.ToString().Equals(worldAttempt, StringComparison.InvariantCultureIgnoreCase));
-
-            return world != null;
-        }
-
         internal CharacterData GetClipboardCharacter()
         {
             if (ImGui.GetClipboardText() == null) throw new ArgumentException("Invalid clipboard.");
@@ -284,10 +260,7 @@ namespace FFLogsViewer
             var words = rawText.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
 
             var index = -1;
-            for (var i = 0; index == -1 && i < this._na.Length; i++) index = Array.IndexOf(words, this._na[i]);
-            for (var i = 0; index == -1 && i < this._eu.Length; i++) index = Array.IndexOf(words, this._eu[i]);
-            for (var i = 0; index == -1 && i < this._jp.Length; i++) index = Array.IndexOf(words, this._jp[i]);
-            for (var i = 0; index == -1 && i < this._oc.Length; i++) index = Array.IndexOf(words, this._oc[i]);
+            for (var i = 0; index == -1 && i < this._validWorlds.Length; i++) index = Array.IndexOf(words, this._validWorlds[i]);
 
             if (index - 2 >= 0)
             {
@@ -410,19 +383,22 @@ namespace FFLogsViewer
             });
         }
 
-        private string GetRegionName(string worldName)
+        private static string GetRegionName(string worldName)
         {
-            if (!IsWorldValid(worldName)) throw new ArgumentException("Invalid world.");
+            var world = DalamudApi.DataManager.GetExcelSheet<World>()
+                ?.FirstOrDefault(
+                    x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
 
-            if (this._na.Contains(worldName)) return "NA";
+            if (world == null)  throw new ArgumentException("Invalid world.");
 
-            if (this._eu.Contains(worldName)) return "EU";
-
-            if (this._jp.Contains(worldName)) return "JP";
-
-            if (this._oc.Contains(worldName)) return "OC";
-
-            throw new ArgumentException("World not supported.");
+            return world?.DataCenter?.Value?.Region switch
+            {
+                1 => "JP",
+                2 => "NA",
+                3 => "EU",
+                4 => "OC",
+                _ => throw new ArgumentException("World not supported."),
+            };
         }
 
         private static void ParseLogs(CharacterData characterData, dynamic zone)
