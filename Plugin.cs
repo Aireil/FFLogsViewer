@@ -258,7 +258,7 @@ namespace FFLogsViewer
                 var firstName = splitedText[0];
                 var serverName = splitedText[1];
                 
-                character.FirstName = firstName[ Math.Max(0, firstName.Length - 6).. ]; // Maximum name length for Chinese region is 6, same goes for Korean I think
+                character.FirstName = firstName[Math.Max(0, firstName.Length - 6)..]; // Maximum name length for Chinese region is 6, same goes for Korean I think
                 character.LastName = "";
                 character.WorldName = serverName[..4];
                 
