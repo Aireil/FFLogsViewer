@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FFLogsViewer</PackageId>
-    <Version>1.5.6.2</Version>
+    <Version>1.5.7.0</Version>
     <Authors>Aireil</Authors>
     <Company>-</Company>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
