@@ -178,10 +178,12 @@ namespace FFLogsViewer
 
         private static CharacterData GetPlayerData(PlayerCharacter playerCharacter)
         {
+            var splitedName = playerCharacter.Name.TextValue.Split( ' ' );
+
             return new CharacterData
             {
-                FirstName = playerCharacter.Name.TextValue.Split(' ')[0],
-                LastName = playerCharacter.Name.TextValue.Split(' ')[1],
+                FirstName = splitedName.Length > 1 ? splitedName[0] : playerCharacter.Name.TextValue,
+                LastName = splitedName.Length > 1 ? splitedName[1] : "",
                 WorldName = playerCharacter.HomeWorld.GameData?.Name,
             };
         }
@@ -249,8 +251,21 @@ namespace FFLogsViewer
                 rawText = placeholder;
             }
 
+            // Matching player with @ServerName
+            if (Regex.IsMatch( rawText, "@[^\x00-\x7F]{1,6}"))
+            {
+                var splitedText = rawText.Split("@");
+                var firstName = splitedText[0];
+                var serverName = splitedText[1];
+                
+                character.FirstName = firstName.Substring(Math.Max(0, firstName.Length - 6)); // Maximum name length for Chinese region is 6, same goes for Korean I think
+                character.LastName = "";
+                character.WorldName = serverName;
+                
+                return character;
+            }
+            
             rawText = rawText.Replace("'s party for", " ");
-
             rawText = rawText.Replace("You join", " ");
             rawText = Regex.Replace(rawText, "\\[.*?\\]", " ");
             rawText = Regex.Replace(rawText, "[^A-Za-z '-]", " ");
@@ -390,9 +405,10 @@ namespace FFLogsViewer
                     x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
 
             if (world == null)  throw new ArgumentException("Invalid world.");
-
+            
             return world?.DataCenter?.Value?.Region switch
             {
+                0 => "CN",
                 1 => "JP",
                 2 => "NA",
                 3 => "EU",
