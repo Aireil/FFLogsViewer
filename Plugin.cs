@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using Dalamud;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Command;
@@ -37,6 +38,8 @@ namespace FFLogsViewer
         private ContextMenu ContextMenu { get; set; }
 
         public string Name => "FF Logs Viewer";
+
+        public bool IsChinese { get; private set; } = false;
 
         public FFLogsViewer(DalamudPluginInterface pluginInterface, CommandManager commandManager)
         {
@@ -77,6 +80,11 @@ namespace FFLogsViewer
             }
 
             this._validWorlds = worlds.Select(world => world.Name.RawString).ToArray();
+
+            if (DalamudApi.DataManager.Language == (ClientLanguage)4)
+            {
+                this.IsChinese = true;
+            }
 
             this._pi.UiBuilder.Draw += DrawUi;
             this._pi.UiBuilder.OpenConfigUi += ToggleSettingsUi;
@@ -178,12 +186,12 @@ namespace FFLogsViewer
 
         private static CharacterData GetPlayerData(PlayerCharacter playerCharacter)
         {
-            var splitedName = playerCharacter.Name.TextValue.Split( ' ' );
+            var splitName = playerCharacter.Name.TextValue.Split(' ');
 
             return new CharacterData
             {
-                FirstName = splitedName.Length > 1 ? splitedName[0] : playerCharacter.Name.TextValue,
-                LastName = splitedName.Length > 1 ? splitedName[1] : "",
+                FirstName = splitName.Length > 1 ? splitName[0] : playerCharacter.Name.TextValue,
+                LastName = splitName.Length > 1 ? splitName[1] : "",
                 WorldName = playerCharacter.HomeWorld.GameData?.Name,
             };
         }
@@ -221,22 +229,30 @@ namespace FFLogsViewer
 
         private static unsafe string? FindPlaceholder(string text)
         {
-            var placeholder = Framework.Instance()->GetUiModule()->GetPronounModule()->ResolvePlaceholder(text, 0, 0);
-            if (placeholder != null && placeholder->IsCharacter())
+            try
             {
-                var character = (Character*)placeholder;
-
-                if (placeholder->Name != null && character->HomeWorld != 0 && character->HomeWorld != 65535)
+                var placeholder = Framework.Instance()->GetUiModule()->GetPronounModule()->ResolvePlaceholder(text, 0, 0);
+                if (placeholder != null && placeholder->IsCharacter())
                 {
-                    var world = DalamudApi.DataManager.GetExcelSheet<World>()
-                        ?.FirstOrDefault(x => x.RowId == character->HomeWorld);
+                    var character = (Character*)placeholder;
 
-                    if (world != null)
+                    if (placeholder->Name != null && character->HomeWorld != 0 && character->HomeWorld != 65535)
                     {
-                        var name = $"{ReadSeString(placeholder->Name)}@{world.Name}";
-                        return name;
+                        var world = DalamudApi.DataManager.GetExcelSheet<World>()
+                            ?.FirstOrDefault(x => x.RowId == character->HomeWorld);
+
+                        if (world != null)
+                        {
+                            var name = $"{ReadSeString(placeholder->Name)}@{world.Name}";
+                            return name;
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                PluginLog.Error(e, "Error while resolving placeholder.");
+                return null;
             }
 
             return null;
@@ -251,20 +267,20 @@ namespace FFLogsViewer
                 rawText = placeholder;
             }
 
-            // Matching player with @ServerName
-            if (Regex.IsMatch( rawText, "@[^\x00-\x7F]{1,6}"))
+            // Matching player with Name@World for Chinese version
+            if (this.IsChinese && Regex.IsMatch( rawText, "@[^\x00-\x7F]{1,6}"))
             {
-                var splitedText = rawText.Split("@");
-                var firstName = splitedText[0];
-                var serverName = splitedText[1];
-                
-                character.FirstName = firstName[Math.Max(0, firstName.Length - 6)..]; // Maximum name length for Chinese region is 6, same goes for Korean I think
+                var splitText = rawText.Split("@");
+                var firstName = splitText[0];
+                var serverName = splitText[1];
+
+                character.FirstName = firstName[Math.Max(0, firstName.Length - 6)..]; // Maximum name length for Chinese region is 6
                 character.LastName = "";
                 character.WorldName = serverName[..4];
-                
+
                 return character;
             }
-            
+
             rawText = rawText.Replace("'s party for", " ");
             rawText = rawText.Replace("You join", " ");
             rawText = Regex.Replace(rawText, "\\[.*?\\]", " ");
@@ -398,17 +414,21 @@ namespace FFLogsViewer
             });
         }
 
-        private static string GetRegionName(string worldName)
+        private string GetRegionName(string worldName)
         {
+            if (this.IsChinese)
+            {
+                return "CN";
+            }
+
             var world = DalamudApi.DataManager.GetExcelSheet<World>()
                 ?.FirstOrDefault(
                     x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
 
             if (world == null)  throw new ArgumentException("Invalid world.");
-            
+
             return world?.DataCenter?.Value?.Region switch
             {
-                0 => "CN",
                 1 => "JP",
                 2 => "NA",
                 3 => "EU",

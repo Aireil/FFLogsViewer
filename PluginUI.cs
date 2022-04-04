@@ -242,26 +242,36 @@ namespace FFLogsViewer
             if (ImGui.Begin("FF Logs Viewer", ref this._visible,
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollWithMouse))
             {
-                ImGui.Columns(4, "InputColumns", true);
+                ImGui.Columns(this._plugin.IsChinese ? 3 : 4, "InputColumns", true);
 
                 var buttonsWidth = ((ImGui.CalcTextSize("Target") + ImGui.CalcTextSize("Clipboard")).X + (40.0f * ImGui.GetIO().FontGlobalScale));
                 var sizeMin = Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.FirstName).X,
                     Math.Max(ImGui.CalcTextSize(this._selectedCharacterData.LastName).X,
                         ImGui.CalcTextSize(this._selectedCharacterData.WorldName).X));
-                var idealWindowWidth = sizeMin * 3 + buttonsWidth + 73.0f;
+                var idealWindowWidth = sizeMin * (this._plugin.IsChinese ? 2 : 3) + buttonsWidth + 73.0f;
                 if (idealWindowWidth < windowWidth) idealWindowWidth = windowWidth;
                 float idealWindowHeight;
                 if (this._selectedCharacterData.IsEveryLogsReady && !this._hasLoadingFailed)
                     idealWindowHeight = windowHeight;
                 else
                     idealWindowHeight = reducedWindowHeight;
-                var colWidth = ((idealWindowWidth - buttonsWidth) / 3.0f);
+                var colWidth = ((idealWindowWidth - buttonsWidth) / (this._plugin.IsChinese ? 2.0f : 3.0f));
                 ImGui.SetWindowSize(new Vector2(idealWindowWidth, idealWindowHeight));
 
-                ImGui.SetColumnWidth(0, colWidth);
-                ImGui.SetColumnWidth(1, colWidth);
-                ImGui.SetColumnWidth(2, colWidth);
-                ImGui.SetColumnWidth(3, buttonsWidth);
+                if (this._plugin.IsChinese)
+                {
+                    ImGui.SetColumnWidth(0, colWidth);
+                    ImGui.SetColumnWidth(1, colWidth);
+                    ImGui.SetColumnWidth(2, buttonsWidth);
+                }
+                else
+                {
+                    ImGui.SetColumnWidth(0, colWidth);
+                    ImGui.SetColumnWidth(1, colWidth);
+                    ImGui.SetColumnWidth(2, colWidth);
+                    ImGui.SetColumnWidth(3, buttonsWidth);
+                }
+
 
                 ImGui.PushItemWidth(colWidth - 15);
                 this._characterInput[0] = this._selectedCharacterData.FirstName;
@@ -270,13 +280,16 @@ namespace FFLogsViewer
                 this._selectedCharacterData.FirstName = this._characterInput[0];
                 ImGui.PopItemWidth();
 
-                ImGui.NextColumn();
-                ImGui.PushItemWidth(colWidth - 15);
-                this._characterInput[1] = this._selectedCharacterData.LastName;
-                ImGui.InputTextWithHint("##LastName", "Last Name", ref this._characterInput[1], 256,
-                    ImGuiInputTextFlags.CharsNoBlank);
-                this._selectedCharacterData.LastName = this._characterInput[1];
-                ImGui.PopItemWidth();
+                if (!this._plugin.IsChinese)
+                {
+                    ImGui.NextColumn();
+                    ImGui.PushItemWidth(colWidth - 15);
+                    this._characterInput[1] = this._selectedCharacterData.LastName;
+                    ImGui.InputTextWithHint("##LastName", "Last Name", ref this._characterInput[1], 256,
+                        ImGuiInputTextFlags.CharsNoBlank);
+                    this._selectedCharacterData.LastName = this._characterInput[1];
+                    ImGui.PopItemWidth();
+                }
 
                 ImGui.NextColumn();
                 ImGui.PushItemWidth(colWidth - 14);
