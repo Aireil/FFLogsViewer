@@ -276,7 +276,7 @@ namespace FFLogsViewer
 
                 character.FirstName = firstName[Math.Max(0, firstName.Length - 6)..]; // Maximum name length for Chinese region is 6
                 character.LastName = "";
-                character.WorldName = serverName[..4];
+                character.WorldName = serverName;
 
                 return character;
             }
@@ -363,7 +363,7 @@ namespace FFLogsViewer
                     }
 
                     characterData.IsDataLoading = false;
-                    this.Ui.SetErrorMessage("Character not found.");
+                    this.Ui.SetErrorMessage("Character not found on FF Logs.");
                     return;
                 }
 
