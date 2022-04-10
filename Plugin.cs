@@ -83,7 +83,7 @@ namespace FFLogsViewer
 
             this._validWorlds = worlds.Select(world => world.Name.RawString).ToArray();
 
-            if (DalamudApi.DataManager.Language == (ClientLanguage)4 || true)
+            if (DalamudApi.DataManager.Language == (ClientLanguage)4)
             {
                 this.IsChinese = true;
                 this.FflogsHost = "cn.fflogs.com";
