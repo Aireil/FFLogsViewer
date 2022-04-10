@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "Add support for the Chinese client (by NukoOoOoOoO) and some under the hood improvements."
+  "Changelog": "- Add support for Endsinger Extreme\n- Fix search and host name for the Chinese client (by LittleNightmare)"
 }
