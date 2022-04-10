@@ -186,13 +186,13 @@ namespace FFLogsViewer
                 ImGui.Text("How to get a client ID and a client secret:");
 
                 ImGui.Bullet();
-                ImGui.Text($"Open https://{this._plugin.fflogsHost}/api/clients/ or");
+                ImGui.Text($"Open https://{this._plugin.FflogsHost}/api/clients/ or");
                 ImGui.SameLine();
                 if (ImGui.Button("Click here##APIClientLink"))
                 {
                     Process.Start(new ProcessStartInfo()
                     {
-                        FileName = $"https://{this._plugin.fflogsHost}/api/clients/",
+                        FileName = $"https://{this._plugin.FflogsHost}/api/clients/",
                         UseShellExecute = true,
                     });
                 }
@@ -234,7 +234,7 @@ namespace FFLogsViewer
                 || (this._plugin.Configuration.HideInCombat && DalamudApi.Condition[ConditionFlag.InCombat]))
                 return;
 
-            var windowHeight = 287 * ImGui.GetIO().FontGlobalScale + 100;
+            var windowHeight = 293 * ImGui.GetIO().FontGlobalScale + 100;
             var reducedWindowHeight = 58 * ImGui.GetIO().FontGlobalScale + 30;
             var windowWidth = 407 * ImGui.GetIO().FontGlobalScale;
 
@@ -394,7 +394,7 @@ namespace FFLogsViewer
                             {
                                 Process.Start(new ProcessStartInfo()
                                 {
-                                    FileName = $"https://{this._plugin.fflogsHost}/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
+                                    FileName = $"https://{this._plugin.FflogsHost}/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
                                     UseShellExecute = true,
                                 });
                                 this._isLinkClicked = false;
@@ -508,9 +508,10 @@ namespace FFLogsViewer
                         this._isUltimateButtonClicked = false;
                     }
                     ImGui.Spacing();
-                    PrintTextColumn(1, "TEA");
                     PrintTextColumn(1, "UCoB");
                     PrintTextColumn(1, "UwU");
+                    PrintTextColumn(1, "TEA");
+
                     ImGui.Spacing();
                     PrintTextColumn(1, "Trials (Extreme)");
                     ImGui.Spacing();
@@ -539,8 +540,8 @@ namespace FFLogsViewer
                             this._plugin.Configuration.Save();
                             this._isSpoilerClicked = false;
                         }
-
                     }
+                    PrintTextColumn(1, "Endsinger");
 
                     try
                     {
@@ -555,14 +556,15 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
-                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Best, 2);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Best, 2);
                         ImGui.Spacing();
                         PrintTextColumn(2, "Best");
                         ImGui.Spacing();
                         PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Best, 2);
                         PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Best, 2);
+                        PrintDataColumn(CharacterData.BossesId.Endsinger, CharacterData.DataType.Best, 2);
 
                         ImGui.NextColumn();
                         PrintTextColumn(3, "Med.");
@@ -575,14 +577,15 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
-                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Median, 3);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Median, 3);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Median, 3);
                         ImGui.Spacing();
                         PrintTextColumn(3, "Med.");
                         ImGui.Spacing();
                         PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Median, 3);
                         PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Median, 3);
+                        PrintDataColumn(CharacterData.BossesId.Endsinger, CharacterData.DataType.Median, 3);
 
                         ImGui.NextColumn();
                         PrintTextColumn(4, "Kills");
@@ -595,14 +598,15 @@ namespace FFLogsViewer
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
-                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Kills, 4);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Kills, 4);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Kills, 4);
                         ImGui.Spacing();
                         PrintTextColumn(4, "Kills");
                         ImGui.Spacing();
                         PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Kills, 4);
                         PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Kills, 4);
+                        PrintDataColumn(CharacterData.BossesId.Endsinger, CharacterData.DataType.Kills, 4);
 
                         ImGui.NextColumn();
                         PrintTextColumn(5, "Job");
@@ -615,14 +619,15 @@ namespace FFLogsViewer
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
-                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Job, 5);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UCoBShB : CharacterData.BossesId.UCoB, CharacterData.DataType.Job, 5);
                         PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.UwUShB : CharacterData.BossesId.UwU, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(this._plugin.Configuration.DisplayOldUltimate ? CharacterData.BossesId.TeaShB : CharacterData.BossesId.Tea, CharacterData.DataType.Job, 5);
                         ImGui.Separator();
                         PrintTextColumn(5, "Job");
                         ImGui.Separator();
                         PrintDataColumn(CharacterData.BossesId.Zodiark, CharacterData.DataType.Job, 5);
                         PrintDataColumn(CharacterData.BossesId.Hydaelyn, CharacterData.DataType.Job, 5);
+                        PrintDataColumn(CharacterData.BossesId.Endsinger, CharacterData.DataType.Job, 5);
 
                         ImGui.Columns();
                     }

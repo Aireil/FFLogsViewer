@@ -41,7 +41,7 @@ namespace FFLogsViewer
 
         public bool IsChinese { get; private set; } = false;
 
-        public string fflogsHost { get; private set; } = "www.fflogs.com";
+        public string FflogsHost { get; private set; } = "www.fflogs.com";
 
         public FFLogsViewer(DalamudPluginInterface pluginInterface, CommandManager commandManager)
         {
@@ -83,10 +83,10 @@ namespace FFLogsViewer
 
             this._validWorlds = worlds.Select(world => world.Name.RawString).ToArray();
 
-            if (DalamudApi.DataManager.Language == (ClientLanguage)4)
+            if (DalamudApi.DataManager.Language == (ClientLanguage)4 || true)
             {
                 this.IsChinese = true;
-                this.fflogsHost = "cn.fflogs.com";
+                this.FflogsHost = "cn.fflogs.com";
             }
 
             this._pi.UiBuilder.Draw += DrawUi;
@@ -176,7 +176,7 @@ namespace FFLogsViewer
                 var character = ParseTextForChar(args);
                 Process.Start(new ProcessStartInfo()
                 {
-                    FileName = $"https://{this.fflogsHost}/character/{GetRegionName(character.WorldName)}/{character.WorldName}/{character.FirstName} {character.LastName}",
+                    FileName = $"https://{this.FflogsHost}/character/{GetRegionName(character.WorldName)}/{character.WorldName}/{character.FirstName} {character.LastName}",
                     UseShellExecute = true,
                 });
 

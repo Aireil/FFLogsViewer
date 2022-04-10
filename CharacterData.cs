@@ -31,15 +31,16 @@ namespace FFLogsViewer
             TitanUnreal = 3002,
             LeviathanUnreal = 3003,
             //EW Ultimates
-            Tea = 1062,
             UCoB = 1060,
             UwU = 1061,
+            Tea = 1062,
             // SHB Ultimates
-            TeaShB = 1050,
             UCoBShB = 1047,
             UwUShB = 1048,
+            TeaShB = 1050,
             Zodiark = 1058,
             Hydaelyn = 1059,
+            Endsinger = 1060,
         }
 
         internal enum DataType
@@ -79,10 +80,10 @@ namespace FFLogsViewer
         internal bool IsEveryLogsReady { get; set; }
         internal bool IsDataLoading { get; set; }
 
-        internal bool IsCharacterReady(bool IsChinese)
+        internal bool IsCharacterReady(bool isChinese)
         {
             return this.FirstName != ""
-                   && (this.LastName != "" || IsChinese)
+                   && (this.LastName != "" || isChinese)
                    && this.WorldName != "";
         }
 
