@@ -186,13 +186,13 @@ namespace FFLogsViewer
                 ImGui.Text("How to get a client ID and a client secret:");
 
                 ImGui.Bullet();
-                ImGui.Text("Open https://www.fflogs.com/api/clients/ or");
+                ImGui.Text($"Open https://{this._plugin.fflogsHost}/api/clients/ or");
                 ImGui.SameLine();
                 if (ImGui.Button("Click here##APIClientLink"))
                 {
                     Process.Start(new ProcessStartInfo()
                     {
-                        FileName = "https://www.fflogs.com/api/clients/",
+                        FileName = $"https://{this._plugin.fflogsHost}/api/clients/",
                         UseShellExecute = true,
                     });
                 }
@@ -394,7 +394,7 @@ namespace FFLogsViewer
                             {
                                 Process.Start(new ProcessStartInfo()
                                 {
-                                    FileName = $"https://www.fflogs.com/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
+                                    FileName = $"https://{this._plugin.fflogsHost}/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
                                     UseShellExecute = true,
                                 });
                                 this._isLinkClicked = false;
@@ -425,7 +425,7 @@ namespace FFLogsViewer
 
                 if (ImGui.Button("Search"))
                 {
-                    if (this._selectedCharacterData.IsCharacterReady())
+                    if (this._selectedCharacterData.IsCharacterReady(this._plugin.IsChinese))
                     {
                         this._errorMessage = "";
                         try
