@@ -55,6 +55,7 @@ namespace FFLogsViewer
         internal Dictionary<int, string> Jobs = new();
         internal Dictionary<int, int> Kills = new();
         internal Dictionary<int, int> Medians = new();
+        internal Dictionary<int, bool> IsLockedInDic = new();
 
         internal CharacterData()
         {

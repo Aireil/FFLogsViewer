@@ -472,6 +472,7 @@ namespace FFLogsViewer
                 characterData.Medians.Add(bossId, median);
                 characterData.Kills.Add(bossId, kills);
                 characterData.Jobs.Add(bossId, job);
+                characterData.IsLockedInDic.Add(bossId, (bool)fight.lockedIn);
             }
         }
 

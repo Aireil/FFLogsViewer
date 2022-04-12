@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Interface;
+using Dalamud.Interface.Colors;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using ImGuiNET;
@@ -694,7 +696,21 @@ namespace FFLogsViewer
 
             if (text != null)
             {
+                var isLockedIn = true;
+                if (this._selectedCharacterData.IsLockedInDic.ContainsKey((int)bossId))
+                {
+                    isLockedIn = this._selectedCharacterData.IsLockedInDic[(int)bossId];
+                }
+                if (dataType is CharacterData.DataType.Best or CharacterData.DataType.Median &&
+                    !isLockedIn)
+                {
+                    text += " (?)";
+                }
                 PrintTextColumn(column, text, color);
+                if (dataType is CharacterData.DataType.Best or CharacterData.DataType.Median && !isLockedIn)
+                {
+                    if (ImGui.IsItemHovered()) ImGui.SetTooltip("Not locked in.");
+                }
             }
             else
             {
