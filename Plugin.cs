@@ -43,6 +43,8 @@ namespace FFLogsViewer
 
         public string FflogsHost { get; private set; } = "www.fflogs.com";
 
+        public bool isCommonBroken { get; set; }
+
         public FFLogsViewer(DalamudPluginInterface pluginInterface, CommandManager commandManager)
         {
             this._pi = pluginInterface;
@@ -56,7 +58,12 @@ namespace FFLogsViewer
 
             this.Ui = new PluginUi(this);
 
-            if (this.Configuration.ContextMenu)
+            // TODO common fix (disable on 6.1)
+            if (DalamudApi.DataManager.GameData.Repositories.First(repo => repo.Key == "ffxiv").Value.Version ==
+                "2022.04.07.0000.0000")
+                this.isCommonBroken = true;
+
+            if (!this.isCommonBroken && this.Configuration.ContextMenu) // TODO common fix
             {
                 this.Common = new XivCommonBase(Hooks.ContextMenu);
                 this.ContextMenu = new ContextMenu(this);
@@ -144,8 +151,12 @@ namespace FFLogsViewer
                 case false when this.ContextMenu == null:
                     return;
                 case true:
-                    this.Common = new XivCommonBase(Hooks.ContextMenu);
-                    this.ContextMenu = new ContextMenu(this);
+                    // TODO common fix
+                    if (!this.isCommonBroken)
+                    {
+                        this.Common = new XivCommonBase(Hooks.ContextMenu);
+                        this.ContextMenu = new ContextMenu(this);
+                    }
                     break;
                 default:
                     this.Common?.Dispose();

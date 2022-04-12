@@ -109,6 +109,12 @@ namespace FFLogsViewer
                     this._plugin.Configuration.Save();
                 }
 
+                // TODO common fix
+                if (this._plugin.isCommonBroken)
+                {
+                    ImGui.TextColored(ImGuiColors.DalamudRed, "Context menu button is disabled in 6.1, waiting for a fix.");
+                }
+
                 var contextMenu = this._plugin.Configuration.ContextMenu;
                 if (ImGui.Checkbox("Search button in context menus##ContextMenu", ref contextMenu))
                 {
