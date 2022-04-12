@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "- Add support for Endsinger Extreme\n- Fix search and host name for the Chinese client (by LittleNightmare)"
+  "Changelog": "- Disable context menu button on 6.1"
 }
