@@ -40,7 +40,7 @@ namespace FFLogsViewer
             TeaShB = 1050,
             Zodiark = 1058,
             Hydaelyn = 1059,
-            Endsinger = 1060,
+            Endsinger = 1063,
         }
 
         internal enum DataType
