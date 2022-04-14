@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FFLogsViewer</PackageId>
-    <Version>1.5.7.3</Version>
+    <Version>1.5.7.4</Version>
     <Authors>Aireil</Authors>
     <Company>-</Company>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -81,7 +81,7 @@
   <ItemGroup>
     <PackageReference Include="DalamudLinter" Version="1.0.3" />
     <PackageReference Include="ILRepack" Version="2.0.18" />
-    <PackageReference Include="DalamudPackager" Version="2.1.5" />
+    <PackageReference Include="DalamudPackager" Version="2.1.6" />
     <PackageReference Include="XivCommon" Version="4.0.0" />
   </ItemGroup>
 
