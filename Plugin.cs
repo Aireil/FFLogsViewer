@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,7 +11,9 @@ using Dalamud;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Command;
+using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -58,10 +61,17 @@ namespace FFLogsViewer
 
             this.Ui = new PluginUi(this);
 
+            if (DalamudApi.DataManager.Language == (ClientLanguage)4)
+            {
+                this.IsChinese = true;
+                this.FflogsHost = "cn.fflogs.com";
+            }
+
             // TODO common fix (disable on 6.1)
-            if (DalamudApi.DataManager.GameData.Repositories.First(repo => repo.Key == "ffxiv").Value.Version ==
-                "2022.04.07.0000.0000")
+            if (!this.IsChinese)
+            {
                 this.isCommonBroken = true;
+            }
 
             if (!this.isCommonBroken && this.Configuration.ContextMenu) // TODO common fix
             {
@@ -89,12 +99,6 @@ namespace FFLogsViewer
             }
 
             this._validWorlds = worlds.Select(world => world.Name.RawString).ToArray();
-
-            if (DalamudApi.DataManager.Language == (ClientLanguage)4)
-            {
-                this.IsChinese = true;
-                this.FflogsHost = "cn.fflogs.com";
-            }
 
             this._pi.UiBuilder.Draw += DrawUi;
             this._pi.UiBuilder.OpenConfigUi += ToggleSettingsUi;

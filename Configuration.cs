@@ -28,6 +28,8 @@ namespace FFLogsViewer
 
         public bool HideInCombat { get; set; } = false;
 
+        public bool hasDismissed { get; set; } = false;
+
         public int Version { get; set; } = 0;
 
         internal void Initialize(DalamudPluginInterface pluginInterface)

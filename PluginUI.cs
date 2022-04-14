@@ -383,46 +383,60 @@ namespace FFLogsViewer
                 }
                 else
                 {
-                    if (this._errorMessage == "")
+                    if (!this._plugin.IsChinese || this._plugin.Configuration.hasDismissed)
                     {
-                        if (this._selectedCharacterData.IsEveryLogsReady)
+                        if (this._errorMessage == "")
                         {
-                            var message = $"Viewing {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}'s logs.";
-                            var messageSize = ImGui.CalcTextSize(message);
-                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - messageSize.X / 2);
-                            messageSize.X -= (7 * ImGui.GetIO().FontGlobalScale); // A bit too large on right side
-                            messageSize.Y += (1 * ImGui.GetIO().FontGlobalScale);
-                            ImGui.Selectable(
-                                message,
-                                ref this._isLinkClicked, ImGuiSelectableFlags.None, messageSize);
-
-                            if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to open on FF Logs.");
-
-                            if (this._isLinkClicked)
+                            if (this._selectedCharacterData.IsEveryLogsReady)
                             {
-                                Process.Start(new ProcessStartInfo()
+                                var message = $"Viewing {this._selectedCharacterData.LoadedFirstName} {this._selectedCharacterData.LoadedLastName}@{this._selectedCharacterData.LoadedWorldName}'s logs.";
+                                var messageSize = ImGui.CalcTextSize(message);
+                                ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - messageSize.X / 2);
+                                messageSize.X -= (7 * ImGui.GetIO().FontGlobalScale); // A bit too large on right side
+                                messageSize.Y += (1 * ImGui.GetIO().FontGlobalScale);
+                                ImGui.Selectable(
+                                    message,
+                                    ref this._isLinkClicked, ImGuiSelectableFlags.None, messageSize);
+
+                                if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to open on FF Logs.");
+
+                                if (this._isLinkClicked)
                                 {
-                                    FileName = $"https://{this._plugin.FflogsHost}/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
-                                    UseShellExecute = true,
-                                });
-                                this._isLinkClicked = false;
+                                    Process.Start(new ProcessStartInfo()
+                                    {
+                                        FileName = $"https://{this._plugin.FflogsHost}/character/{this._selectedCharacterData.RegionName}/{this._selectedCharacterData.WorldName}/{this._selectedCharacterData.FirstName} {this._selectedCharacterData.LastName}",
+                                        UseShellExecute = true,
+                                    });
+                                    this._isLinkClicked = false;
+                                }
                             }
-                        }
-                        else if (this._selectedCharacterData.IsDataLoading)
-                        {
-                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Loading...").X / 2);
-                            ImGui.TextUnformatted("Loading...");
+                            else if (this._selectedCharacterData.IsDataLoading)
+                            {
+                                ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Loading...").X / 2);
+                                ImGui.TextUnformatted("Loading...");
+                            }
+                            else
+                            {
+                                ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Waiting...").X / 2);
+                                ImGui.TextUnformatted("Waiting...");
+                            }
                         }
                         else
                         {
-                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize("Waiting...").X / 2);
-                            ImGui.TextUnformatted("Waiting...");
+                            ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(this._errorMessage).X / 2);
+                            ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), this._errorMessage);
                         }
                     }
                     else
                     {
-                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(this._errorMessage).X / 2);
-                        ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f), this._errorMessage);
+                        var message = "CN support is ending, hover for more info.";
+                        ImGui.SetCursorPosX(ImGui.GetWindowWidth() / 2 - ImGui.CalcTextSize(message).X / 2);
+                        if (ImGui.Button(message))
+                        {
+                            this._plugin.Configuration.hasDismissed = true;
+                            this._plugin.Configuration.Save();
+                        }
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Click to dismiss the button. Once the full update for the global patch 6.1 is released, this version of the plugin will no longer support the Chinese Client.\nPlease look in issues on the GitHub, I am hoping someone can maintain a version in a fork, but it will cause too much trouble having both global and CN in the same repo.\nHope you can understand, I'm sorry about that.");
                     }
                 }
 
