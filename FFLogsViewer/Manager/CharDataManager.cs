@@ -129,6 +129,15 @@ public class CharDataManager
         return partyMembers;
     }
 
+    public static void OpenCharInBrowser(string name)
+    {
+        var charData = new CharData();
+        if (charData.ParseTextForChar(name))
+        {
+            Util.OpenLink(charData);
+        }
+    }
+
     public void ResetDisplayedChar()
     {
         this.DisplayedChar = new CharData();

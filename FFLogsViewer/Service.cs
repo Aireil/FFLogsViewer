@@ -45,4 +45,6 @@ internal class Service
     internal static TargetManager TargetManager { get; private set; } = null!;
     [PluginService]
     internal static PartyList PartyList { get; private set; } = null!;
+    [PluginService]
+    internal static Dalamud.Game.Gui.ContextMenus.ContextMenu ContextMenu { get; private set; } = null!;
 }

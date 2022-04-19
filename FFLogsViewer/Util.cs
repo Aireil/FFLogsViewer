@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using FFLogsViewer.Manager;
 using ImGuiNET;
 
 namespace FFLogsViewer;
@@ -119,7 +120,7 @@ public class Util
 
     public static void OpenLink(CharData charData)
     {
-        OpenLink($"https://fflogs.com/character/{charData.RegionName}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
+        OpenLink($"https://fflogs.com/character/{CharDataManager.GetRegionName(charData.WorldName)}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
     }
 
     public static void OpenLink(string link)

@@ -25,6 +25,15 @@ public class MiscTab
         var contextMenu = Service.Configuration.ContextMenu;
         if (ImGui.Checkbox("Search button in context menus##ContextMenu", ref contextMenu))
         {
+            if (contextMenu)
+            {
+                ContextMenu.Enable();
+            }
+            else
+            {
+                ContextMenu.Disable();
+            }
+
             Service.Configuration.ContextMenu = contextMenu;
             hasChanged = true;
         }
@@ -33,17 +42,6 @@ public class MiscTab
 
         if (Service.Configuration.ContextMenu)
         {
-            var openInBrowser = Service.Configuration.OpenInBrowser;
-            if (ImGui.Checkbox(@"Open in browser##OpenInBrowser", ref openInBrowser))
-            {
-                Service.Configuration.OpenInBrowser = openInBrowser;
-                hasChanged = true;
-            }
-
-            Util.SetHoverTooltip("The button in context menus opens" +
-                                 "\nFFLogs in your default browser instead" +
-                                 "\nof opening the plugin window.");
-
             if (!Service.Configuration.ContextMenuStreamer)
             {
                 var contextMenuButtonName = Service.Configuration.ContextMenuButtonName;
@@ -52,18 +50,32 @@ public class MiscTab
                     Service.Configuration.ContextMenuButtonName = contextMenuButtonName;
                     hasChanged = true;
                 }
+
+                var openInBrowser = Service.Configuration.OpenInBrowser;
+                if (ImGui.Checkbox(@"Open in browser##OpenInBrowser", ref openInBrowser))
+                {
+                    Service.Configuration.OpenInBrowser = openInBrowser;
+                    hasChanged = true;
+                }
+
+                Util.SetHoverTooltip("The button in context menus opens" +
+                                     "\nFFLogs in your default browser instead" +
+                                     "\nof opening the plugin window.");
             }
 
-            var contextMenuStreamer = Service.Configuration.ContextMenuStreamer;
-            if (ImGui.Checkbox(@"Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
+            if (!Service.Configuration.OpenInBrowser)
             {
-                Service.Configuration.ContextMenuStreamer = contextMenuStreamer;
-                hasChanged = true;
-            }
+                var contextMenuStreamer = Service.Configuration.ContextMenuStreamer;
+                if (ImGui.Checkbox(@"Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
+                {
+                    Service.Configuration.ContextMenuStreamer = contextMenuStreamer;
+                    hasChanged = true;
+                }
 
-            Util.SetHoverTooltip("When the FF Logs Viewer window is open, opening a context menu" +
-                                 "\nwill automatically search for the selected player." +
-                                 "\nThis mode does not add a button to the context menu.");
+                Util.SetHoverTooltip("When the FF Logs Viewer window is open, opening a context menu" +
+                                     "\nwill automatically search for the selected player." +
+                                     "\nThis mode does not add a button to the context menu.");
+            }
         }
 
         ImGui.Text("API client:");

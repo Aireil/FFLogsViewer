@@ -13,6 +13,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
     public string Name => "FFLogsViewer";
 
     private readonly WindowSystem windowSystem;
+    private readonly ContextMenu contextMenu;
 
     public FFLogsViewer(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
@@ -33,6 +34,8 @@ public sealed class FFLogsViewer : IDalamudPlugin
         this.windowSystem.AddWindow(Service.ConfigWindow);
         this.windowSystem.AddWindow(Service.MainWindow);
 
+        this.contextMenu = new ContextMenu();
+
         Service.Interface.UiBuilder.OpenConfigUi += OpenConfigUi;
         Service.Interface.UiBuilder.Draw += this.windowSystem.Draw;
     }
@@ -40,6 +43,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
     public void Dispose()
     {
         Commands.Dispose();
+        this.contextMenu.Dispose();
 
         Service.Interface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         Service.Interface.UiBuilder.Draw -= this.windowSystem.Draw;

@@ -1,6 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
 using FFLogsViewer.Manager;
 using ImGuiNET;
 
