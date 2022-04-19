@@ -1,4 +1,5 @@
-bin/
-obj/
 .vs/
+obj/
+bin/
+*.user
 .idea/
