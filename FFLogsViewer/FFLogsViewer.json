@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "- Disable context menu button on 6.1"
+  "Changelog": "Complete rewrite of the plugin, see in /fflogs for more info."
 }
