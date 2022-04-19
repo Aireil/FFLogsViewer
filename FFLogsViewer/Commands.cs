@@ -42,6 +42,7 @@ public class Commands
                 break;
             case CommandName:
                 Service.CharDataManager.DisplayedChar.FetchTextCharacter(args);
+                Service.MainWindow.IsOpen = true;
                 break;
         }
     }
