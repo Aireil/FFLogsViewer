@@ -36,7 +36,7 @@ public class PartyListManager
             if (cwProxy->IsInCrossRealmParty != 0)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
-                partyMembers.AddRange(GetPartyMembersFromGroup(cwProxy->CrossRealmGroupSpan[localIndex]));
+                AddMembersFromCRGroup(partyMembers, cwProxy->CrossRealmGroupSpan[localIndex]);
 
                 for (var i = 0; i < cwProxy->CrossRealmGroupSpan.Length; i++)
                 {
@@ -45,7 +45,7 @@ public class PartyListManager
                         continue;
                     }
 
-                    partyMembers.AddRange(GetPartyMembersFromGroup(cwProxy->CrossRealmGroupSpan[i]));
+                    AddMembersFromCRGroup(partyMembers, cwProxy->CrossRealmGroupSpan[i]);
                 }
             }
         }
@@ -65,9 +65,8 @@ public class PartyListManager
         return partyMembers;
     }
 
-    private static unsafe IEnumerable<(string Name, string World)> GetPartyMembersFromGroup(CrossRealmGroup crossRealmGroup)
+    private static unsafe void AddMembersFromCRGroup(ICollection<(string Name, string World)> partyMembers, CrossRealmGroup crossRealmGroup)
     {
-        List<(string, string)> partyMembers = new();
         foreach (var groupMember in crossRealmGroup.GroupMemberSpan)
         {
             var worldId = groupMember.HomeWorld;
@@ -81,7 +80,5 @@ public class PartyListManager
             var name = Util.ReadSeString(groupMember.Name);
             partyMembers.Add((name.ToString(), world.Name.ToString()));
         }
-
-        return partyMembers;
     }
 }
