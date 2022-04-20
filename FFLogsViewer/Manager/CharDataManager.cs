@@ -117,13 +117,16 @@ public class CharDataManager
             }
         }
 
-        var selfName = Service.ClientState.LocalPlayer?.Name;
-        var selfWorldId = Service.ClientState.LocalPlayer?.HomeWorld.Id;
-        var selfWorld = Service.DataManager.GetExcelSheet<World>()
-                               ?.FirstOrDefault(x => x.RowId == selfWorldId);
-        if (selfName != null && selfWorld != null)
+        if (partyMembers.Count == 0)
         {
-            partyMembers.Remove($"{selfName}@{selfWorld.Name}");
+            var selfName = Service.ClientState.LocalPlayer?.Name;
+            var selfWorldId = Service.ClientState.LocalPlayer?.HomeWorld.Id;
+            var selfWorld = Service.DataManager.GetExcelSheet<World>()
+                                   ?.FirstOrDefault(x => x.RowId == selfWorldId);
+            if (selfName != null && selfWorld != null)
+            {
+                partyMembers.Add($"{selfName}@{selfWorld.Name}");
+            }
         }
 
         return partyMembers;

@@ -23,7 +23,7 @@ public class MiscTab
         ImGui.TextColored(ImGuiColors.DalamudRed, "Context menu button is disabled in 6.1, waiting for a fix.");
 
         var contextMenu = Service.Configuration.ContextMenu;
-        if (ImGui.Checkbox("Search button in context menus##ContextMenu", ref contextMenu))
+        if (ImGui.Checkbox("Enable context menu##ContextMenu", ref contextMenu))
         {
             if (contextMenu)
             {
