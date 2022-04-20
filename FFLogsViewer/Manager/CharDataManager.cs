@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -75,61 +74,6 @@ public class CharDataManager
         }
 
         return null;
-    }
-
-    public static unsafe List<string> GetPartyMembers()
-    {
-        List<string> partyMembers = new();
-        if (Service.PartyList.Length != 0)
-        {
-            foreach (var partyMember in Service.PartyList)
-            {
-                var world = partyMember.World.GameData?.Name;
-                if (world == null)
-                {
-                    continue;
-                }
-
-                partyMembers.Add($"{partyMember.Name}@{world}");
-            }
-        }
-        else
-        {
-            var cwProxy = FFXIVClientStructs.FFXIV.Client.UI.Info.InfoProxyCrossRealm.Instance();
-            if (cwProxy->IsInCrossRealmParty != 0)
-            {
-                foreach (var group in cwProxy->CrossRealmGroupSpan)
-                {
-                    foreach (var groupMember in group.GroupMemberSpan)
-                    {
-                        var worldId = groupMember.HomeWorld;
-                        var world = Service.DataManager.GetExcelSheet<World>()
-                                           ?.FirstOrDefault(x => x.RowId == worldId);
-                        if (world == null)
-                        {
-                            continue;
-                        }
-
-                        var name = Util.ReadSeString(groupMember.Name);
-                        partyMembers.Add($"{name}@{world.Name}");
-                    }
-                }
-            }
-        }
-
-        if (partyMembers.Count == 0)
-        {
-            var selfName = Service.ClientState.LocalPlayer?.Name;
-            var selfWorldId = Service.ClientState.LocalPlayer?.HomeWorld.Id;
-            var selfWorld = Service.DataManager.GetExcelSheet<World>()
-                                   ?.FirstOrDefault(x => x.RowId == selfWorldId);
-            if (selfName != null && selfWorld != null)
-            {
-                partyMembers.Add($"{selfName}@{selfWorld.Name}");
-            }
-        }
-
-        return partyMembers;
     }
 
     public static void OpenCharInBrowser(string name)

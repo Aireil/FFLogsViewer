@@ -23,6 +23,7 @@ internal class Service
     internal static MainWindow MainWindow { get; set; } = null!;
     internal static GameDataManager GameDataManager { get; set; } = null!;
     internal static CharDataManager CharDataManager { get; set; } = null!;
+    internal static PartyListManager PartyListManager { get; set; } = null!;
     internal static FFLogsClient FfLogsClient { get; set; } = null!;
 
     [PluginService]

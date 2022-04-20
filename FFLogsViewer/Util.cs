@@ -150,4 +150,19 @@ public class Util
         Marshal.Copy(new IntPtr(ptr), bytes, 0, offset);
         return SeString.Parse(bytes);
     }
+
+    public static void UpdateDelayed(Stopwatch stopwatch, TimeSpan delayTime, Action function)
+    {
+        if (stopwatch.IsRunning && stopwatch.Elapsed >= delayTime)
+        {
+            stopwatch.Stop();
+            stopwatch.Reset();
+        }
+
+        if (!stopwatch.IsRunning)
+        {
+            stopwatch.Start();
+            function();
+        }
+    }
 }

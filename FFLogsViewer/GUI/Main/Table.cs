@@ -16,9 +16,16 @@ public class Table
                     enabledStats.Count + 1,
                     Service.Configuration.Style.MainTableFlags))
         {
-            foreach (var entry in Service.Configuration.Layout)
+            for (var i = 0; i < Service.Configuration.Layout.Count; i++)
             {
+                if (i != 0)
+                {
+                    ImGui.TableNextRow();
+                }
+
                 ImGui.TableNextColumn();
+
+                var entry = Service.Configuration.Layout[i];
 
                 if (entry.Type == LayoutEntryType.Header)
                 {
@@ -114,8 +121,6 @@ public class Table
                         Util.CenterTextColored(color.Value, text);
                     }
                 }
-
-                ImGui.TableNextRow();
             }
 
             ImGui.EndTable();
