@@ -67,7 +67,7 @@ public class PopupEntry
                 currLayoutEntry.Alias = alias;
             }
 
-            Util.DrawHelp("Optional, will overwrite the encounter name from FFLogs");
+            Util.DrawHelp("Optional, will overwrite the encounter name from FF Logs");
 
             if (!Service.GameDataManager.IsDataReady && !Service.GameDataManager.IsDataLoading && !Service.GameDataManager.HasFailed)
             {

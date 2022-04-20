@@ -10,6 +10,8 @@ public class StyleTab
         var hasStyleChanged = false;
         ImGui.Text("Main window:");
 
+        ImGui.Indent();
+
         if (ImGui.Checkbox("Close window with esc", ref style.IsCloseHotkeyRespected))
         {
             Service.MainWindow.RespectCloseHotkey = style.IsCloseHotkeyRespected;
@@ -79,7 +81,11 @@ public class StyleTab
             ImGui.Unindent();
         }
 
+        ImGui.Unindent();
+
         ImGui.Text("Main window table:");
+
+        ImGui.Indent();
 
         hasStyleChanged |= ImGui.Checkbox("Always display table", ref style.IsTableAlwaysDrawn);
         Util.DrawHelp("The table will always be displayed, even when no log info is loaded.");
@@ -117,6 +123,8 @@ public class StyleTab
                 hasStyleChanged = true;
             }
         }
+
+        ImGui.Unindent();
 
         if (hasStyleChanged)
         {

@@ -12,13 +12,13 @@ public class Commands
     {
         Service.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open config",
+            HelpMessage = "Toggle the main window. If given an argument, open the main window and search for a character name.",
             ShowInHelp = true,
         });
 
         Service.CommandManager.AddHandler(SettingsCommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Open the FF Logs Viewer config window.",
+            HelpMessage = "Toggle the config window.",
             ShowInHelp = true,
         });
     }

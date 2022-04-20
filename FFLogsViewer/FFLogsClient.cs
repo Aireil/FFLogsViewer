@@ -66,7 +66,7 @@ public class FFLogsClient
             }
             else
             {
-                PluginLog.Error("FFLogs token couldn't be set.");
+                PluginLog.Error("FF Logs token couldn't be set.");
             }
         });
     }
