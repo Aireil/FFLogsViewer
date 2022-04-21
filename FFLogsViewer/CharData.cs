@@ -281,6 +281,7 @@ public class CharData
 
             if (ranking.spec != null)
             {
+                encounter.IsLockedIn = ranking.lockedIn;
                 encounter.Best = Convert.ToInt32(Math.Floor((float)ranking.rankPercent));
                 encounter.Median = Convert.ToInt32(Math.Floor((float)ranking.medianPercent));
                 encounter.Kills = ranking.totalKills;

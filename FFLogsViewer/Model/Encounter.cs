@@ -9,7 +9,7 @@ public class Encounter
     public int? Kills;
     public int? Fastest;
     public int? BestAmount;
-    public bool IsLockedIn;
+    public bool IsLockedIn = true;
     public string? Metric;
     public Job? Job;
     public Job? BestJob;

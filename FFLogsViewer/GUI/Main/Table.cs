@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Interface.Colors;
 using FFLogsViewer.Model;
 using ImGuiNET;
 
@@ -69,11 +70,25 @@ public class Table
                 }
                 else if (entry.Type == LayoutEntryType.Encounter)
                 {
-                    ImGui.Text(entry.Alias != string.Empty ? entry.Alias : entry.Encounter);
-
                     var encounter =
                         Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
+
+                    var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
+                    if (encounter is { IsLockedIn: false })
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+                        encounterName += " (NL)";
+                    }
+
+                    ImGui.Text(encounterName);
+
+                    if (encounter is { IsLockedIn: false })
+                    {
+                        ImGui.PopStyleColor();
+                        Util.SetHoverTooltip("Not locked in");
+                    }
+
                     foreach (var stat in enabledStats)
                     {
                         ImGui.TableNextColumn();
