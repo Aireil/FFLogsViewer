@@ -3,7 +3,6 @@ using Dalamud.Game;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Game.Gui.FlyText;
@@ -44,8 +43,6 @@ internal class Service
     internal static SigScanner SigScanner { get; private set; } = null!;
     [PluginService]
     internal static TargetManager TargetManager { get; private set; } = null!;
-    [PluginService]
-    internal static PartyList PartyList { get; private set; } = null!;
     [PluginService]
     internal static Dalamud.Game.Gui.ContextMenus.ContextMenu ContextMenu { get; private set; } = null!;
 }

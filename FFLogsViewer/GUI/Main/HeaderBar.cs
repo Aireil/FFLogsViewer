@@ -102,12 +102,12 @@ public class HeaderBar
 
         if (ImGui.BeginPopup("##PartyList", ImGuiWindowFlags.NoMove))
         {
-            Util.UpdateDelayed(this.partyListStopwatch, TimeSpan.FromSeconds(1), Service.PartyListManager.Update);
+            Util.UpdateDelayed(this.partyListStopwatch, TimeSpan.FromSeconds(1), Service.PartyListManager.UpdatePartyList);
 
             var partyList = Service.PartyListManager.PartyList;
             if (partyList.Count != 0)
             {
-                if (ImGui.BeginTable("##PartyListTable", 2, ImGuiTableFlags.RowBg))
+                if (ImGui.BeginTable("##PartyListTable", 3, ImGuiTableFlags.RowBg))
                 {
                     for (var i = 0; i < partyList.Count; i++)
                     {
@@ -118,14 +118,39 @@ public class HeaderBar
 
                         ImGui.TableNextColumn();
 
-                        var (name, world) = partyList[i];
-                        if (ImGui.Selectable($"{name}##{i}", false, ImGuiSelectableFlags.SpanAllColumns))
+                        var partyMember = partyList[i];
+
+                        var icon = Service.PartyListManager.GetJobIcon(partyMember.JobId);
+                        var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                        if (icon != null)
                         {
-                            Service.CharDataManager.DisplayedChar.FetchTextCharacter($"{name}@{world}");
+                            ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
+                        }
+                        else
+                        {
+                            ImGui.Text("(?)");
+                            Util.SetHoverTooltip("An error occured with icons.\n" +
+                                                 "Please create an issue on the GitHub with a screenshot of the red lines in /xllog.\n" +
+                                                 "This is probably due to TexTools corrupting your game files.\n" +
+                                                 "This shouldn't affect the party members functionality.");
+                        }
+
+                        ImGui.SameLine();
+                        if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
+                        {
+                            Service.CharDataManager.DisplayedChar.FetchTextCharacter($"{partyMember.Name}@{partyMember.World}");
                         }
 
                         ImGui.TableNextColumn();
-                        ImGui.Text(world);
+
+                        var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
+                        ImGui.SetCursorPosY(middleCursorPosY);
+                        ImGui.Text(partyMember.Name);
+
+                        ImGui.TableNextColumn();
+
+                        ImGui.SetCursorPosY(middleCursorPosY);
+                        ImGui.Text(partyMember.World);
                     }
 
                     ImGui.EndTable();
