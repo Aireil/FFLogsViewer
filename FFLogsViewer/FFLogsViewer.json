@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "- 2.0.0.0: Complete rewrite of the plugin, see in /fflogs for more info.\n- 2.0.0.1: Fix /fflogs placeholders not opening the window\n- 2.0.1.0: Added context menu button back, this is currently disabled in Dalamud, but will automatically work once fixed."
+  "Changelog": "- 2.0.0.0: Complete rewrite of the plugin, see in /fflogs for more info.\n- 2.0.0.1: Fix /fflogs placeholders not opening the window\n- 2.0.1.0: Added context menu button back, this is currently disabled in Dalamud, but will automatically work once fixed.\n- 2.0.2.0: Improved party members feature UI"
 }
