@@ -15,9 +15,9 @@ public class Configuration : IPluginConfiguration
 
     public int Version { get; set; } = CurrentConfigVersion;
 
-    public string ClientId { get; set; } = string.Empty;
+    public string? ClientId { get; set; } = string.Empty;
 
-    public string ClientSecret { get; set; } = string.Empty;
+    public string? ClientSecret { get; set; } = string.Empty;
 
     public bool ContextMenu { get; set; } = true;
 
@@ -25,7 +25,7 @@ public class Configuration : IPluginConfiguration
 
     public bool OpenInBrowser { get; set; }
 
-    public string ContextMenuButtonName { get; set; } = "Search FF Logs";
+    public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
 
     public bool HideInCombat { get; set; }
 
@@ -55,6 +55,10 @@ public class Configuration : IPluginConfiguration
 
     public void Initialize()
     {
+        this.ClientId ??= string.Empty;
+        this.ClientSecret ??= string.Empty;
+        this.ContextMenuButtonName ??= string.Empty;
+
         if (this.Stats.Count == 0)
         {
             this.Stats.AddRange(GetDefaultStats());

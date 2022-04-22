@@ -51,7 +51,7 @@ public class ContextMenu : IDisposable
             }
             else
             {
-                args.AddCustomItem(Service.Configuration.ContextMenuButtonName, Search);
+                args.AddCustomItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search);
             }
         }
 

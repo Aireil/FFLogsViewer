@@ -40,8 +40,8 @@ public class FFLogsClient
 
     public static bool IsConfigSet()
     {
-        return Service.Configuration.ClientId != string.Empty &&
-               Service.Configuration.ClientSecret != string.Empty;
+        return !string.IsNullOrEmpty(Service.Configuration.ClientId)
+               && !string.IsNullOrEmpty(Service.Configuration.ClientSecret);
     }
 
     public void SetToken()
@@ -151,8 +151,8 @@ public class FFLogsClient
         var form = new Dictionary<string, string>
         {
             { "grant_type", grantType },
-            { "client_id", Service.Configuration.ClientId },
-            { "client_secret", Service.Configuration.ClientSecret },
+            { "client_id", Service.Configuration.ClientId ?? string.Empty },
+            { "client_secret", Service.Configuration.ClientSecret ?? string.Empty },
         };
 
         var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form!));
