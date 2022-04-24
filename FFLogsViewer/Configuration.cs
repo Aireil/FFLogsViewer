@@ -11,34 +11,21 @@ namespace FFLogsViewer;
 public class Configuration : IPluginConfiguration
 {
     [JsonIgnore]
-    public const int CurrentConfigVersion = 0;
-
+    public const int CurrentConfigVersion = 1;
     public int Version { get; set; } = CurrentConfigVersion;
-
     public string? ClientId { get; set; } = string.Empty;
-
     public string? ClientSecret { get; set; } = string.Empty;
-
     public bool ContextMenu { get; set; } = true;
-
     public bool ContextMenuStreamer { get; set; }
-
     public bool OpenInBrowser { get; set; }
-
     public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
-
     public bool HideInCombat { get; set; }
-
     public bool IsUpdateDismissed { get; set; }
-
     public bool IsDefaultLayout { get; set; } = true;
-
+    public int NbOfDecimalDigits { get; set; }
     public List<LayoutEntry> Layout { get; set; } = new();
-
     public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
-
     public List<Stat> Stats { get; set; } = new();
-
     public Style Style { get; set; } = new()
     {
         MinMainWindowWidth = 390.0f,
@@ -68,6 +55,27 @@ public class Configuration : IPluginConfiguration
         {
             this.SetDefaultLayout();
             this.IsDefaultLayout = true;
+        }
+
+        this.Upgrade();
+    }
+
+    public void Upgrade()
+    {
+        // all stars stats
+        if (this.Version == 0)
+        {
+            var defaultStats = GetDefaultStats();
+            if (this.Stats.Count < defaultStats.Count)
+            {
+                for (var i = this.Stats.Count; i < defaultStats.Count; i++)
+                {
+                    this.Stats.Add(defaultStats[i]);
+                }
+            }
+
+            this.Version = 1;
+            this.Save();
         }
     }
 
@@ -108,6 +116,9 @@ public class Configuration : IPluginConfiguration
             new() { Alias = "/metric/", Name = "Best Metric", Type = StatType.BestAmount, IsEnabled = false },
             new() { Name = "Job", Type = StatType.Job, IsEnabled = true },
             new() { Name = "Best Job", Type = StatType.BestJob, IsEnabled = false },
+            new() { Alias = "ASP", Name = "All Stars Points", Type = StatType.AllStarsPoints, IsEnabled = false },
+            new() { Alias = "ASP R", Name = "All Stars Rank", Type = StatType.AllStarsRank, IsEnabled = false },
+            new() { Alias = "ASP R%", Name = "All Stars Rank %", Type = StatType.AllStarsRankPercent, IsEnabled = false },
         };
     }
 }

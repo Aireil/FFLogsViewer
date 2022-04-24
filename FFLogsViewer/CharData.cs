@@ -267,10 +267,17 @@ public class CharData
 
     private void ParseZone(dynamic zone)
     {
-        if (zone.rankings == null) return;
+        if (zone.rankings == null)
+        {
+            return;
+        }
+
         foreach (var ranking in zone.rankings)
         {
-            if (ranking.encounter == null) continue;
+            if (ranking.encounter == null)
+            {
+                continue;
+            }
 
             var encounter = new Encounter
             {
@@ -282,8 +289,8 @@ public class CharData
             if (ranking.spec != null)
             {
                 encounter.IsLockedIn = ranking.lockedIn;
-                encounter.Best = Convert.ToInt32(Math.Floor((float)ranking.rankPercent));
-                encounter.Median = Convert.ToInt32(Math.Floor((float)ranking.medianPercent));
+                encounter.Best = ranking.rankPercent;
+                encounter.Median = ranking.medianPercent;
                 encounter.Kills = ranking.totalKills;
                 encounter.Fastest = ranking.fastestKill;
                 encounter.BestAmount = ranking.bestAmount;
@@ -291,6 +298,13 @@ public class CharData
                 encounter.Job = Service.GameDataManager.Jobs.FirstOrDefault(job => job.Name == jobName);
                 var bestJobName = Regex.Replace(ranking.bestSpec.ToString(), "([a-z])([A-Z])", "$1 $2");
                 encounter.BestJob = Service.GameDataManager.Jobs.FirstOrDefault(job => job.Name == bestJobName);
+                var allStars = ranking.allStars;
+                if (allStars != null)
+                {
+                    encounter.AllStarsPoints = allStars.points;
+                    encounter.AllStarsRank = allStars.rank;
+                    encounter.AllStarsRankPercent = allStars.rankPercent;
+                }
             }
 
             this.Encounters.Add(encounter);

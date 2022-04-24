@@ -15,6 +15,8 @@ public class MainWindow : Window
         this.RespectCloseHotkey = Service.Configuration.Style.IsCloseHotkeyRespected;
 
         this.Flags = Service.Configuration.Style.MainWindowFlags;
+
+        this.ResetSize();
     }
 
     public override bool DrawConditions()

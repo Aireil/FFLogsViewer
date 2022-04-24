@@ -9,4 +9,7 @@ public enum StatType
     BestAmount,
     Job,
     BestJob,
+    AllStarsPoints,
+    AllStarsRank,
+    AllStarsRankPercent,
 }

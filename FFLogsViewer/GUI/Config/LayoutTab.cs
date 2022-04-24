@@ -32,13 +32,10 @@ public class LayoutTab
             Util.DrawHelp("The layout will not automatically update if the plugin is updated.\nYou will have to add new encounters yourself.");
 
             ImGui.SameLine();
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(ImGui.GetStyle().FramePadding.X, 1));
-            if (ImGui.Button("Reset layout and resume auto-update"))
+            if (ImGui.SmallButton("Reset layout and resume auto-update"))
             {
                 ImGui.OpenPopup("##ResetLayout");
             }
-
-            ImGui.PopStyleVar();
 
             if (ImGui.BeginPopup("##ResetLayout", ImGuiWindowFlags.NoMove))
             {
@@ -110,7 +107,7 @@ public class LayoutTab
                 ImGui.Text(layoutEntry.Type.ToString());
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Alias);
+                ImGui.TextUnformatted(layoutEntry.Alias);
 
                 ImGui.TableNextColumn();
                 ImGui.Text(layoutEntry.Expansion);

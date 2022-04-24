@@ -37,7 +37,7 @@ public class Table
                         separatorCursorY = ImGui.GetCursorPosY();
                     }
 
-                    ImGui.Text(entry.Alias);
+                    ImGui.TextUnformatted(entry.Alias);
 
                     foreach (var stat in enabledStats)
                     {
@@ -97,11 +97,11 @@ public class Table
                         switch (stat.Type)
                         {
                             case StatType.Best:
-                                text = encounter?.Best?.ToString();
+                                text = Util.GetFormattedLog(encounter?.Best, Service.Configuration.NbOfDecimalDigits);
                                 color = Util.GetLogColor(encounter?.Best);
                                 break;
                             case StatType.Median:
-                                text = encounter?.Median?.ToString();
+                                text = Util.GetFormattedLog(encounter?.Median, Service.Configuration.NbOfDecimalDigits);
                                 color = Util.GetLogColor(encounter?.Median);
                                 break;
                             case StatType.Kills:
@@ -124,6 +124,17 @@ public class Table
                             case StatType.BestJob:
                                 text = encounter?.BestJob?.Name;
                                 color = encounter?.BestJob?.Color;
+                                break;
+                            case StatType.AllStarsPoints:
+                                text = encounter?.AllStarsPoints?.ToString();
+                                break;
+                            case StatType.AllStarsRank:
+                                text = encounter?.AllStarsRank?.ToString();
+                                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
+                                break;
+                            case StatType.AllStarsRankPercent:
+                                text = Util.GetFormattedLog(encounter?.AllStarsRankPercent, Service.Configuration.NbOfDecimalDigits);
+                                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
                                 break;
                             default:
                                 text = "?";

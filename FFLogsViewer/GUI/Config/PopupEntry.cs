@@ -59,7 +59,7 @@ public class PopupEntry
                 currLayoutEntry.Type = LayoutEntryType.Header;
             }
 
-            Util.DrawHelp("A header displays the metric for each column.");
+            Util.DrawHelp("A header displays the stat for each column.");
 
             var alias = currLayoutEntry.Alias;
             if (ImGui.InputText("Alias", ref alias, 400))

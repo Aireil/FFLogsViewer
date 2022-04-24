@@ -65,7 +65,7 @@ public class Util
         (list[indexA], list[indexB]) = (list[indexB], list[indexA]);
     }
 
-    public static Vector4 GetLogColor(int? log)
+    public static Vector4 GetLogColor(float? log)
     {
         var color = log switch
         {
@@ -75,7 +75,7 @@ public class Util
             < 75 => new Vector4(0, 112, 255, 255),
             < 95 => new Vector4(163, 53, 238, 255),
             < 99 => new Vector4(255, 128, 0, 255),
-            99 => new Vector4(226, 104, 168, 255),
+            < 100 => new Vector4(226, 104, 168, 255),
             100 => new Vector4(229, 204, 128, 255),
             _ => new Vector4(255, 255, 255, 255),
         };
@@ -98,7 +98,7 @@ public class Util
     public static void CenterText(string text)
     {
         CenterCursor(text);
-        ImGui.Text(text);
+        ImGui.TextUnformatted(text);
     }
 
     public static void CenterSelectable(string text, ref bool isClicked)
@@ -117,6 +117,22 @@ public class Util
     }
 
     public static int Mod(int x, int m) => ((x % m) + m) % m;
+
+    public static string? GetFormattedLog(float? value, int nbOfDecimalDigits)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        if (value >= 100.0f)
+        {
+            return "100";
+        }
+
+        var magnitude = Math.Pow(10, nbOfDecimalDigits);
+        return (Math.Truncate(magnitude * value.Value) / magnitude).ToString("F" + nbOfDecimalDigits);
+    }
 
     public static void OpenLink(CharData charData)
     {

@@ -4,8 +4,8 @@ public class Encounter
 {
     public int Id;
     public int Difficulty;
-    public int? Best;
-    public int? Median;
+    public float? Best;
+    public float? Median;
     public int? Kills;
     public int? Fastest;
     public int? BestAmount;
@@ -13,4 +13,7 @@ public class Encounter
     public string? Metric;
     public Job? Job;
     public Job? BestJob;
+    public float? AllStarsPoints;
+    public int? AllStarsRank;
+    public float? AllStarsRankPercent;
 }
