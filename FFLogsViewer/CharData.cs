@@ -9,6 +9,7 @@ using Dalamud.Logging;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
+using Newtonsoft.Json.Linq;
 
 namespace FFLogsViewer;
 
@@ -302,8 +303,13 @@ public class CharData
                 if (allStars != null)
                 {
                     encounter.AllStarsPoints = allStars.points;
-                    encounter.AllStarsRank = allStars.rank;
-                    encounter.AllStarsRankPercent = allStars.rankPercent;
+
+                    // both "-" if fresh log
+                    if (allStars.rank.Type != JTokenType.String && allStars.rankPercent.Type != JTokenType.String)
+                    {
+                        encounter.AllStarsRank = allStars.rank;
+                        encounter.AllStarsRankPercent = allStars.rankPercent;
+                    }
                 }
             }
 

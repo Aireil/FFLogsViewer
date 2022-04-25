@@ -126,7 +126,8 @@ public class Table
                                 color = encounter?.BestJob?.Color;
                                 break;
                             case StatType.AllStarsPoints:
-                                text = encounter?.AllStarsPoints?.ToString();
+                                // points have a lot of decimals if fresh log
+                                text = encounter?.AllStarsPoints?.ToString("0.##");
                                 break;
                             case StatType.AllStarsRank:
                                 text = encounter?.AllStarsRank?.ToString();
