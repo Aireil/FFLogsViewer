@@ -106,8 +106,6 @@ public class MenuBar
                         "This update has completely reworked the plugin.\n" +
                         "Layout, style, stats, metric, are all customizable in the settings.\n" +
                         "The UI should work better with the different scaling/themes.\n" +
-                        "Context menu button is still disabled, as soon as Dalamud supports it,\n" +
-                        "it will be enabled again.\n" +
                         "\n" +
                         "If anything is broken, weird, or if you have any suggestion, do not hesitate\n" +
                         "to create an issue on the GitHub repo.");
