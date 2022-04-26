@@ -127,7 +127,7 @@ public class Table
                                 break;
                             case StatType.AllStarsPoints:
                                 // points have a lot of decimals if fresh log
-                                text = encounter?.AllStarsPoints?.ToString("0.##");
+                                text = encounter?.AllStarsPoints?.ToString("0.00");
                                 break;
                             case StatType.AllStarsRank:
                                 text = encounter?.AllStarsRank?.ToString();
