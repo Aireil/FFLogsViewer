@@ -1,114 +1,105 @@
 ﻿using System;
 using System.Linq;
-using Dalamud.Game.Gui.ContextMenus;
 using FFLogsViewer.Manager;
 using Lumina.Excel.GeneratedSheets;
+using XivCommon.Functions.ContextMenu;
 
 namespace FFLogsViewer;
 
 public class ContextMenu : IDisposable
 {
-        public ContextMenu()
+    public ContextMenu()
+    {
+        if (Service.Configuration.ContextMenu)
         {
-            if (Service.Configuration.ContextMenu)
-            {
-                Enable();
-            }
+            Enable();
         }
+    }
 
-        public static void Enable()
+    public static void Enable()
+    {
+        Service.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
+        Service.Common.Functions.ContextMenu.OpenContextMenu += OnOpenContextMenu;
+    }
+
+    public static void Disable()
+    {
+        Service.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
+    }
+
+    public void Dispose()
+    {
+        Disable();
+        GC.SuppressFinalize(this);
+    }
+
+    private static bool IsMenuValid(BaseContextMenuArgs args)
+    {
+        switch (args.ParentAddonName)
         {
-            Service.ContextMenu.ContextMenuOpened -= OnOpenContextMenu;
-            Service.ContextMenu.ContextMenuOpened += OnOpenContextMenu;
+            case null: // Nameplate/Model menu
+            case "LookingForGroup":
+            case "PartyMemberList":
+            case "FriendList":
+            case "FreeCompany":
+            case "SocialList":
+            case "ContactList":
+            case "ChatLog":
+            case "_PartyList":
+            case "LinkShell":
+            case "CrossWorldLinkshell":
+            case "ContentMemberList": // Eureka/Bozja/...
+                return args.Text != null && args.ObjectWorld != 0 && args.ObjectWorld != 65535;
+
+            default:
+                return false;
         }
+    }
 
-        public static void Disable()
+    private static void SearchPlayerFromMenu(BaseContextMenuArgs args)
+    {
+        var world = Service.DataManager.GetExcelSheet<World>()
+                           ?.FirstOrDefault(x => x.RowId == args.ObjectWorld);
+
+        if (world == null)
+            return;
+
+        var playerName = $"{args.Text}@{world.Name}";
+
+        if (Service.Configuration.OpenInBrowser && !Service.Configuration.ContextMenuStreamer)
         {
-            Service.ContextMenu.ContextMenuOpened -= OnOpenContextMenu;
+            CharDataManager.OpenCharInBrowser(playerName);
         }
-
-        public void Dispose()
+        else
         {
-            Disable();
-            GC.SuppressFinalize(this);
+            Service.CharDataManager.DisplayedChar.FetchTextCharacter(playerName);
+            Service.MainWindow.IsOpen = true;
         }
+    }
 
-        private static void OnOpenContextMenu(ContextMenuOpenedArgs args)
+    private static void OnOpenContextMenu(ContextMenuOpenArgs args)
+    {
+        if (!IsMenuValid(args))
+            return;
+
+        if (Service.Configuration.ContextMenuStreamer)
         {
-            if (!IsMenuValid(args))
-            {
-                return;
-            }
-
-            if (Service.Configuration.ContextMenuStreamer)
-            {
-                if (!Service.MainWindow.IsOpen)
-                {
-                    return;
-                }
-
-                SearchPlayerFromMenu(args);
-            }
-            else
-            {
-                args.AddCustomItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search);
-            }
-        }
-
-        private static bool IsMenuValid(ContextMenuOpenedArgs args)
-        {
-            switch (args.ParentAddonName)
-            {
-                case null: // Nameplate/Model menu
-                case "LookingForGroup":
-                case "PartyMemberList":
-                case "FriendList":
-                case "FreeCompany":
-                case "SocialList":
-                case "ContactList":
-                case "ChatLog":
-                case "_PartyList":
-                case "LinkShell":
-                case "CrossWorldLinkshell":
-                case "ContentMemberList": // Eureka/Bozja/...
-                    return args.GameObjectContext?.Name != null
-                           && args.GameObjectContext?.WorldId != null
-                           && args.GameObjectContext.WorldId != 0
-                           && args.GameObjectContext.WorldId != 65535;
-
-                default:
-                    return false;
-            }
-        }
-
-        private static void SearchPlayerFromMenu(ContextMenuOpenedArgs args)
-        {
-            var world = Service.DataManager.GetExcelSheet<World>()
-                               ?.FirstOrDefault(x => x.RowId == args.GameObjectContext?.WorldId);
-
-            if (world == null)
+            if (!Service.MainWindow.IsOpen)
                 return;
 
-            var playerName = $"{args.GameObjectContext?.Name}@{world.Name}";
-
-            if (Service.Configuration.OpenInBrowser && !Service.Configuration.ContextMenuStreamer)
-            {
-                CharDataManager.OpenCharInBrowser(playerName);
-            }
-            else
-            {
-                Service.CharDataManager.DisplayedChar.FetchTextCharacter(playerName);
-                Service.MainWindow.IsOpen = true;
-            }
+            SearchPlayerFromMenu(args);
         }
-
-        private static void Search(CustomContextMenuItemSelectedArgs args)
+        else
         {
-            if (!IsMenuValid(args.ContextMenuOpenedArgs))
-            {
-                return;
-            }
-
-            SearchPlayerFromMenu(args.ContextMenuOpenedArgs);
+            args.Items.Add(new NormalContextMenuItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search));
         }
+    }
+
+    private static void Search(ContextMenuItemSelectedArgs args)
+    {
+        if (!IsMenuValid(args))
+                return;
+
+        SearchPlayerFromMenu(args);
+    }
 }

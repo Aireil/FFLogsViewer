@@ -11,6 +11,7 @@ using Dalamud.Plugin;
 using FFLogsViewer.GUI.Config;
 using FFLogsViewer.GUI.Main;
 using FFLogsViewer.Manager;
+using XivCommon;
 
 namespace FFLogsViewer;
 
@@ -24,6 +25,7 @@ internal class Service
     internal static CharDataManager CharDataManager { get; set; } = null!;
     internal static PartyListManager PartyListManager { get; set; } = null!;
     internal static FFLogsClient FfLogsClient { get; set; } = null!;
+    internal static XivCommonBase Common { get; set; } = null!;
 
     [PluginService]
     internal static DalamudPluginInterface Interface { get; private set; } = null!;
@@ -43,6 +45,4 @@ internal class Service
     internal static SigScanner SigScanner { get; private set; } = null!;
     [PluginService]
     internal static TargetManager TargetManager { get; private set; } = null!;
-    [PluginService]
-    internal static Dalamud.Game.Gui.ContextMenus.ContextMenu ContextMenu { get; private set; } = null!;
 }
