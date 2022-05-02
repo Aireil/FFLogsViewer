@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "- 2.0.3.0: Add all stars points/rank/rank% stats + number of decimal digits setting.\n- 2.0.3.1: Add DSR to default layout + fix all star bug with fresh log.\n- 2.0.4.0: Enable context menu button again."
+  "Changelog": "- 2.0.4.0: Enable context menu button again.\n- 2.0.4.1: Warn when a metric is not supported by an encounter."
 }
