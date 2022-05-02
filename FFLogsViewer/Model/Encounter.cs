@@ -11,7 +11,7 @@ public class Encounter
     public int? Fastest;
     public int? BestAmount;
     public bool IsLockedIn = true;
-    public bool IsNotValid;
+    public bool IsMetricValid = true;
     public string? Metric;
     public Job? Job;
     public Job? BestJob;

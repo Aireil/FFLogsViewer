@@ -78,7 +78,7 @@ public class Table
                                     enc => enc.ZoneId == entry.ZoneId);
 
                     var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
-                    if (encounter is { IsNotValid: true })
+                    if (encounter is { IsMetricValid: false })
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
                         encounterName += " (?)";
@@ -91,7 +91,7 @@ public class Table
 
                     ImGui.Text(encounterName);
 
-                    if (encounter is { IsNotValid: true })
+                    if (encounter is { IsMetricValid: false })
                     {
                         ImGui.PopStyleColor();
                         Util.SetHoverTooltip("This metric is not supported by this encounter.\nFor old content, aDPS and HPS are usually the only allowed metrics.");
