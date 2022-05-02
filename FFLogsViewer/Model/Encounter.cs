@@ -2,6 +2,7 @@
 
 public class Encounter
 {
+    public int ZoneId;
     public int Id;
     public int Difficulty;
     public float? Best;
@@ -10,6 +11,7 @@ public class Encounter
     public int? Fastest;
     public int? BestAmount;
     public bool IsLockedIn = true;
+    public bool IsNotValid;
     public string? Metric;
     public Job? Job;
     public Job? BestJob;

@@ -74,8 +74,16 @@ public class Table
                         Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
 
+                    encounter ??= Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
+                                    enc => enc.ZoneId == entry.ZoneId);
+
                     var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
-                    if (encounter is { IsLockedIn: false })
+                    if (encounter is { IsNotValid: true })
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+                        encounterName += " (?)";
+                    }
+                    else if (encounter is { IsLockedIn: false })
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
                         encounterName += " (NL)";
@@ -83,10 +91,15 @@ public class Table
 
                     ImGui.Text(encounterName);
 
-                    if (encounter is { IsLockedIn: false })
+                    if (encounter is { IsNotValid: true })
                     {
                         ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("Not locked in");
+                        Util.SetHoverTooltip("This metric is not supported by this encounter.\nFor old content, aDPS and HPS are usually the only allowed metrics.");
+                    }
+                    else if (encounter is { IsLockedIn: false })
+                    {
+                        ImGui.PopStyleColor();
+                        Util.SetHoverTooltip("Not locked in.");
                     }
 
                     foreach (var stat in enabledStats)
