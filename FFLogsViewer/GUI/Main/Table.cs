@@ -74,14 +74,20 @@ public class Table
                         Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
 
+                    // for invalid metric
                     encounter ??= Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
                                     enc => enc.ZoneId == entry.ZoneId);
 
                     var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
-                    if (encounter is { IsMetricValid: false })
+                    if (encounter == null)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                        encounterName += " (?)";
+                        encounterName += " (N/A)";
+                    }
+                    else if (encounter is { IsMetricValid: false })
+                    {
+                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+                        encounterName += " (NS)";
                     }
                     else if (encounter is { IsLockedIn: false })
                     {
@@ -91,10 +97,15 @@ public class Table
 
                     ImGui.Text(encounterName);
 
-                    if (encounter is { IsMetricValid: false })
+                    if (encounter == null)
                     {
                         ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("This metric is not supported by this encounter.\nFor old content, aDPS and HPS are usually the only allowed metrics.");
+                        Util.SetHoverTooltip("No data available, this is expected if this encounter has just be added.");
+                    }
+                    else if (encounter is { IsMetricValid: false })
+                    {
+                        ImGui.PopStyleColor();
+                        Util.SetHoverTooltip("This metric is not supported by this encounter.\nFor some content, aDPS and HPS are the only allowed metrics.");
                     }
                     else if (encounter is { IsLockedIn: false })
                     {
@@ -155,7 +166,7 @@ public class Table
                                 break;
                         }
 
-                        text ??= "-";
+                        text ??= encounter is null or { IsMetricValid: false } ? "?" : "-";
                         color ??= new Vector4(1, 1, 1, 1);
 
                         Util.CenterTextColored(color.Value, text);

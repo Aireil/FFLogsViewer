@@ -46,6 +46,7 @@ public class LayoutTab
                     Service.Configuration.SetDefaultLayout();
                     Service.Configuration.IsDefaultLayout = true;
                     Service.Configuration.Save();
+                    Service.MainWindow.ResetSize();
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -156,6 +157,7 @@ public class LayoutTab
                 Service.Configuration.Layout = new List<LayoutEntry>();
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
+                Service.MainWindow.ResetSize();
                 ImGui.CloseCurrentPopup();
             }
 
