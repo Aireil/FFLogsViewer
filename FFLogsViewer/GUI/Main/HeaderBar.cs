@@ -120,7 +120,7 @@ public class HeaderBar
 
                         var partyMember = partyList[i];
 
-                        var icon = Service.PartyListManager.GetJobIcon(partyMember.JobId);
+                        var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(partyMember.JobId);
                         var iconSize = 25 * ImGuiHelpers.GlobalScale;
                         if (icon != null)
                         {

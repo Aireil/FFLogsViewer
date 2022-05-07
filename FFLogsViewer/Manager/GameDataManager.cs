@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 using Dalamud.Logging;
@@ -7,7 +8,7 @@ using FFLogsViewer.Model.GameData;
 
 namespace FFLogsViewer.Manager;
 
-public class GameDataManager
+public class GameDataManager : IDisposable
 {
     public static readonly List<Metric> AvailableMetrics = new()
     {
@@ -27,15 +28,24 @@ public class GameDataManager
     public bool HasFailed;
     public GameData? GameData;
     public List<Job> Jobs;
+    public JobIconsManager JobIconsManager;
 
     public GameDataManager()
     {
         this.Jobs = GetJobs();
+        this.JobIconsManager = new JobIconsManager();
     }
 
     public static Job GetDefaultJob()
     {
         return new Job { Name = "All jobs", Color = new Vector4(255, 255, 255, 255) };
+    }
+
+    public void Dispose()
+    {
+        this.JobIconsManager.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 
     public void FetchData()
