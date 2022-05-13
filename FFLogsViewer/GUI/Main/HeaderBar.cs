@@ -119,15 +119,23 @@ public class HeaderBar
                         ImGui.TableNextColumn();
 
                         var partyMember = partyList[i];
+                        var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                        var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
+
+                        if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
+                        {
+                            Service.CharDataManager.DisplayedChar.FetchTextCharacter($"{partyMember.Name}@{partyMember.World}");
+                        }
 
                         var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(partyMember.JobId);
-                        var iconSize = 25 * ImGuiHelpers.GlobalScale;
                         if (icon != null)
                         {
+                            ImGui.SameLine();
                             ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
                         }
                         else
                         {
+                            ImGui.SetCursorPosY(middleCursorPosY);
                             ImGui.Text("(?)");
                             Util.SetHoverTooltip("An error occured with icons.\n" +
                                                  "Please create an issue on the GitHub with a screenshot of the red lines in /xllog.\n" +
@@ -135,15 +143,8 @@ public class HeaderBar
                                                  "This shouldn't affect the party members functionality.");
                         }
 
-                        ImGui.SameLine();
-                        if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
-                        {
-                            Service.CharDataManager.DisplayedChar.FetchTextCharacter($"{partyMember.Name}@{partyMember.World}");
-                        }
-
                         ImGui.TableNextColumn();
 
-                        var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
                         ImGui.SetCursorPosY(middleCursorPosY);
                         ImGui.Text(partyMember.Name);
 

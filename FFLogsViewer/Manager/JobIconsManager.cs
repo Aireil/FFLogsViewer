@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiScene;
@@ -10,10 +11,16 @@ namespace FFLogsViewer.Manager;
 public class JobIconsManager : IDisposable
 {
     private List<TextureWrap>? jobIcons;
+    private volatile bool isLoading;
     private int iconLoadAttemptsLeft = 4;
 
     public TextureWrap? GetJobIcon(uint jobId)
     {
+        if (this.isLoading)
+        {
+            return null;
+        }
+
         if (this.jobIcons == null)
         {
             this.LoadJobIcons();
@@ -29,13 +36,7 @@ public class JobIconsManager : IDisposable
 
     public void Dispose()
     {
-        if (this.jobIcons != null)
-        {
-            foreach (var icon in this.jobIcons)
-            {
-                icon.Dispose();
-            }
-        }
+        this.DisposeIcons();
 
         GC.SuppressFinalize(this);
     }
@@ -85,44 +86,55 @@ public class JobIconsManager : IDisposable
         }
 
         this.jobIcons = new List<TextureWrap>();
+        this.isLoading = true;
         var hasFailed = false;
 
-        var defaultIcon = GetIconTextureWrap(62143);
-        if (defaultIcon != null)
+        Task.Run(() =>
         {
-            this.jobIcons.Add(defaultIcon);
-        }
-        else
-        {
-            hasFailed = true;
-        }
-
-        for (var i = 62101; i <= 62140 && !hasFailed; i++)
-        {
-            var icon = GetIconTextureWrap(i);
-            if (icon != null)
+            var defaultIcon = GetIconTextureWrap(62143);
+            if (defaultIcon != null)
             {
-                this.jobIcons.Add(icon);
+                this.jobIcons.Add(defaultIcon);
             }
             else
             {
                 hasFailed = true;
             }
-        }
 
-        if (hasFailed)
-        {
-            if (this.jobIcons != null)
+            for (var i = 62101; i <= 62140 && !hasFailed; i++)
             {
-                foreach (var icon in this.jobIcons)
+                var icon = GetIconTextureWrap(i);
+                if (icon != null)
                 {
-                    icon.Dispose();
+                    this.jobIcons.Add(icon);
+                }
+                else
+                {
+                    hasFailed = true;
                 }
             }
 
-            this.jobIcons = null;
+            if (hasFailed)
+            {
+                this.DisposeIcons();
 
-            PluginLog.Error($"Job icons loading failed, {--this.iconLoadAttemptsLeft} attempt(s) left.");
+                this.jobIcons = null;
+
+                PluginLog.Error($"Job icons loading failed, {--this.iconLoadAttemptsLeft} attempt(s) left.");
+            }
+
+            this.isLoading = false;
+        });
+    }
+
+    private void DisposeIcons()
+    {
+        if (this.jobIcons != null)
+        {
+            foreach (var icon in this.jobIcons)
+            {
+                icon.Dispose();
+            }
         }
     }
 }
