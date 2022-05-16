@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-  "Changelog": "- 2.0.4.0: Enable context menu button again.\n- 2.0.4.1: Warn when a metric is not supported by an encounter."
+  "Changelog": "- 2.0.4.2: Miscellaneous improvements."
 }
