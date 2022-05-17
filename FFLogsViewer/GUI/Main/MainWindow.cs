@@ -41,7 +41,7 @@ public class MainWindow : Window
 
         this.headerBar.Draw();
 
-        if (Service.CharDataManager.DisplayedChar.IsDataReady || Service.Configuration.Style.IsTableAlwaysDrawn)
+        if (Service.CharDataManager.DisplayedChar.IsDataReady)
         {
             Table.Draw();
         }

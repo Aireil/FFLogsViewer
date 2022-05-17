@@ -9,6 +9,5 @@ public class Style
     public ImGuiTableFlags MainTableFlags;
     public bool IsHeaderSeparatorDrawn;
     public bool IsSizeFixed;
-    public bool IsTableAlwaysDrawn;
     public bool IsCloseHotkeyRespected;
 }

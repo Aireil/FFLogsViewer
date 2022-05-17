@@ -25,8 +25,8 @@ public class CharData
     public string LoadedFirstName = string.Empty;
     public string LoadedLastName = string.Empty;
     public string LoadedWorldName = string.Empty;
-    public bool IsDataLoading;
-    public bool IsDataReady;
+    public volatile bool IsDataLoading;
+    public volatile bool IsDataReady;
 
     public List<Encounter> Encounters = new();
 

@@ -87,9 +87,6 @@ public class StyleTab
 
         ImGui.Indent();
 
-        hasStyleChanged |= ImGui.Checkbox("Always display table", ref style.IsTableAlwaysDrawn);
-        Util.DrawHelp("The table will always be displayed, even when no log info is loaded.");
-
         if (ImGui.Button("Borders customization"))
         {
             ImGui.OpenPopup("##Borders");
