@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.4.2: Miscellaneous improvements.\n- 2.0.4.3: Removed always display table setting to avoid crashes.\n      A bit annoying to fix, if you really want the setting back, please open an issue on the GitHub repo."
+    "Changelog": "- 2.0.4.4: Fix Dalamud breaking context menus."
 }
