@@ -80,7 +80,7 @@ public class ContextMenu : IDisposable
 
     private static void OnOpenContextMenu(ContextMenuOpenArgs args)
     {
-        if (!Service.Interface.UiBuilder.ShouldModifyUi || !IsMenuValid(args))
+        if (!IsMenuValid(args))
             return;
 
         if (Service.Configuration.ContextMenuStreamer)
