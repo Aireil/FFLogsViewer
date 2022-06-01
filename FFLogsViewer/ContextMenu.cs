@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
+using Dalamud.ContextMenu;
 using FFLogsViewer.Manager;
 using Lumina.Excel.GeneratedSheets;
-using XivCommon.Functions.ContextMenu;
 
 namespace FFLogsViewer;
 
@@ -18,13 +18,13 @@ public class ContextMenu : IDisposable
 
     public static void Enable()
     {
-        Service.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
-        Service.Common.Functions.ContextMenu.OpenContextMenu += OnOpenContextMenu;
+        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
+        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu += OnOpenContextMenu;
     }
 
     public static void Disable()
     {
-        Service.Common.Functions.ContextMenu.OpenContextMenu -= OnOpenContextMenu;
+        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
     }
 
     public void Dispose()
@@ -78,7 +78,7 @@ public class ContextMenu : IDisposable
         }
     }
 
-    private static void OnOpenContextMenu(ContextMenuOpenArgs args)
+    private static void OnOpenContextMenu(GameObjectContextMenuOpenArgs args)
     {
         if (!IsMenuValid(args))
             return;
@@ -92,11 +92,11 @@ public class ContextMenu : IDisposable
         }
         else
         {
-            args.Items.Add(new NormalContextMenuItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search));
+            args.AddCustomItem(new GameObjectContextMenuItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search));
         }
     }
 
-    private static void Search(ContextMenuItemSelectedArgs args)
+    private static void Search(GameObjectContextMenuItemSelectedArgs args)
     {
         if (!IsMenuValid(args))
                 return;
