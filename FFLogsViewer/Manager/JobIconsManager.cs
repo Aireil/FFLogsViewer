@@ -47,16 +47,16 @@ public class JobIconsManager : IDisposable
         {
             TexFile? iconTex = null;
             var iconPath = $"ui/icon/062000/0{id}_hr1.tex";
-            if (IPC.PenumbraEnabled)
+            try
             {
-                try
+                if (IPC.IsPenumbraIpcEnabled)
                 {
                     iconTex = Service.DataManager.GameData.GetFileFromDisk<TexFile>(IPC.ResolvePenumbraPath(iconPath));
                 }
-                catch (Exception)
-                {
-                    // ignored
-                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
 
             iconTex ??= Service.DataManager.GetFile<TexFile>(iconPath);

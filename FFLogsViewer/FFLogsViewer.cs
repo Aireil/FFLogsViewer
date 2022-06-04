@@ -47,6 +47,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
 
     public void Dispose()
     {
+        IPC.Dispose();
         Commands.Dispose();
         Service.ContextMenuBase.Dispose();
         this.contextMenu.Dispose();
