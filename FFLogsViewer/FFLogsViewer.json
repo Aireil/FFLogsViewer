@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.4.4: Fix Dalamud breaking context menus."
+    "Changelog": "- 2.0.4.5: Penumbra API update + library change for context menu button."
 }
