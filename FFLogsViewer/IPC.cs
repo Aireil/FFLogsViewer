@@ -59,6 +59,6 @@ public class IPC
 
     private static void UpdatePenumbraStatus()
     {
-        IsPenumbraIpcEnabled = PenumbraApiVersion == PenumbraSupportedApiVersion;
+        IsPenumbraIpcEnabled = PenumbraApiVersion >= PenumbraSupportedApiVersion; // Should not break after this
     }
 }
