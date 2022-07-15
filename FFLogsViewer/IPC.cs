@@ -11,7 +11,7 @@ public class IPC
 
     private static ICallGateSubscriber<int> penumbraInitializedSubscriber = null!;
     private static ICallGateSubscriber<int> penumbraDisposedSubscriber = null!;
-    private static ICallGateSubscriber<int> penumbraApiVersionSubscriber = null!;
+    private static ICallGateSubscriber<(int Breaking, int Features)> penumbraApiVersionsSubscriber = null!;
     private static ICallGateSubscriber<string, string> penumbraResolveDefaultSubscriber = null!;
     public static int PenumbraApiVersion
     {
@@ -19,7 +19,7 @@ public class IPC
         {
             try
             {
-                return penumbraApiVersionSubscriber.InvokeFunc();
+                return penumbraApiVersionsSubscriber.InvokeFunc().Breaking;
             }
             catch
             {
@@ -34,7 +34,7 @@ public class IPC
         penumbraInitializedSubscriber.Subscribe(UpdatePenumbraStatus);
         penumbraDisposedSubscriber = Service.Interface.GetIpcSubscriber<int>("Penumbra.Disposed");
         penumbraDisposedSubscriber.Subscribe(UpdatePenumbraStatus);
-        penumbraApiVersionSubscriber = Service.Interface.GetIpcSubscriber<int>("Penumbra.ApiVersion");
+        penumbraApiVersionsSubscriber = Service.Interface.GetIpcSubscriber<(int, int)>("Penumbra.ApiVersions");
         penumbraResolveDefaultSubscriber = Service.Interface.GetIpcSubscriber<string, string>("Penumbra.ResolveDefaultPath");
         UpdatePenumbraStatus();
     }
@@ -59,6 +59,6 @@ public class IPC
 
     private static void UpdatePenumbraStatus()
     {
-        IsPenumbraIpcEnabled = PenumbraApiVersion >= PenumbraSupportedApiVersion; // Should not break after this
+        IsPenumbraIpcEnabled = PenumbraApiVersion == PenumbraSupportedApiVersion;
     }
 }
