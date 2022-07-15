@@ -39,11 +39,17 @@ public class Table
 
                     ImGui.TextUnformatted(entry.Alias);
 
+                    if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+                    {
+                        ImGui.Separator();
+                    }
+
                     foreach (var stat in enabledStats)
                     {
                         ImGui.TableNextColumn();
                         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
                         {
+                            ImGui.Separator();
                             ImGui.SetCursorPosY(separatorCursorY);
                         }
 
@@ -61,11 +67,11 @@ public class Table
                         {
                             Util.CenterText(stat.Alias != string.Empty ? stat.Alias : stat.Name);
                         }
-                    }
 
-                    if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-                    {
-                        ImGui.Separator();
+                        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+                        {
+                            ImGui.Separator();
+                        }
                     }
                 }
                 else if (entry.Type == LayoutEntryType.Encounter)
