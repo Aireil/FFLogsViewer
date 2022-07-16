@@ -18,13 +18,13 @@ public class ContextMenu : IDisposable
 
     public static void Enable()
     {
-        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
-        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu += OnOpenContextMenu;
+        Service.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
+        Service.ContextMenu.OnOpenGameObjectContextMenu += OnOpenContextMenu;
     }
 
     public static void Disable()
     {
-        Service.ContextMenuBase.Functions.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
+        Service.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
     }
 
     public void Dispose()
