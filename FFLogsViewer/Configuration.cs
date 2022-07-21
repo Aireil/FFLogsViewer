@@ -24,8 +24,8 @@ public class Configuration : IPluginConfiguration
     public bool IsDefaultLayout { get; set; } = true;
     public int NbOfDecimalDigits { get; set; }
     public List<LayoutEntry> Layout { get; set; } = new();
-    public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
     public List<Stat> Stats { get; set; } = new();
+    public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
     public Style Style { get; set; } = new()
     {
         MinMainWindowWidth = 390.0f,
@@ -46,15 +46,15 @@ public class Configuration : IPluginConfiguration
         this.ClientSecret ??= string.Empty;
         this.ContextMenuButtonName ??= string.Empty;
 
-        if (this.Stats.Count == 0)
-        {
-            this.Stats.AddRange(GetDefaultStats());
-        }
-
         if (this.IsDefaultLayout || this.Layout.Count == 0)
         {
             this.SetDefaultLayout();
             this.IsDefaultLayout = true;
+        }
+
+        if (this.Stats.Count == 0)
+        {
+            this.Stats.AddRange(GetDefaultStats());
         }
 
         this.Upgrade();
