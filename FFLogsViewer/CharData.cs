@@ -16,6 +16,7 @@ namespace FFLogsViewer;
 public class CharData
 {
     public Job Job = GameDataManager.GetDefaultJob();
+    public Partition Partition = GameDataManager.GetDefaultPartition();
     public Metric? OverriddenMetric;
     public Metric? LoadedMetric;
     public string FirstName = string.Empty;

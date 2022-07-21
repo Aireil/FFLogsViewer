@@ -115,7 +115,7 @@ public class FFLogsClient
         charData.LoadedMetric = metric;
         foreach (var (id, difficulty) in GetZoneInfo())
         {
-            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}");
+            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}, partition: {charData.Partition.Id}");
             if (charData.Job.Name != "All jobs")
             {
                 query.Append($", specName: \\\"{charData.Job.Name.Replace(" ", string.Empty)}\\\"");

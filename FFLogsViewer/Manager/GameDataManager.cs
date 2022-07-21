@@ -23,6 +23,13 @@ public class GameDataManager : IDisposable
         new Metric { Name = "Tank Combined aDPS", InternalName = "tankcombineddps" },
         new Metric { Name = "Tank Combined nDPS", InternalName = "tankcombinedndps" },
     };
+
+    public static readonly List<Partition> AvailablePartitions = new()
+    {
+        new Partition { Name = "Standard", Id = -1 },
+        new Partition { Name = "Non-Standard", Id = -2 },
+    };
+
     public bool IsDataReady;
     public bool IsDataLoading;
     public bool HasFailed;
@@ -39,6 +46,11 @@ public class GameDataManager : IDisposable
     public static Job GetDefaultJob()
     {
         return new Job { Name = "All jobs", Color = new Vector4(255, 255, 255, 255) };
+    }
+
+    public static Partition GetDefaultPartition()
+    {
+        return AvailablePartitions[0];
     }
 
     public void Dispose()

@@ -31,7 +31,7 @@ public class MenuBar
             ImGui.PopFont();
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.CharDataManager.DisplayedChar.Job.Color);
-            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.Job.Name + "##JobMenu"))
+            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.Job.Name))
             {
                 foreach (var job in Service.GameDataManager.Jobs)
                 {
@@ -62,6 +62,23 @@ public class MenuBar
                     if (ImGui.MenuItem(metric.Name))
                     {
                         Service.CharDataManager.DisplayedChar.OverriddenMetric = metric;
+                        if (Service.CharDataManager.DisplayedChar.IsInfoSet())
+                        {
+                            Service.CharDataManager.DisplayedChar.FetchData();
+                        }
+                    }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.Partition.Name))
+            {
+                foreach (var partition in GameDataManager.AvailablePartitions)
+                {
+                    if (ImGui.MenuItem(partition.Name))
+                    {
+                        Service.CharDataManager.DisplayedChar.Partition = partition;
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
