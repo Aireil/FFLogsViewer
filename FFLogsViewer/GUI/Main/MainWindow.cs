@@ -1,12 +1,17 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Windowing;
 using FFLogsViewer.Manager;
+using FFLogsViewer.Model;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Main;
 
 public class MainWindow : Window
 {
+    public Job Job = GameDataManager.GetDefaultJob();
+    public Partition Partition = GameDataManager.GetDefaultPartition();
+    public Metric? OverriddenMetric;
+
     private readonly HeaderBar headerBar = new();
 
     public MainWindow()
@@ -31,7 +36,7 @@ public class MainWindow : Window
 
     public override void OnOpen()
     {
-        Service.CharDataManager.DisplayedChar.ResetTemporarySettings();
+        this.ResetTemporarySettings();
     }
 
     public override void Draw()
@@ -58,5 +63,12 @@ public class MainWindow : Window
         {
             this.headerBar.ResetSizeCount = 5;
         }
+    }
+
+    public void ResetTemporarySettings()
+    {
+        this.Job = GameDataManager.GetDefaultJob();
+        this.OverriddenMetric = null;
+        this.Partition = GameDataManager.GetDefaultPartition();
     }
 }

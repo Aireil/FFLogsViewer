@@ -75,7 +75,7 @@ public class ContextMenu : IDisposable
         {
             if (!Service.MainWindow.IsOpen)
             {
-                Service.CharDataManager.DisplayedChar.ResetTemporarySettings();
+                Service.MainWindow.ResetTemporarySettings();
             }
 
             Service.CharDataManager.DisplayedChar.FetchTextCharacter(playerName);

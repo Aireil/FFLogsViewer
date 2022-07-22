@@ -15,9 +15,6 @@ namespace FFLogsViewer;
 
 public class CharData
 {
-    public Job Job = GameDataManager.GetDefaultJob();
-    public Partition Partition = GameDataManager.GetDefaultPartition();
-    public Metric? OverriddenMetric;
     public Metric? LoadedMetric;
     public string FirstName = string.Empty;
     public string LastName = string.Empty;
@@ -265,13 +262,6 @@ public class CharData
         this.Encounters = new List<Encounter>();
         this.IsDataReady = false;
         this.LoadedMetric = null;
-    }
-
-    public void ResetTemporarySettings()
-    {
-        this.Job = GameDataManager.GetDefaultJob();
-        this.OverriddenMetric = null;
-        this.Partition = GameDataManager.GetDefaultPartition();
     }
 
     private void ParseZone(dynamic zone)

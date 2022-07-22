@@ -30,15 +30,15 @@ public class MenuBar
 
             ImGui.PopFont();
 
-            ImGui.PushStyleColor(ImGuiCol.Text, Service.CharDataManager.DisplayedChar.Job.Color);
-            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.Job.Name))
+            ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
+            if (ImGui.BeginMenu(Service.MainWindow.Job.Name))
             {
                 foreach (var job in Service.GameDataManager.Jobs)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, job.Color);
                     if (ImGui.MenuItem(job.Name))
                     {
-                        Service.CharDataManager.DisplayedChar.Job = job;
+                        Service.MainWindow.Job = job;
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
@@ -53,15 +53,15 @@ public class MenuBar
 
             ImGui.PopStyleColor();
 
-            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.OverriddenMetric != null
-                                    ? Service.CharDataManager.DisplayedChar.OverriddenMetric.Name
+            if (ImGui.BeginMenu(Service.MainWindow.OverriddenMetric != null
+                                    ? Service.MainWindow.OverriddenMetric.Name
                                     : Service.Configuration.Metric.Name))
             {
                 foreach (var metric in GameDataManager.AvailableMetrics)
                 {
                     if (ImGui.MenuItem(metric.Name))
                     {
-                        Service.CharDataManager.DisplayedChar.OverriddenMetric = metric;
+                        Service.MainWindow.OverriddenMetric = metric;
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
@@ -72,13 +72,13 @@ public class MenuBar
                 ImGui.EndMenu();
             }
 
-            if (ImGui.BeginMenu(Service.CharDataManager.DisplayedChar.Partition.Name))
+            if (ImGui.BeginMenu(Service.MainWindow.Partition.Name))
             {
                 foreach (var partition in GameDataManager.AvailablePartitions)
                 {
                     if (ImGui.MenuItem(partition.Name))
                     {
-                        Service.CharDataManager.DisplayedChar.Partition = partition;
+                        Service.MainWindow.Partition = partition;
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
