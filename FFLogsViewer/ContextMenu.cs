@@ -73,6 +73,11 @@ public class ContextMenu : IDisposable
         }
         else
         {
+            if (!Service.MainWindow.IsOpen)
+            {
+                Service.CharDataManager.DisplayedChar.ResetTemporarySettings();
+            }
+
             Service.CharDataManager.DisplayedChar.FetchTextCharacter(playerName);
             Service.MainWindow.IsOpen = true;
         }

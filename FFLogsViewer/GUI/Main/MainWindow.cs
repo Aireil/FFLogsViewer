@@ -31,8 +31,7 @@ public class MainWindow : Window
 
     public override void OnOpen()
     {
-        Service.CharDataManager.DisplayedChar.Job = GameDataManager.GetDefaultJob();
-        Service.CharDataManager.DisplayedChar.OverriddenMetric = null;
+        Service.CharDataManager.DisplayedChar.ResetTemporarySettings();
     }
 
     public override void Draw()

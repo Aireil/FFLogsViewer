@@ -267,6 +267,13 @@ public class CharData
         this.LoadedMetric = null;
     }
 
+    public void ResetTemporarySettings()
+    {
+        this.Job = GameDataManager.GetDefaultJob();
+        this.OverriddenMetric = null;
+        this.Partition = GameDataManager.GetDefaultPartition();
+    }
+
     private void ParseZone(dynamic zone)
     {
         if (zone.rankings == null)
