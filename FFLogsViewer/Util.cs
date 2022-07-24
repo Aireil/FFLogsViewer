@@ -141,11 +141,7 @@ public class Util
 
     public static void OpenLink(string link)
     {
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = link,
-            UseShellExecute = true,
-        });
+        Dalamud.Utility.Util.OpenLink(link);
     }
 
     public static unsafe SeString ReadSeString(byte* ptr)
