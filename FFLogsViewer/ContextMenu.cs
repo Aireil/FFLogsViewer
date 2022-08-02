@@ -85,7 +85,7 @@ public class ContextMenu : IDisposable
 
     private static void OnOpenContextMenu(GameObjectContextMenuOpenArgs args)
     {
-        if (!IsMenuValid(args))
+        if (!Service.Interface.UiBuilder.ShouldModifyUi || !IsMenuValid(args))
             return;
 
         if (Service.Configuration.ContextMenuStreamer)
