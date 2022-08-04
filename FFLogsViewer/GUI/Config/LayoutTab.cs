@@ -18,6 +18,22 @@ public class LayoutTab
 
     public void Draw()
     {
+        DrawAutoUpdate();
+        this.DrawLayoutTable();
+        this.DrawFooter();
+
+        // Needed because popups do not open in tables
+        if (this.isEditButtonPressed)
+        {
+            this.isEditButtonPressed = false;
+            this.popupEntry.Open();
+        }
+
+        this.popupEntry.Draw();
+    }
+
+    private static void DrawAutoUpdate()
+    {
         ImGui.Text("Auto-update layout: ");
         ImGui.SameLine();
         if (Service.Configuration.IsDefaultLayout)
@@ -59,7 +75,10 @@ public class LayoutTab
                 ImGui.EndPopup();
             }
         }
+    }
 
+    private void DrawLayoutTable()
+    {
         if (ImGui.BeginTable(
                 "##ConfigLayoutTable",
                 8,
@@ -135,7 +154,10 @@ public class LayoutTab
 
             ImGui.EndTable();
         }
+    }
 
+    private void DrawFooter()
+    {
         if (Util.DrawButtonIcon(FontAwesomeIcon.Plus, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
         {
             this.popupEntry.SwitchMode(PopupEntry.Mode.Adding);
@@ -169,14 +191,5 @@ public class LayoutTab
 
             ImGui.EndPopup();
         }
-
-        // Needed because popups do not open in tables
-        if (this.isEditButtonPressed)
-        {
-            this.isEditButtonPressed = false;
-            this.popupEntry.Open();
-        }
-
-        this.popupEntry.Draw();
     }
 }
