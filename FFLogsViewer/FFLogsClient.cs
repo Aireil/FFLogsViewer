@@ -107,9 +107,9 @@ public class FFLogsClient
             var jsonContent = await dataResponse.Content.ReadAsStringAsync();
             Service.GameDataManager.SetDataFromJson(jsonContent);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            PluginLog.Error(e, "Error while fetching game data.");
+            PluginLog.Error(ex, "Error while fetching game data.");
         }
     }
 
@@ -151,9 +151,9 @@ public class FFLogsClient
             var jsonContent = await dataResponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject(jsonContent);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            PluginLog.Error(e, "Error while fetching data.");
+            PluginLog.Error(ex, "Error while fetching data.");
             return null;
         }
     }
@@ -274,9 +274,9 @@ public class FFLogsClient
             var jsonContent = await dataResponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<JObject>(jsonContent);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            PluginLog.Error(e, "Error while fetching rate limit data.");
+            PluginLog.Error(ex, "Error while fetching rate limit data.");
         }
 
         return null;

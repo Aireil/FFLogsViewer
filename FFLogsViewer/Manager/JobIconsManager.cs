@@ -70,9 +70,9 @@ public class JobIconsManager : IDisposable
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            PluginLog.Error(e, "Icon loading failed.");
+            PluginLog.Error(ex, "Icon loading failed.");
         }
 
         return null;

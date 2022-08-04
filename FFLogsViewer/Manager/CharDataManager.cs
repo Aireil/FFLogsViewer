@@ -67,9 +67,9 @@ public class CharDataManager
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            PluginLog.Error(e, "Error while resolving placeholder.");
+            PluginLog.Error(ex, "Error while resolving placeholder.");
             return null;
         }
 
