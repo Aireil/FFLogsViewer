@@ -30,9 +30,9 @@ public class GameDataManager : IDisposable
         new Partition { Name = "Non-Standard", Id = -2 },
     };
 
-    public bool IsDataReady;
-    public bool IsDataLoading;
-    public bool HasFailed;
+    public volatile bool IsDataReady;
+    public volatile bool IsDataLoading;
+    public volatile bool HasFailed;
     public GameData? GameData;
     public List<Job> Jobs;
     public JobIconsManager JobIconsManager;
@@ -62,7 +62,10 @@ public class GameDataManager : IDisposable
 
     public void FetchData()
     {
-        if (this.IsDataLoading) return;
+        if (this.IsDataLoading)
+        {
+            return;
+        }
 
         this.IsDataReady = false;
         this.IsDataLoading = true;

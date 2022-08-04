@@ -2,6 +2,6 @@
 
 public class Partition
 {
-    public string Name { get; set; } = null!;
-    public int Id { get; set; }
+    public string Name { get; init; } = null!;
+    public int Id { get; init; }
 }

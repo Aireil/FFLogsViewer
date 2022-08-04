@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 using Dalamud.Logging;
 using FFLogsViewer.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FFLogsViewer;
 
 public class FFLogsClient
 {
     public bool IsTokenValid;
+    public int LimitPerHour;
 
     private readonly HttpClient httpClient;
+    private volatile bool isRateLimitDataLoading;
 
     public class Token
     {
@@ -66,7 +69,7 @@ public class FFLogsClient
             }
             else
             {
-                PluginLog.Error("FF Logs token couldn't be set.");
+                PluginLog.Error($"FF Logs token couldn't be set: {(token == null ? "return was null" : token.Error)}");
             }
         });
     }
@@ -84,9 +87,9 @@ public class FFLogsClient
 
         var content = new StringContent(query, Encoding.UTF8, "application/json");
 
-        var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
         try
         {
+            var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
             var jsonContent = await dataResponse.Content.ReadAsStringAsync();
             Service.GameDataManager.SetDataFromJson(jsonContent);
         }
@@ -128,9 +131,9 @@ public class FFLogsClient
 
         var content = new StringContent(query.ToString(), Encoding.UTF8, "application/json");
 
-        var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
         try
         {
+            var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
             var jsonContent = await dataResponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject(jsonContent);
         }
@@ -139,6 +142,40 @@ public class FFLogsClient
             PluginLog.Error(e, "Error while fetching data.");
             return null;
         }
+    }
+
+    public void RefreshRateLimitData()
+    {
+        if (this.isRateLimitDataLoading)
+        {
+            return;
+        }
+
+        this.isRateLimitDataLoading = true;
+
+        Task.Run(async () =>
+        {
+            var rateLimitData = await this.FetchRateLimitData().ConfigureAwait(false);
+
+            if (rateLimitData != null && rateLimitData["error"] == null)
+            {
+                var limitPerHour = rateLimitData["data"]?["rateLimitData"]?["limitPerHour"]?.ToObject<int>();
+                if (limitPerHour is null or <= 0)
+                {
+                    PluginLog.Error($"Couldn't find proper limit per hour: {rateLimitData}");
+                }
+                else
+                {
+                    this.LimitPerHour = limitPerHour.Value;
+                }
+            }
+            else
+            {
+                PluginLog.Error($"FF Logs rate limit data couldn't be fetched: {(rateLimitData == null ? "return was null" : rateLimitData["error"])}");
+            }
+
+            this.isRateLimitDataLoading = false;
+        });
     }
 
     private static async Task<Token?> FetchToken()
@@ -155,10 +192,18 @@ public class FFLogsClient
             { "client_secret", Service.Configuration.ClientSecret ?? string.Empty },
         };
 
-        var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form!));
-        var jsonContent = await tokenResponse.Content.ReadAsStringAsync();
-        var tok = JsonConvert.DeserializeObject<Token>(jsonContent);
-        return tok;
+        try
+        {
+            var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form!));
+            var jsonContent = await tokenResponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Token>(jsonContent);
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Error(ex, "Error while fetching token.");
+        }
+
+        return null;
     }
 
     private static List<Tuple<int, int>> GetZoneInfo()
@@ -186,5 +231,32 @@ public class FFLogsClient
         }
 
         return info;
+    }
+
+    private async Task<JObject?> FetchRateLimitData()
+    {
+        if (!this.IsTokenValid)
+        {
+            PluginLog.Error("FFLogs token not valid.");
+            return null;
+        }
+
+        const string baseAddress = @"https://www.fflogs.com/api/v2/client";
+        const string query = @"{""query"":""{rateLimitData {limitPerHour}}""}";
+
+        var content = new StringContent(query, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
+            var jsonContent = await dataResponse.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<JObject>(jsonContent);
+        }
+        catch (Exception e)
+        {
+            PluginLog.Error(e, "Error while fetching rate limit data.");
+        }
+
+        return null;
     }
 }
