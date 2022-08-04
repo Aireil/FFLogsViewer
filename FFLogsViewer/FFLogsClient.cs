@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Dalamud.Logging;
 using FFLogsViewer.Model;
@@ -13,11 +14,12 @@ namespace FFLogsViewer;
 
 public class FFLogsClient
 {
-    public bool IsTokenValid;
+    public volatile bool IsTokenValid;
     public int LimitPerHour;
 
     private readonly HttpClient httpClient;
     private volatile bool isRateLimitDataLoading;
+    private volatile int rateLimitDataFetchAttempts;
 
     public class Token
     {
@@ -47,9 +49,21 @@ public class FFLogsClient
                && !string.IsNullOrEmpty(Service.Configuration.ClientSecret);
     }
 
+    public static int EstimateCurrentLayoutPoints()
+    {
+        var zoneCount = GetZoneInfo().Count;
+        if (zoneCount == 0)
+        {
+            return 1;
+        }
+
+        return GetZoneInfo().Count * 5;
+    }
+
     public void SetToken()
     {
         this.IsTokenValid = false;
+        this.rateLimitDataFetchAttempts = 0;
 
         if (!IsConfigSet())
         {
@@ -146,12 +160,20 @@ public class FFLogsClient
 
     public void RefreshRateLimitData()
     {
-        if (this.isRateLimitDataLoading)
+        if (this.isRateLimitDataLoading || (this.LimitPerHour <= 0 && this.rateLimitDataFetchAttempts >= 3))
         {
             return;
         }
 
         this.isRateLimitDataLoading = true;
+
+        // don't count as an attempt if the previous refresh was successful
+        if (this.LimitPerHour <= 0)
+        {
+            Interlocked.Increment(ref this.rateLimitDataFetchAttempts);
+        }
+
+        this.LimitPerHour = 0;
 
         Task.Run(async () =>
         {
