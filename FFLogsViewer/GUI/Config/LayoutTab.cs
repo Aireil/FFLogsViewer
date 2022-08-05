@@ -9,7 +9,7 @@ namespace FFLogsViewer.GUI.Config;
 public class LayoutTab
 {
     private readonly PopupEntry popupEntry;
-    private bool isEditButtonPressed;
+    private bool shouldPopupOpen;
 
     public LayoutTab()
     {
@@ -23,9 +23,9 @@ public class LayoutTab
         this.DrawFooter();
 
         // Needed because popups do not open in tables
-        if (this.isEditButtonPressed)
+        if (this.shouldPopupOpen)
         {
-            this.isEditButtonPressed = false;
+            this.shouldPopupOpen = false;
             this.popupEntry.Open();
         }
 
@@ -82,7 +82,7 @@ public class LayoutTab
     {
         if (ImGui.BeginTable(
                 "##ConfigLayoutTable",
-                9,
+                10,
                 ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY,
                 new Vector2(-1, 350)))
         {
@@ -96,6 +96,7 @@ public class LayoutTab
             ImGui.TableSetupColumn("Difficulty");
             ImGui.TableSetupColumn("Swap ID/#");
             ImGui.TableSetupColumn("##EditCol", ImGuiTableColumnFlags.WidthFixed, 20 * ImGuiHelpers.GlobalScale);
+            ImGui.TableSetupColumn("##AddCol", ImGuiTableColumnFlags.WidthFixed, 20 * ImGuiHelpers.GlobalScale);
             ImGui.TableHeadersRow();
 
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
@@ -147,11 +148,19 @@ public class LayoutTab
                 ImGui.Text(layoutEntry.SwapId == string.Empty ? string.Empty : $"{layoutEntry.SwapId}/{layoutEntry.SwapNumber}");
 
                 ImGui.TableNextColumn();
-                if (Util.DrawButtonIcon(FontAwesomeIcon.Edit, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
+                if (Util.DrawButtonIcon(FontAwesomeIcon.Edit))
                 {
-                    this.popupEntry.EditingIndex = i;
+                    this.popupEntry.SelectedIndex = i;
                     this.popupEntry.SwitchMode(PopupEntry.Mode.Editing);
-                    this.isEditButtonPressed = true;
+                    this.shouldPopupOpen = true;
+                }
+
+                ImGui.TableNextColumn();
+                if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
+                {
+                    this.popupEntry.SelectedIndex = i + 1;
+                    this.popupEntry.SwitchMode(PopupEntry.Mode.Adding);
+                    this.shouldPopupOpen = true;
                 }
 
                 ImGui.PopID();
@@ -163,14 +172,15 @@ public class LayoutTab
 
     private void DrawFooter()
     {
-        if (Util.DrawButtonIcon(FontAwesomeIcon.Plus, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
         {
+            this.popupEntry.SelectedIndex = -1;
             this.popupEntry.SwitchMode(PopupEntry.Mode.Adding);
             this.popupEntry.Open();
         }
 
         ImGui.SameLine();
-        if (Util.DrawButtonIcon(FontAwesomeIcon.Trash, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.Trash))
         {
             ImGui.OpenPopup("##DeleteLayout");
         }

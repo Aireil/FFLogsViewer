@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Logging;
 using FFLogsViewer.Model;
 using ImGuiNET;
 
@@ -18,7 +19,7 @@ public class PopupEntry
     private LayoutEntry AddLayoutEntry { get; set; } = LayoutEntry.CreateEncounter();
     private LayoutEntry EditLayoutEntry { get; set; } = null!;
 
-    public int EditingIndex;
+    public int SelectedIndex;
     private Mode mode = Mode.Adding;
     private bool hasDeleted;
 
@@ -30,7 +31,7 @@ public class PopupEntry
         }
         else if (this.mode == Mode.Editing)
         {
-            this.EditLayoutEntry = (LayoutEntry)Service.Configuration.Layout[this.EditingIndex].Clone();
+            this.EditLayoutEntry = (LayoutEntry)Service.Configuration.Layout[this.SelectedIndex].Clone();
         }
 
         ImGui.OpenPopup("##PopupEntry");
@@ -116,7 +117,7 @@ public class PopupEntry
         const string helpMessage =
             "Optional, setting a Swap ID/# group allows you to click these encounters/headers\n" +
             "in the main window to dynamically change the layout.\n" +
-            "All the groups are reset to the lowest Swap # after a restart\n" +
+            "All groups are reset to the lowest Swap # after a restart\n" +
             "Note: Data is still fetched even if not displayed.\n" +
             "\n" +
             "Swap ID: ID of the Swap ID/# group.\n" +
@@ -264,16 +265,24 @@ public class PopupEntry
         {
             if (this.mode == Mode.Adding)
             {
-                Service.Configuration.Layout.Add((LayoutEntry)currLayoutEntry.Clone());
+                if (this.SelectedIndex >= 0)
+                {
+                    Service.Configuration.Layout.Insert(this.SelectedIndex, (LayoutEntry)currLayoutEntry.Clone());
+                }
+                else
+                {
+                    Service.Configuration.Layout.Add((LayoutEntry)currLayoutEntry.Clone());
+                }
+
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSwapGroups();
             }
             else
             {
-                if (!Service.Configuration.Layout[this.EditingIndex].Compare(currLayoutEntry))
+                if (!Service.Configuration.Layout[this.SelectedIndex].Compare(currLayoutEntry))
                 {
-                    Service.Configuration.Layout[this.EditingIndex] = currLayoutEntry;
+                    Service.Configuration.Layout[this.SelectedIndex] = currLayoutEntry;
                     Service.Configuration.IsDefaultLayout = false;
                     Service.Configuration.Save();
                     Service.MainWindow.ResetSwapGroups();
@@ -318,16 +327,24 @@ public class PopupEntry
 
             if (this.mode == Mode.Adding)
             {
-                Service.Configuration.Layout.Add(newLayoutEntry);
+                if (this.SelectedIndex >= 0)
+                {
+                    Service.Configuration.Layout.Insert(this.SelectedIndex, newLayoutEntry);
+                }
+                else
+                {
+                    Service.Configuration.Layout.Add(newLayoutEntry);
+                }
+
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSwapGroups();
             }
             else
             {
-                if (!Service.Configuration.Layout[this.EditingIndex].Compare(newLayoutEntry))
+                if (!Service.Configuration.Layout[this.SelectedIndex].Compare(newLayoutEntry))
                 {
-                    Service.Configuration.Layout[this.EditingIndex] = newLayoutEntry;
+                    Service.Configuration.Layout[this.SelectedIndex] = newLayoutEntry;
                     Service.Configuration.IsDefaultLayout = false;
                     Service.Configuration.Save();
                     Service.MainWindow.ResetSwapGroups();
@@ -355,7 +372,7 @@ public class PopupEntry
         {
             if (Util.DrawButtonIcon(FontAwesomeIcon.Trash, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
             {
-                Service.Configuration.Layout.RemoveAt(this.EditingIndex);
+                Service.Configuration.Layout.RemoveAt(this.SelectedIndex);
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSwapGroups();
