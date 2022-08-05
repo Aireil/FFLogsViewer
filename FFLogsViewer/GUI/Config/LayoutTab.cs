@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
@@ -20,6 +21,7 @@ public class LayoutTab
     {
         DrawAutoUpdate();
         this.DrawLayoutTable();
+        DrawSwapGroupsError();
         this.DrawFooter();
 
         // Needed because popups do not open in tables
@@ -30,6 +32,23 @@ public class LayoutTab
         }
 
         this.popupEntry.Draw();
+    }
+
+    private static void DrawSwapGroupsError()
+    {
+        var swapGroups = Service.Configuration.Layout
+                                                    .Where(entry => entry.SwapId != string.Empty)
+                                                    .Select(entry => (entry.SwapId, entry.SwapNumber))
+                                                    .Distinct()
+                                                    .ToArray();
+
+        foreach (var (swapId, swapNumber) in swapGroups)
+        {
+            if (swapGroups.Count(swapGroup => swapGroup.SwapId == swapId && swapGroup.SwapNumber != swapNumber) == 0)
+            {
+                ImGui.TextColored(ImGuiColors.DalamudRed, $"Swap ID \"{swapId}\" only has a single Swap #, an ID has to have different # or it will just swap with itself.");
+            }
+        }
     }
 
     private static void DrawAutoUpdate()
