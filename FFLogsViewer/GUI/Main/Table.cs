@@ -49,7 +49,7 @@ public class Table
                     }
                     else
                     {
-                        if (ImGui.Selectable(entry.Alias))
+                        if (ImGui.Selectable($"{entry.Alias}##{i}"))
                         {
                             this.Swap(entry.SwapId, entry.SwapNumber);
                         }
@@ -123,7 +123,7 @@ public class Table
                     }
                     else
                     {
-                        if (ImGui.Selectable(encounterName))
+                        if (ImGui.Selectable($"{encounterName}##{i}"))
                         {
                             this.Swap(entry.SwapId, entry.SwapNumber);
                         }
