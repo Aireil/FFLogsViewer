@@ -14,6 +14,8 @@ public class LayoutEntry : ICloneable
     public int EncounterId { get; set; }
     public string Difficulty { get; set; } = string.Empty;
     public int DifficultyId { get; set; }
+    public string SwapId { get; set; } = string.Empty;
+    public int SwapNumber { get; set; }
 
     public LayoutEntry()
     {
@@ -30,6 +32,8 @@ public class LayoutEntry : ICloneable
         this.EncounterId = layoutEntry.EncounterId;
         this.Difficulty = layoutEntry.Difficulty;
         this.DifficultyId = layoutEntry.DifficultyId;
+        this.SwapId = layoutEntry.SwapId;
+        this.SwapNumber = layoutEntry.SwapNumber;
     }
 
     public static LayoutEntry CreateEncounter(LayoutEntry? layoutEntry = null)
@@ -37,7 +41,7 @@ public class LayoutEntry : ICloneable
         return new LayoutEntry
         {
             Type = LayoutEntryType.Encounter,
-            Alias = string.Empty,
+            Alias = layoutEntry?.Alias ?? string.Empty,
             Expansion = layoutEntry?.Expansion ?? "-",
             Zone = layoutEntry?.Zone ?? "-",
             ZoneId = layoutEntry?.ZoneId ?? 0,
@@ -45,6 +49,8 @@ public class LayoutEntry : ICloneable
             EncounterId = layoutEntry?.EncounterId ?? 0,
             Difficulty = layoutEntry?.Difficulty ?? "-",
             DifficultyId = layoutEntry?.DifficultyId ?? 0,
+            SwapId = layoutEntry?.SwapId ?? string.Empty,
+            SwapNumber = layoutEntry?.SwapNumber ?? 0,
         };
     }
 
@@ -58,6 +64,8 @@ public class LayoutEntry : ICloneable
             Zone = "-",
             Encounter = "-",
             Difficulty = "-",
+            SwapId = layoutEntry?.SwapId ?? string.Empty,
+            SwapNumber = layoutEntry?.SwapNumber ?? 0,
         };
     }
 
@@ -93,6 +101,8 @@ public class LayoutEntry : ICloneable
                this.Encounter == layoutEntry.Encounter &&
                this.EncounterId == layoutEntry.EncounterId &&
                this.Difficulty == layoutEntry.Difficulty &&
-               this.DifficultyId == layoutEntry.DifficultyId;
+               this.DifficultyId == layoutEntry.DifficultyId &&
+               this.SwapId == layoutEntry.SwapId &&
+               this.SwapNumber == layoutEntry.SwapNumber;
     }
 }

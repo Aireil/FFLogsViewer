@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Colors;
@@ -9,7 +10,9 @@ namespace FFLogsViewer.GUI.Main;
 
 public class Table
 {
-    public static void Draw()
+    private Dictionary<string, int> currSwaps = new();
+
+    public void Draw()
     {
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
         if (ImGui.BeginTable(
@@ -17,7 +20,10 @@ public class Table
                     enabledStats.Count + 1,
                     Service.Configuration.Style.MainTableFlags))
         {
-            for (var i = 0; i < Service.Configuration.Layout.Count; i++)
+            var displayedEntries = Service.Configuration.Layout.Where(entry => entry.SwapId == string.Empty
+                                                                                                || (this.currSwaps.ContainsKey(entry.SwapId) && this.currSwaps[entry.SwapId] == entry.SwapNumber)
+                                                                                                || (!this.currSwaps.ContainsKey(entry.SwapId) && this.AddSwapIfDefault(entry.SwapId, entry.SwapNumber))).ToList();
+            for (var i = 0; i < displayedEntries.Count; i++)
             {
                 if (i != 0)
                 {
@@ -26,7 +32,7 @@ public class Table
 
                 ImGui.TableNextColumn();
 
-                var entry = Service.Configuration.Layout[i];
+                var entry = displayedEntries[i];
 
                 if (entry.Type == LayoutEntryType.Header)
                 {
@@ -37,7 +43,17 @@ public class Table
                         separatorCursorY = ImGui.GetCursorPosY();
                     }
 
-                    ImGui.TextUnformatted(entry.Alias);
+                    if (entry.SwapId == string.Empty)
+                    {
+                        ImGui.TextUnformatted(entry.Alias);
+                    }
+                    else
+                    {
+                        if (ImGui.Selectable(entry.Alias))
+                        {
+                            this.Swap(entry.SwapId, entry.SwapNumber);
+                        }
+                    }
 
                     if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
                     {
@@ -101,7 +117,17 @@ public class Table
                         encounterName += " (NL)";
                     }
 
-                    ImGui.Text(encounterName);
+                    if (entry.SwapId == string.Empty)
+                    {
+                        ImGui.TextUnformatted(encounterName);
+                    }
+                    else
+                    {
+                        if (ImGui.Selectable(encounterName))
+                        {
+                            this.Swap(entry.SwapId, entry.SwapNumber);
+                        }
+                    }
 
                     if (encounter == null)
                     {
@@ -182,5 +208,50 @@ public class Table
 
             ImGui.EndTable();
         }
+    }
+
+    public void ResetSwapGroups()
+    {
+        this.currSwaps = new Dictionary<string, int>();
+    }
+
+    private static bool IsDefaultSwap(string swapId, int swapNumber)
+    {
+        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber < swapNumber);
+    }
+
+    private static bool IsFinaleSwap(string swapId, int swapNumber)
+    {
+        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber);
+    }
+
+    private bool AddSwapIfDefault(string swapId, int swapNumber)
+    {
+        if (IsDefaultSwap(swapId, swapNumber))
+        {
+            this.currSwaps[swapId] = swapNumber;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Swap(string swapId, int swapNumber)
+    {
+        int newSwapNumber;
+        if (IsFinaleSwap(swapId, swapNumber))
+        {
+            newSwapNumber = Service.Configuration.Layout.First(entry => entry.SwapId == swapId && IsDefaultSwap(swapId, entry.SwapNumber)).SwapNumber;
+        }
+        else
+        {
+            newSwapNumber = Service.Configuration.Layout
+                                   .Where(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber)
+                                   .Select(entry => entry.SwapNumber)
+                                   .Distinct()
+                                   .OrderBy(groupNumber => Math.Abs(swapNumber - groupNumber)).First();
+        }
+
+        this.currSwaps[swapId] = newSwapNumber;
     }
 }

@@ -13,6 +13,7 @@ public class MainWindow : Window
     public Metric? OverriddenMetric;
 
     private readonly HeaderBar headerBar = new();
+    private readonly Table table = new();
 
     public MainWindow()
         : base("FFLogsViewer##FFLogsViewerMainWindow")
@@ -47,7 +48,7 @@ public class MainWindow : Window
 
         if (Service.CharDataManager.DisplayedChar.IsDataReady)
         {
-            Table.Draw();
+            this.table.Draw();
         }
     }
 
@@ -70,5 +71,10 @@ public class MainWindow : Window
         this.Job = GameDataManager.GetDefaultJob();
         this.OverriddenMetric = null;
         this.Partition = GameDataManager.GetDefaultPartition();
+    }
+
+    public void ResetSwapGroups()
+    {
+        this.table.ResetSwapGroups();
     }
 }

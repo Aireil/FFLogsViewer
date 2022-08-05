@@ -111,6 +111,44 @@ public class PopupEntry
         }
     }
 
+    private static void DrawEntrySwap(LayoutEntry currLayoutEntry)
+    {
+        const string helpMessage =
+            "Optional, setting a Swap ID/# group allows you to click these encounters/headers\n" +
+            "in the main window to dynamically change the layout.\n" +
+            "All the groups are reset to the lowest Swap # after a restart\n" +
+            "Note: Data is still fetched even if not displayed.\n" +
+            "\n" +
+            "Swap ID: ID of the Swap ID/# group.\n" +
+            "Swap #: Order of the swaps in the group, smallest value is the default.\n";
+
+        var swapId = currLayoutEntry.SwapId;
+        if (ImGui.InputText("Swap ID", ref swapId, 400))
+        {
+            currLayoutEntry.SwapId = swapId;
+        }
+
+        Util.DrawHelp(helpMessage);
+
+        if (currLayoutEntry.SwapId == string.Empty)
+        {
+            ImGui.BeginDisabled();
+        }
+
+        var swapNumber = currLayoutEntry.SwapNumber;
+        if (ImGui.InputInt("Swap #", ref swapNumber))
+        {
+            currLayoutEntry.SwapNumber = swapNumber;
+        }
+
+        if (currLayoutEntry.SwapId == string.Empty)
+        {
+            ImGui.EndDisabled();
+        }
+
+        Util.DrawHelp(helpMessage);
+    }
+
     private void DrawEntryEncounter(LayoutEntry currLayoutEntry)
     {
         var expansions = Service.GameDataManager.GameData!.Data!.WorldData!.Expansions!;
@@ -215,15 +253,21 @@ public class PopupEntry
             }
         }
 
-        var isButtonDisabled = !currLayoutEntry.IsEncounterValid();
-        if (Util.DrawDisabledButton(this.mode == Mode.Adding ? "Add" : "Edit", isButtonDisabled)
-            && !isButtonDisabled)
+        DrawEntrySwap(currLayoutEntry);
+
+        if (!currLayoutEntry.IsEncounterValid())
+        {
+            ImGui.BeginDisabled();
+        }
+
+        if (ImGui.Button(this.mode == Mode.Adding ? "Add" : "Edit"))
         {
             if (this.mode == Mode.Adding)
             {
                 Service.Configuration.Layout.Add((LayoutEntry)currLayoutEntry.Clone());
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
+                Service.MainWindow.ResetSwapGroups();
             }
             else
             {
@@ -232,14 +276,16 @@ public class PopupEntry
                     Service.Configuration.Layout[this.EditingIndex] = currLayoutEntry;
                     Service.Configuration.IsDefaultLayout = false;
                     Service.Configuration.Save();
+                    Service.MainWindow.ResetSwapGroups();
                 }
             }
 
             ImGui.CloseCurrentPopup();
         }
 
-        if (isButtonDisabled)
+        if (!currLayoutEntry.IsEncounterValid())
         {
+            ImGui.EndDisabled();
             ImGui.SameLine();
             ImGui.TextColored(ImGuiColors.DalamudGrey, "Please select an encounter.");
         }
@@ -248,7 +294,9 @@ public class PopupEntry
                                                                              currLayoutEntry.Type == layoutEntry.Type &&
                                                                              currLayoutEntry.Expansion == layoutEntry.Expansion &&
                                                                              currLayoutEntry.Zone == layoutEntry.Zone &&
-                                                                             currLayoutEntry.Encounter == layoutEntry.Encounter))
+                                                                             currLayoutEntry.Encounter == layoutEntry.Encounter &&
+                                                                             currLayoutEntry.SwapId == layoutEntry.SwapId &&
+                                                                             currLayoutEntry.SwapNumber == layoutEntry.SwapNumber))
         {
             ImGui.SameLine();
             ImGui.Text("Note: this encounter is already in the layout.");
@@ -262,6 +310,8 @@ public class PopupEntry
 
     private void DrawEntryHeader(LayoutEntry currLayoutEntry)
     {
+        DrawEntrySwap(currLayoutEntry);
+
         if (ImGui.Button(this.mode == Mode.Adding ? "Add" : "Edit"))
         {
             var newLayoutEntry = currLayoutEntry.CloneHeader();
@@ -271,6 +321,7 @@ public class PopupEntry
                 Service.Configuration.Layout.Add(newLayoutEntry);
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
+                Service.MainWindow.ResetSwapGroups();
             }
             else
             {
@@ -279,6 +330,7 @@ public class PopupEntry
                     Service.Configuration.Layout[this.EditingIndex] = newLayoutEntry;
                     Service.Configuration.IsDefaultLayout = false;
                     Service.Configuration.Save();
+                    Service.MainWindow.ResetSwapGroups();
                 }
             }
 
@@ -306,6 +358,7 @@ public class PopupEntry
                 Service.Configuration.Layout.RemoveAt(this.EditingIndex);
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
+                Service.MainWindow.ResetSwapGroups();
 
                 this.hasDeleted = true;
                 ImGui.CloseCurrentPopup();

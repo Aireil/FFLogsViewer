@@ -63,6 +63,7 @@ public class LayoutTab
                     Service.Configuration.IsDefaultLayout = true;
                     Service.Configuration.Save();
                     Service.MainWindow.ResetSize();
+                    Service.MainWindow.ResetSwapGroups();
                     ImGui.CloseCurrentPopup();
                 }
 
@@ -81,7 +82,7 @@ public class LayoutTab
     {
         if (ImGui.BeginTable(
                 "##ConfigLayoutTable",
-                8,
+                9,
                 ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY,
                 new Vector2(-1, 350)))
         {
@@ -93,6 +94,7 @@ public class LayoutTab
             ImGui.TableSetupColumn("Zone");
             ImGui.TableSetupColumn("Encounter");
             ImGui.TableSetupColumn("Difficulty");
+            ImGui.TableSetupColumn("Swap ID/#");
             ImGui.TableSetupColumn("##EditCol", ImGuiTableColumnFlags.WidthFixed, 20 * ImGuiHelpers.GlobalScale);
             ImGui.TableHeadersRow();
 
@@ -142,6 +144,9 @@ public class LayoutTab
                 ImGui.Text(layoutEntry.Difficulty);
 
                 ImGui.TableNextColumn();
+                ImGui.Text(layoutEntry.SwapId == string.Empty ? string.Empty : $"{layoutEntry.SwapId}/{layoutEntry.SwapNumber}");
+
+                ImGui.TableNextColumn();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Edit, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
                 {
                     this.popupEntry.EditingIndex = i;
@@ -180,6 +185,7 @@ public class LayoutTab
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSize();
+                Service.MainWindow.ResetSwapGroups();
                 ImGui.CloseCurrentPopup();
             }
 
