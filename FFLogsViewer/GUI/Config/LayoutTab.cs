@@ -155,6 +155,8 @@ public class LayoutTab
                     this.shouldPopupOpen = true;
                 }
 
+                Util.SetHoverTooltip("Edit");
+
                 ImGui.TableNextColumn();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
                 {
@@ -162,6 +164,8 @@ public class LayoutTab
                     this.popupEntry.SwitchMode(PopupEntry.Mode.Adding);
                     this.shouldPopupOpen = true;
                 }
+
+                Util.SetHoverTooltip("Add below");
 
                 ImGui.PopID();
             }
@@ -179,11 +183,15 @@ public class LayoutTab
             this.popupEntry.Open();
         }
 
+        Util.SetHoverTooltip("Add");
+
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.Trash))
         {
             ImGui.OpenPopup("##DeleteLayout");
         }
+
+        Util.SetHoverTooltip("Delete all");
 
         if (ImGui.BeginPopup("##DeleteLayout", ImGuiWindowFlags.NoMove))
         {

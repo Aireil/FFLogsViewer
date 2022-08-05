@@ -15,7 +15,6 @@ public class MenuBar
         if (ImGui.BeginMenuBar())
         {
             ImGui.PushFont(UiBuilder.IconFont);
-
             if (ImGui.MenuItem(FontAwesomeIcon.Eraser.ToIconString()))
             {
                 Service.CharDataManager.ResetDisplayedChar();
@@ -23,12 +22,17 @@ public class MenuBar
                 Service.MainWindow.ResetSize();
             }
 
+            ImGui.PopFont();
+            Util.SetHoverTooltip("Clear");
+
+            ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.MenuItem(FontAwesomeIcon.Cog.ToIconString()))
             {
                 Service.ConfigWindow.Toggle();
             }
 
             ImGui.PopFont();
+            Util.SetHoverTooltip("Configuration");
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
             if (ImGui.BeginMenu(Service.MainWindow.Job.Name))
