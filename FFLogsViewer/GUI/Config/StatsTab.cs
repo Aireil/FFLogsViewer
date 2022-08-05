@@ -12,6 +12,7 @@ public class StatsTab
     public static void Draw()
     {
         var hasChanged = false;
+        ImGui.SetNextItemWidth(GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale));
         if (ImGui.BeginCombo("Default Metric", Service.Configuration.Metric.Name))
         {
             foreach (var metric in GameDataManager.AvailableMetrics)
@@ -35,13 +36,10 @@ public class StatsTab
                 new Vector2(-1, -1)))
         {
             ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableSetupColumn("##PositionCol", ImGuiTableColumnFlags.WidthFixed, 38 * ImGuiHelpers.GlobalScale);
-            var minAliasSize = Service.Configuration.Stats.Select(stat => ImGui.CalcTextSize(stat.Alias).X).Prepend(ImGui.CalcTextSize("Alias").X).Max() + 10;
-            ImGui.TableSetupColumn("Alias", ImGuiTableColumnFlags.WidthFixed, minAliasSize);
-            ImGui.TableSetupColumn("Stat");
-            ImGui.TableSetupColumn("Enabled");
-            ImGui.TableHeadersRow();
 
+            DrawTableHeader();
+
+            var minAliasSize = Service.Configuration.Stats.Select(stat => ImGui.CalcTextSize(stat.Alias).X).Prepend(ImGui.CalcTextSize("Alias").X).Max() + 10;
             for (var i = 0; i < Service.Configuration.Stats.Count; i++)
             {
                 ImGui.PushID($"##ConfigStatsTable{i}");
@@ -68,7 +66,7 @@ public class StatsTab
                 ImGui.PopStyleVar();
 
                 ImGui.TableNextColumn();
-                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                ImGui.SetNextItemWidth(minAliasSize);
                 hasChanged |= ImGui.InputText("##Alias", ref stat.Alias, 20);
 
                 if (stat.Type == StatType.BestAmount)
@@ -97,6 +95,19 @@ public class StatsTab
         if (hasChanged)
         {
             Service.Configuration.Save();
+        }
+    }
+
+    private static void DrawTableHeader()
+    {
+        var headerColor = ImGui.ColorConvertFloat4ToU32(ImGui.GetStyle().Colors[(int)ImGuiCol.TableHeaderBg]);
+        var headerNames = new[] { string.Empty, "Stat", "Alias", "Enabled" };
+
+        foreach (var headerName in headerNames)
+        {
+            ImGui.TableNextColumn();
+            Util.CenterText(headerName);
+            ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, headerColor);
         }
     }
 }

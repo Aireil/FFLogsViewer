@@ -78,26 +78,30 @@ public class LayoutTab
         }
     }
 
+    private static void DrawTableHeader()
+    {
+        var headerColor = ImGui.ColorConvertFloat4ToU32(ImGui.GetStyle().Colors[(int)ImGuiCol.TableHeaderBg]);
+        var headerNames = new[] { string.Empty, "Type", "Alias", "Expansion", "Zone", "Encounter", "Difficulty", "Swap ID/#", string.Empty };
+
+        foreach (var headerName in headerNames)
+        {
+            ImGui.TableNextColumn();
+            Util.CenterText(headerName);
+            ImGui.TableSetBgColor(ImGuiTableBgTarget.CellBg, headerColor);
+        }
+    }
+
     private void DrawLayoutTable()
     {
         if (ImGui.BeginTable(
                 "##ConfigLayoutTable",
-                10,
+                9,
                 ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY,
                 new Vector2(-1, 350)))
         {
             ImGui.TableSetupScrollFreeze(0, 1);
-            ImGui.TableSetupColumn("##PositionCol", ImGuiTableColumnFlags.WidthFixed, 38 * ImGuiHelpers.GlobalScale);
-            ImGui.TableSetupColumn("Type");
-            ImGui.TableSetupColumn("Alias");
-            ImGui.TableSetupColumn("Expansion");
-            ImGui.TableSetupColumn("Zone");
-            ImGui.TableSetupColumn("Encounter");
-            ImGui.TableSetupColumn("Difficulty");
-            ImGui.TableSetupColumn("Swap ID/#");
-            ImGui.TableSetupColumn("##EditCol", ImGuiTableColumnFlags.WidthFixed, 20 * ImGuiHelpers.GlobalScale);
-            ImGui.TableSetupColumn("##AddCol", ImGuiTableColumnFlags.WidthFixed, 20 * ImGuiHelpers.GlobalScale);
-            ImGui.TableHeadersRow();
+
+            DrawTableHeader();
 
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
             {
@@ -157,7 +161,8 @@ public class LayoutTab
 
                 Util.SetHoverTooltip("Edit");
 
-                ImGui.TableNextColumn();
+                ImGui.SameLine();
+                ImGui.SetCursorPosX(ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 2);
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
                 {
                     this.popupEntry.SelectedIndex = i + 1;
