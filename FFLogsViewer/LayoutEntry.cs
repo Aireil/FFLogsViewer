@@ -88,7 +88,8 @@ public class LayoutEntry : ICloneable
     {
         return this.Expansion != "-" &&
                this.Zone != "-" &&
-               this.Encounter != "-";
+               this.Encounter != "-" &&
+               this.Difficulty != "-";
     }
 
     public bool Compare(LayoutEntry layoutEntry)
