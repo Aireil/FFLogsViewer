@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.4.7: Fix separator issue with the last update + believe it or not, Penumbra API update AGAIN."
+    "Changelog": "- 2.0.5.0:\n   Add swap groups, allowing you to dynamically change the layout in the main window.\n   Adding encounters in the layout is now easier.\n   Some other minor improvements."
 }
