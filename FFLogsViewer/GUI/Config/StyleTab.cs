@@ -12,6 +12,13 @@ public class StyleTab
 
         ImGui.Indent();
 
+        var hideInCombat = Service.Configuration.HideInCombat;
+        if (ImGui.Checkbox(@"Hide in combat##HideInCombat", ref hideInCombat))
+        {
+            Service.Configuration.HideInCombat = hideInCombat;
+            hasStyleChanged = true;
+        }
+
         if (ImGui.Checkbox("Close window with esc", ref style.IsCloseHotkeyRespected))
         {
             Service.MainWindow.RespectCloseHotkey = style.IsCloseHotkeyRespected;
@@ -87,9 +94,16 @@ public class StyleTab
 
         ImGui.Indent();
 
-        if (ImGui.Button("Borders customization"))
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text("Number of decimal digits for logs: ");
+        for (var i = 0; i <= 2; i++)
         {
-            ImGui.OpenPopup("##Borders");
+            ImGui.SameLine();
+            if (ImGui.RadioButton(i + "##NbOfDecimalDigits", Service.Configuration.NbOfDecimalDigits == i))
+            {
+                Service.Configuration.NbOfDecimalDigits = i;
+                hasStyleChanged = true;
+            }
         }
 
         hasStyleChanged |= ImGui.Checkbox("Header separator", ref style.IsHeaderSeparatorDrawn);
@@ -99,6 +113,11 @@ public class StyleTab
         {
             style.MainTableFlags = (ImGuiTableFlags)tmpTableFlags2;
             hasStyleChanged = true;
+        }
+
+        if (ImGui.Button("Borders customization"))
+        {
+            ImGui.OpenPopup("##Borders");
         }
 
         if (ImGui.BeginPopup("##Borders", ImGuiWindowFlags.NoMove))

@@ -13,25 +13,6 @@ public class MiscTab
         }
 
         var hasChanged = false;
-        ImGui.AlignTextToFramePadding();
-        ImGui.Text("Number of decimal digits for logs: ");
-        for (var i = 0; i <= 2; i++)
-        {
-            ImGui.SameLine();
-            if (ImGui.RadioButton(i + "##NbOfDecimalDigits", Service.Configuration.NbOfDecimalDigits == i))
-            {
-                Service.Configuration.NbOfDecimalDigits = i;
-                hasChanged = true;
-            }
-        }
-
-        var hideInCombat = Service.Configuration.HideInCombat;
-        if (ImGui.Checkbox(@"Hide in combat##HideInCombat", ref hideInCombat))
-        {
-            Service.Configuration.HideInCombat = hideInCombat;
-            hasChanged = true;
-        }
-
         var contextMenu = Service.Configuration.ContextMenu;
         if (ImGui.Checkbox("Enable context menu##ContextMenu", ref contextMenu))
         {
