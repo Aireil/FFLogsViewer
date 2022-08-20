@@ -44,7 +44,7 @@ public class LayoutTab
 
         foreach (var (swapId, swapNumber) in swapGroups)
         {
-            if (swapGroups.Count(swapGroup => swapGroup.SwapId == swapId && swapGroup.SwapNumber != swapNumber) == 0)
+            if (!swapGroups.Any(swapGroup => swapGroup.SwapId == swapId && swapGroup.SwapNumber != swapNumber))
             {
                 ImGui.TextColored(ImGuiColors.DalamudRed, $"Swap ID \"{swapId}\" only has a single Swap #, an ID has to have different # or it will just swap with itself.");
             }
