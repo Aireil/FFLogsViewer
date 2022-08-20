@@ -93,7 +93,7 @@ public class MenuBar
                 ImGui.EndMenu();
             }
 
-            if (!Service.Configuration.IsUpdateDismissed)
+            if (!Service.Configuration.IsUpdateDismissed2060)
             {
                 var isButtonHidden = !ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0;
                 if (isButtonHidden)
@@ -116,30 +116,23 @@ public class MenuBar
                     ImGui.PopStyleColor();
                 }
 
-                if (!Service.Configuration.IsUpdateDismissed)
+                if (!Service.Configuration.IsUpdateDismissed2060)
                 {
                     Util.SetHoverTooltip("Update message");
                 }
 
                 if (ImGui.BeginPopup("##UpdateMessage", ImGuiWindowFlags.NoMove))
                 {
-                    ImGui.Text(
-                        "Layout, style, stats, default metric, are all customizable in the settings.\n" +
-                        "\n" +
-                        "If anything is broken, weird, or if you have any suggestion, do not hesitate\n" +
-                        "to create an issue on the GitHub repo.");
+                    ImGui.Text(Service.Configuration.IsDefaultLayout
+                                   ? "Click an Abyssos encounter/header to swap to Asphodelos and vice versa.\n"
+                                   : "A swap group has been added to the default layout to swap from Abyssos to Asphodelos and vice versa.\n" +
+                                     "Should you want the same feature, you will have to add the swap yourself in your layout.\n");
 
                     if (ImGui.Button("Dismiss##UpdateMessage"))
                     {
-                        Service.Configuration.IsUpdateDismissed = true;
+                        Service.Configuration.IsUpdateDismissed2060 = true;
                         Service.Configuration.Save();
                         ImGui.CloseCurrentPopup();
-                    }
-
-                    ImGui.SameLine();
-                    if (ImGui.Button("Open the GitHub repo"))
-                    {
-                        Util.OpenLink("https://github.com/Aireil/FFLogsViewer");
                     }
 
                     ImGui.EndPopup();
