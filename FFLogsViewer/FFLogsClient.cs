@@ -132,7 +132,14 @@ public class FFLogsClient
         charData.LoadedMetric = metric;
         foreach (var (id, difficulty) in GetZoneInfo())
         {
-            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}, partition: {Service.MainWindow.Partition.Id}");
+            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}");
+
+            // do not add if standard, avoid issues with alliance raids that do not support any partition
+            if (Service.MainWindow.Partition.Id != -1)
+            {
+                query.Append($", partition: {Service.MainWindow.Partition.Id}");
+            }
+
             if (Service.MainWindow.Job.Name != "All jobs")
             {
                 query.Append($", specName: \\\"{Service.MainWindow.Job.Name.Replace(" ", string.Empty)}\\\"");

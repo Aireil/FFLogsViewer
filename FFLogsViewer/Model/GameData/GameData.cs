@@ -16,11 +16,11 @@ public class GameData
 
     public bool IsDataValid()
     {
-        var isValid = true;
+        var isDataValid = true;
 
         if (this.Data?.WorldData?.Expansions == null)
         {
-            isValid = false;
+            isDataValid = false;
         }
         else
         {
@@ -28,7 +28,7 @@ public class GameData
             {
                 if (expansion.Name == null || expansion.Id == null || expansion.Zones == null)
                 {
-                    isValid = false;
+                    isDataValid = false;
                     break;
                 }
 
@@ -36,26 +36,26 @@ public class GameData
                 {
                     if (zone.Name == null || zone.Id == null || zone.Difficulties == null || zone.Encounters == null)
                     {
-                        isValid = false;
+                        isDataValid = false;
                         break;
                     }
 
                     if (zone.Difficulties.Any(difficulty => difficulty.Name == null || difficulty.Id == null) ||
                         zone.Encounters.Any(encounter => encounter.Name == null || encounter.Id == null))
                     {
-                        isValid = false;
+                        isDataValid = false;
                         break;
                     }
                 }
             }
         }
 
-        if (isValid == false)
+        if (isDataValid == false)
         {
             PluginLog.Error("Data invalid: " + this.ToJson());
         }
 
-        return isValid;
+        return isDataValid;
     }
 
     public string ToJson() => JsonConvert.SerializeObject(this);

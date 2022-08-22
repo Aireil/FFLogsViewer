@@ -274,7 +274,7 @@ public class CharData
         // metric not valid for this zone
         if (zone.rankings.Count == 0)
         {
-            this.Encounters.Add(new Encounter { ZoneId = zone.zone, IsMetricValid = false });
+            this.Encounters.Add(new Encounter { ZoneId = zone.zone, IsValid = false });
         }
 
         foreach (var ranking in zone.rankings)

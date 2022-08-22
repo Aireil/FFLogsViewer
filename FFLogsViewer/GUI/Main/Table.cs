@@ -96,20 +96,21 @@ public class Table
                         Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
 
-                    // for invalid metric
-                    encounter ??= Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
-                                    enc => enc.ZoneId == entry.ZoneId);
+                    var isValid = Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
+                                    enc => enc.ZoneId == entry.ZoneId)?.IsValid;
 
                     var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
                     if (encounter == null)
                     {
                         ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                        encounterName += " (N/A)";
-                    }
-                    else if (encounter is { IsMetricValid: false })
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                        encounterName += " (NS)";
+                        if (isValid != null && !isValid.Value)
+                        {
+                            encounterName += " (NS)";
+                        }
+                        else
+                        {
+                            encounterName += " (N/A)";
+                        }
                     }
                     else if (encounter is { IsLockedIn: false })
                     {
@@ -132,15 +133,17 @@ public class Table
                     if (encounter == null)
                     {
                         ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("No data available.\n" +
-                                             "\n" +
-                                             "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
-                                             "If neither of these is the case, please try adding the encounter again.");
-                    }
-                    else if (encounter is { IsMetricValid: false })
-                    {
-                        ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("This metric is not supported by this encounter.\nFor some content, aDPS and HPS are the only allowed metrics.");
+                        if (isValid != null && !isValid.Value)
+                        {
+                            Util.SetHoverTooltip("This metric or partition is not supported by this encounter.\nFor some content, aDPS and HPS are the only allowed metrics.");
+                        }
+                        else
+                        {
+                            Util.SetHoverTooltip("No data available.\n" +
+                                                 "\n" +
+                                                 "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
+                                                 "If neither of these is the case, please try adding the encounter again.");
+                        }
                     }
                     else if (encounter is { IsLockedIn: false })
                     {
@@ -201,7 +204,7 @@ public class Table
                                 break;
                         }
 
-                        text ??= encounter is null or { IsMetricValid: false } ? "?" : "-";
+                        text ??= encounter is null or { IsValid: false } ? "?" : "-";
                         color ??= new Vector4(1, 1, 1, 1);
 
                         Util.CenterTextColored(color.Value, text);
