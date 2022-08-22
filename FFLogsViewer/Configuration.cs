@@ -74,7 +74,7 @@ public class Configuration : IPluginConfiguration
                 }
             }
 
-            this.Version = 1;
+            this.Version++;
             this.Save();
         }
     }
@@ -88,21 +88,25 @@ public class Configuration : IPluginConfiguration
     {
         return new List<LayoutEntry>
         {
-            new() { Type = LayoutEntryType.Header, Alias = "Asphodelos", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Erichthonios", EncounterId = 78, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hippokampos", EncounterId = 79, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Phoinix", EncounterId = 80, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hesperos", EncounterId = 81, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hesperos II", EncounterId = 82, Difficulty = "Savage", DifficultyId = 101 },
+            new() { Type = LayoutEntryType.Header, Alias = "Abyssos", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "6.2", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "P5S", EncounterId = 83, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "P6S", EncounterId = 84, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "P7S", EncounterId = 85, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "P8S", EncounterId = 86, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Header, Alias = "Asphodelos", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "6.2", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Erichthonios", EncounterId = 78, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hippokampos", EncounterId = 79, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Phoinix", EncounterId = 80, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hesperos", EncounterId = 81, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Asphodelos", ZoneId = 44, Encounter = "Hesperos II", EncounterId = 82, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.2", SwapNumber = 1 },
             new() { Type = LayoutEntryType.Header, Alias = "Ultimates (EW)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Unending Coil of Bahamut", EncounterId = 1060, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Weapon's Refrain", EncounterId = 1061, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Epic of Alexander", EncounterId = 1062, Difficulty = "Normal", DifficultyId = 100, Alias = "TEA" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1064, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
             new() { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials (Extreme)", ZoneId = 42, Encounter = "Zodiark", EncounterId = 1058, Difficulty = "Normal", DifficultyId = 100 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials (Extreme)", ZoneId = 42, Encounter = "Hydaelyn", EncounterId = 1059, Difficulty = "Normal", DifficultyId = 100 },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials (Extreme)", ZoneId = 42, Encounter = "Endsinger", EncounterId = 1063, Difficulty = "Normal", DifficultyId = 100 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials (Extreme)", ZoneId = 42, Encounter = "6.2 Trial", EncounterId = 1066, Difficulty = "Normal", DifficultyId = 100 },
         };
     }
 
