@@ -132,7 +132,10 @@ public class Table
                     if (encounter == null)
                     {
                         ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("No data available, this is expected if this encounter has just be added.");
+                        Util.SetHoverTooltip("No data available.\n" +
+                                             "\n" +
+                                             "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
+                                             "If neither of these is the case, please try adding the encounter again.");
                     }
                     else if (encounter is { IsMetricValid: false })
                     {
