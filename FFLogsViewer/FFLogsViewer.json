@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.6.0:\n   Preliminary 6.2 update\n   Fix a bug where an incorrect encounter would be displayed if it is from the same zone. If you added a DSR entry early, you may need to re-add it, because FF Logs changed the encounter id.\n   API 7 update\n- 2.0.5.0:\n   Add swap groups, allowing you to dynamically change the layout in the main window.\n   Adding encounters in the layout is now easier.\n   Some other minor improvements."
+    "Changelog": "- 2.0.6.2:\n   Fix Barbariccia zone id change in the default layout. If you are not using the default layout, you should add it again, FF Logs changed the zone."
 }
