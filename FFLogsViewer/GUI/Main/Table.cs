@@ -142,7 +142,10 @@ public class Table
                             Util.SetHoverTooltip("No data available.\n" +
                                                  "\n" +
                                                  "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
-                                                 "If neither of these is the case, please try adding the encounter again.");
+                                                 "If neither of these is the case, please " +
+                                                 (Service.Configuration.IsDefaultLayout
+                                                     ? "report the issue on GitHub."
+                                                     : "try adding the encounter again."));
                         }
                     }
                     else if (encounter is { IsLockedIn: false })
