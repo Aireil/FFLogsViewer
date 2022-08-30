@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.6.2:\n   Fix Barbariccia zone id change in the default layout. If you are not using the default layout, you should add it again, FF Logs changed the zone."
+    "Changelog": "- 2.0.6.3:\n   Add door boss to the default layout."
 }
