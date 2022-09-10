@@ -223,7 +223,7 @@ public class FFLogsClient
 
         try
         {
-            var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form!));
+            var tokenResponse = await client.PostAsync(baseAddress, new FormUrlEncodedContent(form));
             var jsonContent = await tokenResponse.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Token>(jsonContent);
         }

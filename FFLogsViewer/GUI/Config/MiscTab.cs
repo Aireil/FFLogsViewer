@@ -1,4 +1,7 @@
-﻿using Dalamud.Interface.Colors;
+﻿using System;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Logging;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Config;
@@ -97,6 +100,7 @@ public class MiscTab
 
         if (ImGui.CollapsingHeader("How to get a client ID and a client secret:"))
         {
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Open https://www.fflogs.com/api/clients/ or");
             ImGui.SameLine();
@@ -105,30 +109,33 @@ public class MiscTab
                 Util.OpenLink("https://www.fflogs.com/api/clients/");
             }
 
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Create a new client");
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 7);
 
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Choose any name, for example: \"Plugin\"");
             ImGui.SameLine();
             if (ImGui.Button("Copy##APIClientCopyName"))
             {
-                ImGui.SetClipboardText("Plugin");
+                CopyToClipboard("Plugin");
             }
 
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Enter any URL, for example: \"https://www.example.com\"");
             ImGui.SameLine();
             if (ImGui.Button("Copy##APIClientCopyURL"))
             {
-                ImGui.SetClipboardText("https://www.example.com");
+                CopyToClipboard("https://www.example.com");
             }
 
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Do NOT check the Public Client option");
-            ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 7);
 
+            ImGui.AlignTextToFramePadding();
             ImGui.Bullet();
             ImGui.Text("Paste both client ID and secret above");
         }
@@ -136,6 +143,20 @@ public class MiscTab
         if (hasChanged)
         {
             Service.Configuration.Save();
+        }
+    }
+
+    private static void CopyToClipboard(string text)
+    {
+        try
+        {
+            ImGui.SetClipboardText(text);
+            Service.Interface.UiBuilder.AddNotification(text, "Copied to clipboard", NotificationType.Success);
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Error(ex, "Could not set clipboard text.");
+            Service.Interface.UiBuilder.AddNotification(text, "Could not copy to clipboard", NotificationType.Error);
         }
     }
 }

@@ -258,7 +258,7 @@ public class Table
                                    .Where(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber)
                                    .Select(entry => entry.SwapNumber)
                                    .Distinct()
-                                   .OrderBy(groupNumber => Math.Abs(swapNumber - groupNumber)).First();
+                                   .MinBy(groupNumber => Math.Abs(swapNumber - groupNumber));
         }
 
         this.currSwaps[swapId] = newSwapNumber;

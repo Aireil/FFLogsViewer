@@ -151,7 +151,7 @@ public class HeaderBar
                         ImGui.TableNextColumn();
 
                         ImGui.SetCursorPosY(middleCursorPosY);
-                        ImGui.Text(partyMember.World);
+                        ImGui.Text(partyMember.World + " ");
                     }
 
                     ImGui.EndTable();
