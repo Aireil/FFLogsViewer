@@ -17,8 +17,6 @@ No API client needed to use the context menu item when opening in a browser.
 
 ## Context menu
 
-Currently disabled in 6.1, waiting for a fix.
-
 Adds a context menu item nearly everywhere you have a name.  
 Setting in config to open the character page in your default browser instead of the plugin window.
 
