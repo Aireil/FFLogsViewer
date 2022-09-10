@@ -23,5 +23,8 @@ Setting in config to open the character page in your default browser instead of 
 ![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu1.png)
 ![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu2.png)
 
+## Chinese version (CN)
+The Chinese compatible version is being developed and maintained here: https://github.com/NukoOoOoOoO/FFLogsViewer.
+
 ## Note
 Code is a fiesta, feel free to bully me.
