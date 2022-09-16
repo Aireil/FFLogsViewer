@@ -9,6 +9,7 @@ using Dalamud.Logging;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json.Linq;
 
 namespace FFLogsViewer;
@@ -243,10 +244,10 @@ public class CharData
             return;
         }
 
-        this.FetchTextCharacter(clipboardRawText);
+        this.FetchCharacter(clipboardRawText);
     }
 
-    public void FetchTextCharacter(string text)
+    public void FetchCharacter(string text)
     {
         if (!this.ParseTextForChar(text))
         {
@@ -255,6 +256,21 @@ public class CharData
         }
 
         this.FetchData();
+    }
+
+    public void FetchCharacter(string fullName, ushort worldId)
+    {
+        var world = Service.DataManager.GetExcelSheet<World>()
+                           ?.FirstOrDefault(x => x.RowId == worldId);
+
+        if (world == null)
+        {
+            Service.MainWindow.SetErrorMessage("World not found.");
+            return;
+        }
+
+        var playerName = $"{fullName}@{world.Name}";
+        this.FetchCharacter(playerName);
     }
 
     public void ResetData()

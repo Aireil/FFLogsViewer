@@ -41,8 +41,8 @@ public class Commands
                 Service.MainWindow.Toggle();
                 break;
             case CommandName:
-                Service.CharDataManager.DisplayedChar.FetchTextCharacter(args);
-                Service.MainWindow.IsOpen = true;
+                Service.MainWindow.Open();
+                Service.CharDataManager.DisplayedChar.FetchCharacter(args);
                 break;
         }
     }

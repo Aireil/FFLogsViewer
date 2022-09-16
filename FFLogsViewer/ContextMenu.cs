@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Dalamud.ContextMenu;
+using FFLogsViewer.GUI.Main;
 using FFLogsViewer.Manager;
 using Lumina.Excel.GeneratedSheets;
 
@@ -73,13 +74,8 @@ public class ContextMenu : IDisposable
         }
         else
         {
-            if (!Service.MainWindow.IsOpen)
-            {
-                Service.MainWindow.ResetTemporarySettings();
-            }
-
-            Service.CharDataManager.DisplayedChar.FetchTextCharacter(playerName);
-            Service.MainWindow.IsOpen = true;
+            Service.MainWindow.Open();
+            Service.CharDataManager.DisplayedChar.FetchCharacter(playerName);
         }
     }
 
