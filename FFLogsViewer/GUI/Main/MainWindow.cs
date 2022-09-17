@@ -43,6 +43,7 @@ public class MainWindow : Window
 
     public override void OnOpen()
     {
+        this.ResetSize();
         this.ResetTemporarySettings();
     }
 
