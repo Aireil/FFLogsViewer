@@ -24,6 +24,7 @@ internal class Service
     internal static GameDataManager GameDataManager { get; set; } = null!;
     internal static CharDataManager CharDataManager { get; set; } = null!;
     internal static PartyListManager PartyListManager { get; set; } = null!;
+    internal static OpenWithManager OpenWithManager { get; set; } = null!;
     internal static FFLogsClient FfLogsClient { get; set; } = null!;
     internal static DalamudContextMenu ContextMenu { get; set; } = null!;
 

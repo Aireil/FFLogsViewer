@@ -43,6 +43,12 @@ public class ConfigWindow : Window
             ImGui.EndTabItem();
         }
 
+        if (ImGui.BeginTabItem("Open With"))
+        {
+            OpenWithTab.Draw();
+            ImGui.EndTabItem();
+        }
+
         ImGui.EndTabBar();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Dalamud.ContextMenu;
-using FFLogsViewer.GUI.Main;
 using FFLogsViewer.Manager;
 using Lumina.Excel.GeneratedSheets;
 

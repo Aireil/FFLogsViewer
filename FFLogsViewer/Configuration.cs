@@ -34,6 +34,11 @@ public class Configuration : IPluginConfiguration
         IsHeaderSeparatorDrawn = true,
         IsCloseHotkeyRespected = true,
     };
+    public OpenWith OpenWith { get; set; } = new()
+    {
+        ShouldOpenMainWindow = true,
+        IsAdventurerPlateEnabled = false,
+    };
 
     public void Save()
     {

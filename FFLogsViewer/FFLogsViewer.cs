@@ -30,6 +30,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.GameDataManager = new GameDataManager();
         Service.CharDataManager = new CharDataManager();
         Service.PartyListManager = new PartyListManager();
+        Service.OpenWithManager = new OpenWithManager();
         Service.FfLogsClient = new FFLogsClient();
 
         Service.MainWindow = new MainWindow();
@@ -52,6 +53,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.ContextMenu.Dispose();
         this.contextMenu.Dispose();
         Service.GameDataManager.Dispose();
+        Service.OpenWithManager.Dispose();
 
         Service.Interface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         Service.Interface.UiBuilder.Draw -= this.windowSystem.Draw;
