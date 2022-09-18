@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.7.0:\n   Add open with setting, allowing you to fetch a character when opening different windows."
+    "Changelog": "- 2.0.7.1:\n   Fix some issues with open with + add a close setting.\n- 2.0.7.0:\n   Add open with setting, allowing you to fetch a character when opening different windows."
 }
