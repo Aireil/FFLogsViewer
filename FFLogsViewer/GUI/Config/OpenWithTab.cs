@@ -19,6 +19,7 @@ public class OpenWithTab
 
         var hasChanged = false;
         hasChanged |= ImGui.Checkbox("Open main window if it is closed", ref Service.Configuration.OpenWith.ShouldOpenMainWindow);
+        hasChanged |= ImGui.Checkbox("Close main window when one of the enabled windows is closed", ref Service.Configuration.OpenWith.ShouldCloseMainWindow);
 
         ImGui.Separator();
 

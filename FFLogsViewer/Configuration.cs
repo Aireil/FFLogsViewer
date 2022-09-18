@@ -37,7 +37,6 @@ public class Configuration : IPluginConfiguration
     public OpenWith OpenWith { get; set; } = new()
     {
         ShouldOpenMainWindow = true,
-        IsAdventurerPlateEnabled = false,
     };
 
     public void Save()

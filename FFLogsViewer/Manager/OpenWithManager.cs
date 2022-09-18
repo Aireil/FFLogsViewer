@@ -3,6 +3,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Memory;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFLogsViewer.Manager;
 
@@ -14,6 +15,7 @@ public unsafe class OpenWithManager
     private IntPtr charaCardAtkCreationAddress;
     private IntPtr processInspectPacketAddress;
     private IntPtr socialDetailAtkCreationAddress;
+    private IntPtr atkUnitBaseFinalizeAddress;
 
     private delegate void* CharaCardAtkCreationDelegate(IntPtr agentCharaCard);
     private Hook<CharaCardAtkCreationDelegate>? charaCardAtkCreationHook;
@@ -23,6 +25,9 @@ public unsafe class OpenWithManager
 
     private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, IntPtr data, void* a3, void* a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
+
+    private delegate void* AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
+    private Hook<AtkUnitBaseFinalizeDelegate>? atkUnitBaseFinalizeHook;
 
     public OpenWithManager()
     {
@@ -40,6 +45,7 @@ public unsafe class OpenWithManager
         this.charaCardAtkCreationHook?.Dispose();
         this.processInspectPacketHook?.Dispose();
         this.socialDetailAtkCreationHook?.Dispose();
+        this.atkUnitBaseFinalizeHook?.Dispose();
     }
 
     private static void Open(SeString fullName, ushort worldId)
@@ -67,6 +73,8 @@ public unsafe class OpenWithManager
 
             // Look what accesses social detail agent when opening search info
             this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? BE");
+
+            this.atkUnitBaseFinalizeAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C9 8D 57 01 41 B8");
         }
         catch (Exception ex)
         {
@@ -92,6 +100,9 @@ public unsafe class OpenWithManager
 
             this.socialDetailAtkCreationHook = Hook<SocialDetailAtkCreationDelegate>.FromAddress(this.socialDetailAtkCreationAddress, this.SocialDetailAtkCreationDetour);
             this.socialDetailAtkCreationHook.Enable();
+
+            this.atkUnitBaseFinalizeHook = Hook<AtkUnitBaseFinalizeDelegate>.FromAddress(this.atkUnitBaseFinalizeAddress, this.AktUnitBaseFinalizeDetour);
+            this.atkUnitBaseFinalizeHook.Enable();
         }
         catch (Exception ex)
         {
@@ -172,5 +183,27 @@ public unsafe class OpenWithManager
         }
 
         return this.socialDetailAtkCreationHook!.Original(someAgent, data, a3, a4);
+    }
+
+    private void* AktUnitBaseFinalizeDetour(AtkUnitBase* addon)
+    {
+        try
+        {
+            if (Service.Configuration.OpenWith.ShouldCloseMainWindow)
+            {
+                if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharaCard")
+                    || (Service.Configuration.OpenWith.IsExamineEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharacterInspect")
+                    || (Service.Configuration.OpenWith.IsSearchInfoEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "SocialDetailB"))
+                {
+                    Service.MainWindow.IsOpen = false;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Error(ex, "Exception in AktUnitBaseFinalizeDetour.");
+        }
+
+        return this.atkUnitBaseFinalizeHook!.Original(addon);
     }
 }
