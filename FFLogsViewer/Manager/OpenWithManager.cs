@@ -23,7 +23,7 @@ public unsafe class OpenWithManager
     private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, IntPtr packetData);
     private Hook<ProcessInspectPacketDelegate>? processInspectPacketHook;
 
-    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, IntPtr data, void* a3, void* a4);
+    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, IntPtr data, long a3, void* a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
 
     private delegate void* AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
@@ -161,11 +161,12 @@ public unsafe class OpenWithManager
         return this.processInspectPacketHook!.Original(someAgent, a2, packetData);
     }
 
-    private void* SocialDetailAtkCreationDetour(void* someAgent, IntPtr data, void* a3, void* a4)
+    private void* SocialDetailAtkCreationDetour(void* someAgent, IntPtr data, long a3, void* a4)
     {
         try
         {
-            if (Service.Configuration.OpenWith.IsSearchInfoEnabled)
+            // a3 != 0 => editing
+            if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
             {
                 // To get offsets: look pointed memory by a2 in CE
                 var worldId = *(ushort*)(data + 24);
