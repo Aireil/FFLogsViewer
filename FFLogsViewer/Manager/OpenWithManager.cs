@@ -110,9 +110,12 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: 6.21 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
                 var worldId = *(ushort*)(*(IntPtr*)(agentCharaCard + 40) + 192);
-                var fullName = MemoryHelper.ReadSeStringNullTerminated(*(IntPtr*)(*(IntPtr*)(agentCharaCard + 40) + 88));
+                if (worldId != 0 && worldId != 65535)
+                {
+                    var fullName = MemoryHelper.ReadSeStringNullTerminated(*(IntPtr*)(*(IntPtr*)(agentCharaCard + 40) + 88));
 
-                Open(fullName, worldId);
+                    Open(fullName, worldId);
+                }
             }
         }
         catch (Exception ex)
@@ -131,9 +134,12 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: 6.21 process inspect network packet 48 89 5C 24 ?? 56 41 56 41 57 48 83 EC 20 8B DA
                 var worldId = *(ushort*)(packetData + 50);
-                var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 624);
+                if (worldId != 0 && worldId != 65535)
+                {
+                    var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 624);
 
-                Open(fullName, worldId);
+                    Open(fullName, worldId);
+                }
             }
         }
         catch (Exception ex)
@@ -152,9 +158,12 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: look pointed memory by a2 in CE
                 var worldId = *(ushort*)(data + 24);
-                var fullName = MemoryHelper.ReadSeStringNullTerminated(data + 34);
+                if (worldId != 0 && worldId != 65535)
+                {
+                    var fullName = MemoryHelper.ReadSeStringNullTerminated(data + 34);
 
-                Open(fullName, worldId);
+                    Open(fullName, worldId);
+                }
             }
         }
         catch (Exception ex)
