@@ -1,4 +1,6 @@
-﻿namespace FFLogsViewer.Model;
+﻿using Dalamud.Game.ClientState.Keys;
+
+namespace FFLogsViewer.Model;
 
 public class OpenWith
 {
@@ -7,6 +9,8 @@ public class OpenWith
     public bool IsAdventurerPlateEnabled;
     public bool IsExamineEnabled;
     public bool IsSearchInfoEnabled;
+    public bool IsDisabledWhenKeyHeld = true;
+    public VirtualKey Key;
 
     public bool IsAnyEnabled()
     {

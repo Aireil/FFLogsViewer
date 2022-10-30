@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Dalamud.Configuration;
 using FFLogsViewer.Model;
-using ImGuiNET;
 using Newtonsoft.Json;
 
 namespace FFLogsViewer;

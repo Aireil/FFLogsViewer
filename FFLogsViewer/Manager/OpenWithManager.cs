@@ -1,4 +1,5 @@
 ﻿using System;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
@@ -48,8 +49,36 @@ public unsafe class OpenWithManager
         this.atkUnitBaseFinalizeHook?.Dispose();
     }
 
+    private static bool IsEnabled()
+    {
+        if (Service.Configuration.OpenWith.Key != VirtualKey.NO_KEY)
+        {
+            if (Service.Configuration.OpenWith.IsDisabledWhenKeyHeld)
+            {
+                if (Service.KeyState[Service.Configuration.OpenWith.Key])
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (!Service.KeyState[Service.Configuration.OpenWith.Key])
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private static void Open(SeString fullName, ushort worldId)
     {
+        if (!IsEnabled())
+        {
+            return;
+        }
+
         if (Service.Configuration.OpenWith.ShouldOpenMainWindow && !Service.MainWindow.IsOpen)
         {
             Service.MainWindow.Open();
@@ -190,7 +219,7 @@ public unsafe class OpenWithManager
     {
         try
         {
-            if (Service.Configuration.OpenWith.ShouldCloseMainWindow)
+            if (IsEnabled() && Service.Configuration.OpenWith.ShouldCloseMainWindow)
             {
                 if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharaCard")
                     || (Service.Configuration.OpenWith.IsExamineEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharacterInspect")
