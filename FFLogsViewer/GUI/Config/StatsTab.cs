@@ -71,11 +71,11 @@ public class StatsTab
 
                 if (stat.Type == StatType.BestAmount)
                 {
-                    Util.SetHoverTooltip("If the alias is /metric/ the alias will be replaced by the current metric");
+                    Util.SetHoverTooltip("If the alias is /metric/, it will be replaced by the current metric");
                 }
 
                 ImGui.TableNextColumn();
-                ImGui.Text(stat.Name);
+                ImGui.TextUnformatted(stat.Name);
 
                 ImGui.TableNextColumn();
                 var offset = (ImGui.GetContentRegionAvail().X - (22 * ImGuiHelpers.GlobalScale)) / 2;
@@ -101,7 +101,7 @@ public class StatsTab
     private static void DrawTableHeader()
     {
         var headerColor = ImGui.ColorConvertFloat4ToU32(ImGui.GetStyle().Colors[(int)ImGuiCol.TableHeaderBg]);
-        var headerNames = new[] { string.Empty, "Stat", "Alias", "Enabled" };
+        var headerNames = new[] { string.Empty, "Alias", "Stat", "Enabled" };
 
         foreach (var headerName in headerNames)
         {
