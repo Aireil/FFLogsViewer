@@ -262,7 +262,7 @@ public class LayoutTab
                 "If you are subscribed, make sure to create the API client on that account.\n" +
                 "\n" +
                 $"Points used per request: {pointsPerRequest}\n" +
-                "Every distinctive zone-difficulty pairs in the layout use some points.");
+                "Every distinct zone-difficulty pair in the layout uses some points.");
         }
     }
 }
