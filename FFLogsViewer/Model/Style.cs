@@ -4,10 +4,10 @@ namespace FFLogsViewer.Model;
 
 public class Style
 {
-    public float MinMainWindowWidth;
-    public ImGuiWindowFlags MainWindowFlags;
-    public ImGuiTableFlags MainTableFlags;
-    public bool IsHeaderSeparatorDrawn;
+    public float MinMainWindowWidth = 390.0f;
+    public ImGuiWindowFlags MainWindowFlags = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoScrollbar;
+    public ImGuiTableFlags MainTableFlags = ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.BordersInnerV;
+    public bool IsHeaderSeparatorDrawn = true;
     public bool IsSizeFixed;
-    public bool IsCloseHotkeyRespected;
+    public bool IsCloseHotkeyRespected = true;
 }

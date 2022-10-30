@@ -15,7 +15,6 @@ public class OpenWithTab
         }
 
         ImGui.Text("Automatically fetch the character when opening different windows.");
-        ImGui.Text("Only works if the main window is opened.");
 
         var hasChanged = false;
         hasChanged |= ImGui.Checkbox("Open main window if it is closed", ref Service.Configuration.OpenWith.ShouldOpenMainWindow);

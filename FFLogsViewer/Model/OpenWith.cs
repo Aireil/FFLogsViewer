@@ -2,7 +2,7 @@
 
 public class OpenWith
 {
-    public bool ShouldOpenMainWindow;
+    public bool ShouldOpenMainWindow = true;
     public bool ShouldCloseMainWindow;
     public bool IsAdventurerPlateEnabled;
     public bool IsExamineEnabled;

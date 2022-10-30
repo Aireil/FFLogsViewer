@@ -26,18 +26,8 @@ public class Configuration : IPluginConfiguration
     public List<LayoutEntry> Layout { get; set; } = new();
     public List<Stat> Stats { get; set; } = new();
     public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
-    public Style Style { get; set; } = new()
-    {
-        MinMainWindowWidth = 390.0f,
-        MainWindowFlags = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoScrollbar,
-        MainTableFlags = ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.BordersInnerV,
-        IsHeaderSeparatorDrawn = true,
-        IsCloseHotkeyRespected = true,
-    };
-    public OpenWith OpenWith { get; set; } = new()
-    {
-        ShouldOpenMainWindow = true,
-    };
+    public Style Style { get; set; } = new();
+    public OpenWith OpenWith { get; set; } = new();
 
     public void Save()
     {
