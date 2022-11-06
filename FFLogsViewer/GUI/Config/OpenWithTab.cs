@@ -32,7 +32,7 @@ public class OpenWithTab
 
         ImGui.Separator();
 
-        if (ImGui.BeginCombo("Key", NamedKeys[Service.Configuration.OpenWith.Key]))
+        if (ImGui.BeginCombo("Optional key", NamedKeys[Service.Configuration.OpenWith.Key]))
         {
             foreach (var key in NamedKeys)
             {
@@ -74,6 +74,7 @@ public class OpenWithTab
         hasChanged |= ImGui.Checkbox("Adventurer Plate", ref Service.Configuration.OpenWith.IsAdventurerPlateEnabled);
         hasChanged |= ImGui.Checkbox("Examine", ref Service.Configuration.OpenWith.IsExamineEnabled);
         hasChanged |= ImGui.Checkbox("Search Info", ref Service.Configuration.OpenWith.IsSearchInfoEnabled);
+        hasChanged |= ImGui.Checkbox("Party Finder", ref Service.Configuration.OpenWith.IsPartyFinderEnabled);
 
         if (hasChanged)
         {

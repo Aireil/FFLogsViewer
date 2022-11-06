@@ -9,11 +9,12 @@ public class OpenWith
     public bool IsAdventurerPlateEnabled;
     public bool IsExamineEnabled;
     public bool IsSearchInfoEnabled;
+    public bool IsPartyFinderEnabled;
     public bool IsDisabledWhenKeyHeld = true;
     public VirtualKey Key;
 
     public bool IsAnyEnabled()
     {
-        return this.IsAdventurerPlateEnabled || this.IsExamineEnabled || this.IsSearchInfoEnabled;
+        return this.IsAdventurerPlateEnabled || this.IsExamineEnabled || this.IsSearchInfoEnabled || this.IsPartyFinderEnabled;
     }
 }
