@@ -19,7 +19,6 @@ public class Configuration : IPluginConfiguration
     public bool OpenInBrowser { get; set; }
     public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
     public bool HideInCombat { get; set; }
-    public bool IsUpdateDismissed2060 { get; set; }
     public bool IsDefaultLayout { get; set; } = true;
     public int NbOfDecimalDigits { get; set; }
     public List<LayoutEntry> Layout { get; set; } = new();

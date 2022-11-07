@@ -93,7 +93,7 @@ public class MenuBar
                 ImGui.EndMenu();
             }
 
-            if (!Service.Configuration.IsUpdateDismissed2060)
+            /*if (!Service.Configuration.IsUpdateDismissed2060)
             {
                 var isButtonHidden = !ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0;
                 if (isButtonHidden)
@@ -137,7 +137,7 @@ public class MenuBar
 
                     ImGui.EndPopup();
                 }
-            }
+            }*/
 
             ImGui.EndMenuBar();
         }
