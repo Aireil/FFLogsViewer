@@ -49,4 +49,6 @@ internal class Service
     internal static TargetManager TargetManager { get; private set; } = null!;
     [PluginService]
     internal static KeyState KeyState { get; private set; } = null!;
+    [PluginService]
+    internal static GameGui GameGui { get; private set; } = null!;
 }

@@ -157,7 +157,9 @@ public unsafe class OpenWithManager
     {
         try
         {
-            if (Service.Configuration.OpenWith.IsAdventurerPlateEnabled)
+            if (Service.Configuration.OpenWith.IsAdventurerPlateEnabled
+                && Service.GameGui.GetAddonByName("BannerEditor", 1) == IntPtr.Zero
+                && Service.GameGui.GetAddonByName("CharaCardDesignSetting", 1) == IntPtr.Zero)
             {
                 // To get offsets: 6.21 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
                 var worldId = *(ushort*)(*(IntPtr*)(agentCharaCard + 40) + 192);
