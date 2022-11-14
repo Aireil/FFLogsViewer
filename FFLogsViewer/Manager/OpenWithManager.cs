@@ -13,6 +13,7 @@ public unsafe class OpenWithManager
     public bool HasLoadingFailed;
     public bool HasBeenEnabled;
 
+    private DateTime wasOpenedLast = DateTime.Now;
     private IntPtr charaCardAtkCreationAddress;
     private IntPtr processInspectPacketAddress;
     private IntPtr socialDetailAtkCreationAddress;
@@ -77,15 +78,16 @@ public unsafe class OpenWithManager
         return true;
     }
 
-    private static void Open(SeString fullName, ushort worldId)
+    private void Open(SeString fullName, ushort worldId)
     {
         if (!IsEnabled())
         {
             return;
         }
 
-        if (Service.Configuration.OpenWith.ShouldOpenMainWindow && !Service.MainWindow.IsOpen)
+        if (Service.Configuration.OpenWith.ShouldOpenMainWindow)
         {
+            this.wasOpenedLast = DateTime.Now;
             Service.MainWindow.Open();
             Service.MainWindow.ResetSize();
         }
@@ -168,7 +170,7 @@ public unsafe class OpenWithManager
                 {
                     var fullName = MemoryHelper.ReadSeStringNullTerminated(*(IntPtr*)(*(IntPtr*)(agentCharaCard + 40) + 88));
 
-                    Open(fullName, worldId);
+                    this.Open(fullName, worldId);
                 }
             }
         }
@@ -192,7 +194,7 @@ public unsafe class OpenWithManager
                 {
                     var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 624);
 
-                    Open(fullName, worldId);
+                    this.Open(fullName, worldId);
                 }
             }
         }
@@ -217,7 +219,7 @@ public unsafe class OpenWithManager
                 {
                     var fullName = MemoryHelper.ReadSeStringNullTerminated(data + 34);
 
-                    Open(fullName, worldId);
+                    this.Open(fullName, worldId);
                 }
             }
         }
@@ -246,7 +248,7 @@ public unsafe class OpenWithManager
                     {
                         var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 712);
 
-                        Open(fullName, worldId);
+                        this.Open(fullName, worldId);
                     }
                 }
             }
@@ -270,7 +272,11 @@ public unsafe class OpenWithManager
                     || (Service.Configuration.OpenWith.IsSearchInfoEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "SocialDetailB")
                     || (Service.Configuration.OpenWith.IsPartyFinderEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "LookingForGroupDetail"))
                 {
-                    Service.MainWindow.IsOpen = false;
+                    // do not close the window if it was just opened, avoid issue of race condition with the addon closing
+                    if (DateTime.Now - this.wasOpenedLast > TimeSpan.FromMilliseconds(100))
+                    {
+                        Service.MainWindow.IsOpen = false;
+                    }
                 }
             }
         }
