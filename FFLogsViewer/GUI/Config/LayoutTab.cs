@@ -64,7 +64,7 @@ public class LayoutTab
         {
             ImGui.TextColored(ImGuiColors.DalamudRed, "Disabled");
 
-            Util.DrawHelp("The layout will not automatically update if the plugin is updated.\nYou will have to add new encounters yourself.");
+            Util.DrawHelp("Because you modified the layout, it will not automatically update if the plugin is updated.\nYou will have to add new encounters yourself once they have been added to FF Logs.");
 
             ImGui.SameLine();
             if (ImGui.SmallButton("Reset layout and resume auto-update"))
