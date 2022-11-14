@@ -87,6 +87,7 @@ public unsafe class OpenWithManager
         if (Service.Configuration.OpenWith.ShouldOpenMainWindow && !Service.MainWindow.IsOpen)
         {
             Service.MainWindow.Open();
+            Service.MainWindow.ResetSize();
         }
 
         if (Service.MainWindow.IsOpen)
