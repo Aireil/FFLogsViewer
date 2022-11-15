@@ -85,6 +85,13 @@ public unsafe class OpenWithManager
             return;
         }
 
+        if (Service.Configuration.OpenWith.ShouldIgnoreSelf
+            && Service.ClientState.LocalPlayer?.Name.TextValue == fullName.TextValue
+            && Service.ClientState.LocalPlayer?.HomeWorld.Id == worldId)
+        {
+            return;
+        }
+
         if (Service.Configuration.OpenWith.ShouldOpenMainWindow)
         {
             this.wasOpenedLast = DateTime.Now;
