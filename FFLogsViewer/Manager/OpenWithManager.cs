@@ -95,7 +95,7 @@ public unsafe class OpenWithManager
         if (Service.Configuration.OpenWith.ShouldOpenMainWindow)
         {
             this.wasOpenedLast = DateTime.Now;
-            Service.MainWindow.Open();
+            Service.MainWindow.Open(false);
             Service.MainWindow.ResetSize();
         }
 

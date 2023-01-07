@@ -35,16 +35,25 @@ public class MainWindow : Window
         return true;
     }
 
-    public void Open()
+    public void Open(bool takeFocus = true)
     {
+        if (!takeFocus)
+        {
+            this.Flags |= ImGuiWindowFlags.NoFocusOnAppearing;
+        }
+
         this.IsOpen = true;
-        this.OnOpen();
     }
 
     public override void OnOpen()
     {
         this.ResetSize();
         this.ResetTemporarySettings();
+    }
+
+    public override void OnClose()
+    {
+        this.Flags &= ~ImGuiWindowFlags.NoFocusOnAppearing;
     }
 
     public override void Draw()
