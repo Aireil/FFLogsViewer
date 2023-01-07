@@ -32,7 +32,7 @@ public unsafe class OpenWithManager
     private delegate void* ProcessPartyFinderDetailPacketDelegate(IntPtr something, IntPtr packetData);
     private Hook<ProcessPartyFinderDetailPacketDelegate>? processPartyFinderDetailPacketHook;
 
-    private delegate void* AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
+    private delegate void AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
     private Hook<AtkUnitBaseFinalizeDelegate>? atkUnitBaseFinalizeHook;
 
     public OpenWithManager()
@@ -268,7 +268,7 @@ public unsafe class OpenWithManager
         return this.processPartyFinderDetailPacketHook!.Original(something, packetData);
     }
 
-    private void* AktUnitBaseFinalizeDetour(AtkUnitBase* addon)
+    private void AktUnitBaseFinalizeDetour(AtkUnitBase* addon)
     {
         try
         {
@@ -292,6 +292,6 @@ public unsafe class OpenWithManager
             PluginLog.Error(ex, "Exception in AktUnitBaseFinalizeDetour.");
         }
 
-        return this.atkUnitBaseFinalizeHook!.Original(addon);
+        this.atkUnitBaseFinalizeHook!.Original(addon);
     }
 }
