@@ -92,8 +92,8 @@ public class Configuration : IPluginConfiguration
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Epic of Alexander", EncounterId = 1062, Difficulty = "Normal", DifficultyId = 100, Alias = "TEA" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
             new() { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials I (Extreme)", ZoneId = 42, Encounter = "Endsinger", EncounterId = 1063, Difficulty = "Normal", DifficultyId = 100 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials II (Extreme)", ZoneId = 50, Encounter = "Barbariccia", EncounterId = 1066, Difficulty = "Normal", DifficultyId = 100 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials I (Extreme)", ZoneId = 42, Encounter = "Barbariccia", EncounterId = 1066, Difficulty = "Normal", DifficultyId = 100 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials II (Extreme)", ZoneId = 50, Encounter = "Rubicante", EncounterId = 1067, Difficulty = "Normal", DifficultyId = 100 },
         };
     }
 
