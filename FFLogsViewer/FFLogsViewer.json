@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.9.0:\n   6.3 compatibility + add new trial to default layout"
+    "Changelog": "- 2.0.9.1:\n   Add TOP to the default layout"
 }
