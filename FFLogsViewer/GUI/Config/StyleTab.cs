@@ -106,6 +106,7 @@ public class StyleTab
             }
         }
 
+        hasStyleChanged |= ImGui.Checkbox("Abbreviate job names", ref style.AbbreviateJobNames);
         hasStyleChanged |= ImGui.Checkbox("Header separator", ref style.IsHeaderSeparatorDrawn);
 
         var tmpTableFlags2 = (int)style.MainTableFlags;

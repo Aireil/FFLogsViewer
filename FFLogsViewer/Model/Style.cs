@@ -10,4 +10,5 @@ public class Style
     public bool IsHeaderSeparatorDrawn = true;
     public bool IsSizeFixed;
     public bool IsCloseHotkeyRespected = true;
+    public bool AbbreviateJobNames = true;
 }

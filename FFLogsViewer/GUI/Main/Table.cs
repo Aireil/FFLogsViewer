@@ -181,11 +181,11 @@ public class Table
                                 text = encounter?.BestAmount?.ToString();
                                 break;
                             case StatType.Job:
-                                text = encounter?.Job?.Name;
+                                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.Job?.Abbreviation : encounter?.Job?.Name;
                                 color = encounter?.Job?.Color;
                                 break;
                             case StatType.BestJob:
-                                text = encounter?.BestJob?.Name;
+                                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.BestJob?.Abbreviation : encounter?.BestJob?.Name;
                                 color = encounter?.BestJob?.Color;
                                 break;
                             case StatType.AllStarsPoints:
