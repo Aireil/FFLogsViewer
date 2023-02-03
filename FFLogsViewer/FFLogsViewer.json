@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.9.1:\n   Add TOP to the default layout"
+    "Changelog": "- 2.0.10.0:\n   Add timeframe setting, allowing to choose Historical vs Today rankings.\n   Like metrics, the default is in the settings and can be temporarily overwritten in the main window."
 }
