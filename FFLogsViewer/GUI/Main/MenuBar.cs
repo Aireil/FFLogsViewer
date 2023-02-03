@@ -36,7 +36,7 @@ public class MenuBar
             var hasTmpSettingChanged = false;
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
-            if (ImGui.BeginMenu(Service.MainWindow.Job.Name))
+            if (ImGui.BeginMenu(Service.MainWindow.Job.Abbreviation))
             {
                 foreach (var job in Service.GameDataManager.Jobs)
                 {
