@@ -72,12 +72,10 @@ public class Table
                         if (stat.Type == StatType.BestAmount &&
                             stat.Alias.Equals("/metric/", StringComparison.OrdinalIgnoreCase))
                         {
-                            var metricName = Service.CharDataManager.DisplayedChar.LoadedMetric != null
-                                                 ? Service.CharDataManager.DisplayedChar.LoadedMetric.Name
-                                                 : Service.Configuration.Metric.Name;
-                            metricName = metricName.Replace("Healer Combined", "HC");
-                            metricName = metricName.Replace("Tank Combined", "TC");
-                            Util.CenterText(metricName);
+                            var metricAbbreviation = Service.CharDataManager.DisplayedChar.LoadedMetric != null
+                                                 ? Service.CharDataManager.DisplayedChar.LoadedMetric.Abbreviation
+                                                 : Service.Configuration.Metric.Abbreviation;
+                            Util.CenterText(metricAbbreviation);
                         }
                         else
                         {

@@ -128,7 +128,7 @@ public class FFLogsClient
             $"{{\"query\":\"query {{characterData{{character(name: \\\"{charData.FirstName} {charData.LastName}\\\"serverSlug: \\\"{charData.WorldName}\\\"serverRegion: \\\"{charData.RegionName}\\\"){{");
         query.Append("hidden ");
 
-        var metric = Service.MainWindow.OverriddenMetric ?? Service.Configuration.Metric;
+        var metric = Service.MainWindow.GetCurrentMetric();
         charData.LoadedMetric = metric;
         foreach (var (id, difficulty) in GetZoneInfo())
         {

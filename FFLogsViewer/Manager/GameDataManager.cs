@@ -45,7 +45,7 @@ public class GameDataManager : IDisposable
 
     public static Job GetDefaultJob()
     {
-        return new Job { Name = "All jobs", Abbreviation = "All", Color = new Vector4(255, 255, 255, 255) };
+        return new Job { Name = "All jobs", Color = new Vector4(255, 255, 255, 255) };
     }
 
     public static Partition GetDefaultPartition()
