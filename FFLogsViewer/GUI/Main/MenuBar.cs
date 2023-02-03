@@ -55,7 +55,7 @@ public class MenuBar
 
             ImGui.PopStyleColor();
 
-            if (ImGui.BeginMenu(Service.MainWindow.GetCurrentMetric().Abbreviation ?? Service.MainWindow.GetCurrentMetric().Name))
+            if (ImGui.BeginMenu(Service.MainWindow.GetCurrentMetric().Abbreviation))
             {
                 foreach (var metric in GameDataManager.AvailableMetrics)
                 {
