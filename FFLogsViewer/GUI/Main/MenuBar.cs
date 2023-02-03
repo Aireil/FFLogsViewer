@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Interface;
 using FFLogsViewer.Manager;
 using ImGuiNET;

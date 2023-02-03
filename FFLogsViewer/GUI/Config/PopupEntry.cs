@@ -73,21 +73,21 @@ public class PopupEntry
 
             Util.DrawHelp("Optional, will overwrite the encounter name from FF Logs");
 
-            if (!Service.GameDataManager.IsDataReady && !Service.GameDataManager.IsDataLoading && !Service.GameDataManager.HasFailed)
+            if (Service.GameDataManager is { IsDataReady: false, IsDataLoading: false, HasFailed: false })
             {
                 Service.GameDataManager.FetchData();
             }
 
             if (currLayoutEntry.Type == LayoutEntryType.Encounter)
             {
-                if (!Service.GameDataManager.IsDataReady && Service.GameDataManager.IsDataLoading)
+                if (Service.GameDataManager is { IsDataReady: false, IsDataLoading: true })
                 {
                     ImGui.Text("Fetching data...");
                     ImGui.EndPopup();
                     return;
                 }
 
-                if (!Service.GameDataManager.IsDataLoading && Service.GameDataManager.HasFailed)
+                if (Service.GameDataManager is { IsDataLoading: false, HasFailed: true })
                 {
                     if (ImGui.Button("Couldn't fetch data, try again?"))
                     {

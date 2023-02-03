@@ -11,7 +11,7 @@ public class MainWindow : Window
     public Job Job = GameDataManager.GetDefaultJob();
     public Partition Partition = GameDataManager.GetDefaultPartition();
     public Metric? OverriddenMetric;
-    public bool IsOverridingTimeframe = false;
+    public bool IsOverridingTimeframe;
 
     private readonly HeaderBar headerBar = new();
     private readonly Table table = new();

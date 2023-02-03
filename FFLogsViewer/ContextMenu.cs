@@ -67,7 +67,7 @@ public class ContextMenu : IDisposable
 
         var playerName = $"{args.Text}@{world.Name}";
 
-        if (Service.Configuration.OpenInBrowser && !Service.Configuration.ContextMenuStreamer)
+        if (Service.Configuration is { OpenInBrowser: true, ContextMenuStreamer: false })
         {
             CharDataManager.OpenCharInBrowser(playerName);
         }
