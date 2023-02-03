@@ -20,6 +20,7 @@ public class Configuration : IPluginConfiguration
     public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
     public bool HideInCombat { get; set; }
     public bool IsDefaultLayout { get; set; } = true;
+    public bool IsHistoricalDefault { get; set; } = true;
     public int NbOfDecimalDigits { get; set; }
     public List<LayoutEntry> Layout { get; set; } = new();
     public List<Stat> Stats { get; set; } = new();

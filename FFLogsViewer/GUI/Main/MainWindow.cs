@@ -11,6 +11,7 @@ public class MainWindow : Window
     public Job Job = GameDataManager.GetDefaultJob();
     public Partition Partition = GameDataManager.GetDefaultPartition();
     public Metric? OverriddenMetric;
+    public bool IsOverridingTimeframe = false;
 
     private readonly HeaderBar headerBar = new();
     private readonly Table table = new();
@@ -86,7 +87,13 @@ public class MainWindow : Window
     {
         this.Job = GameDataManager.GetDefaultJob();
         this.OverriddenMetric = null;
+        this.IsOverridingTimeframe = false;
         this.Partition = GameDataManager.GetDefaultPartition();
+    }
+
+    public bool IsTimeframeHistorical()
+    {
+        return this.IsOverridingTimeframe ? !Service.Configuration.IsHistoricalDefault : Service.Configuration.IsHistoricalDefault;
     }
 
     public void ResetSwapGroups()

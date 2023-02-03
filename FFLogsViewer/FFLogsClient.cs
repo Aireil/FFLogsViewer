@@ -145,6 +145,8 @@ public class FFLogsClient
                 query.Append($", specName: \\\"{Service.MainWindow.Job.Name.Replace(" ", string.Empty)}\\\"");
             }
 
+            query.Append($", timeframe: {(Service.MainWindow.IsTimeframeHistorical() ? "Historical" : "Today")}");
+
             query.Append(')');
         }
 

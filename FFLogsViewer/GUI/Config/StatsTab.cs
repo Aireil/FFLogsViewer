@@ -29,6 +29,26 @@ public class StatsTab
 
         Util.SetHoverTooltip("Can be temporarily overridden in the main window");
 
+        ImGui.SetNextItemWidth(GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        if (ImGui.BeginCombo("Default Timeframe", Service.Configuration.IsHistoricalDefault ? "Historical %" : "Today %"))
+        {
+            if (ImGui.Selectable("Historical %"))
+            {
+                Service.Configuration.IsHistoricalDefault = true;
+                hasChanged = true;
+            }
+
+            if (ImGui.Selectable("Today %"))
+            {
+                Service.Configuration.IsHistoricalDefault = false;
+                hasChanged = true;
+            }
+
+            ImGui.EndCombo();
+        }
+
+        Util.SetHoverTooltip("Can be temporarily overridden in the main window");
+
         if (ImGui.BeginTable(
                 "##ConfigStatsTable",
                 4,

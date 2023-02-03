@@ -34,6 +34,8 @@ public class MenuBar
             ImGui.PopFont();
             Util.SetHoverTooltip("Configuration");
 
+            var hasTmpSettingChanged = false;
+
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
             if (ImGui.BeginMenu(Service.MainWindow.Job.Name))
             {
@@ -43,11 +45,7 @@ public class MenuBar
                     if (ImGui.MenuItem(job.Name))
                     {
                         Service.MainWindow.Job = job;
-                        Service.MainWindow.ResetSize();
-                        if (Service.CharDataManager.DisplayedChar.IsInfoSet())
-                        {
-                            Service.CharDataManager.DisplayedChar.FetchData();
-                        }
+                        hasTmpSettingChanged = true;
                     }
 
                     ImGui.PopStyleColor();
@@ -67,11 +65,7 @@ public class MenuBar
                     if (ImGui.MenuItem(metric.Name))
                     {
                         Service.MainWindow.OverriddenMetric = metric;
-                        Service.MainWindow.ResetSize();
-                        if (Service.CharDataManager.DisplayedChar.IsInfoSet())
-                        {
-                            Service.CharDataManager.DisplayedChar.FetchData();
-                        }
+                        hasTmpSettingChanged = true;
                     }
                 }
 
@@ -85,15 +79,37 @@ public class MenuBar
                     if (ImGui.MenuItem(partition.Name))
                     {
                         Service.MainWindow.Partition = partition;
-                        Service.MainWindow.ResetSize();
-                        if (Service.CharDataManager.DisplayedChar.IsInfoSet())
-                        {
-                            Service.CharDataManager.DisplayedChar.FetchData();
-                        }
+                        hasTmpSettingChanged = true;
                     }
                 }
 
                 ImGui.EndMenu();
+            }
+
+            if (ImGui.BeginMenu(Service.MainWindow.IsTimeframeHistorical() ? "H%" : "T%"))
+            {
+                if (ImGui.MenuItem("Historical %"))
+                {
+                    Service.MainWindow.IsOverridingTimeframe = !Service.Configuration.IsHistoricalDefault;
+                    hasTmpSettingChanged = true;
+                }
+
+                if (ImGui.MenuItem("Today %"))
+                {
+                    Service.MainWindow.IsOverridingTimeframe = Service.Configuration.IsHistoricalDefault;
+                    hasTmpSettingChanged = true;
+                }
+
+                ImGui.EndMenu();
+            }
+
+            if (hasTmpSettingChanged)
+            {
+                Service.MainWindow.ResetSize();
+                if (Service.CharDataManager.DisplayedChar.IsInfoSet())
+                {
+                    Service.CharDataManager.DisplayedChar.FetchData();
+                }
             }
 
             /*if (!Service.Configuration.IsUpdateDismissed2060)
