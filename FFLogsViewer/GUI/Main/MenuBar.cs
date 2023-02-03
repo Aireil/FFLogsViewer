@@ -43,6 +43,7 @@ public class MenuBar
                     if (ImGui.MenuItem(job.Name))
                     {
                         Service.MainWindow.Job = job;
+                        Service.MainWindow.ResetSize();
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
@@ -66,6 +67,7 @@ public class MenuBar
                     if (ImGui.MenuItem(metric.Name))
                     {
                         Service.MainWindow.OverriddenMetric = metric;
+                        Service.MainWindow.ResetSize();
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
@@ -83,6 +85,7 @@ public class MenuBar
                     if (ImGui.MenuItem(partition.Name))
                     {
                         Service.MainWindow.Partition = partition;
+                        Service.MainWindow.ResetSize();
                         if (Service.CharDataManager.DisplayedChar.IsInfoSet())
                         {
                             Service.CharDataManager.DisplayedChar.FetchData();
