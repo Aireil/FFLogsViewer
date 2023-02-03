@@ -71,7 +71,7 @@ public class MenuBar
                 ImGui.EndMenu();
             }
 
-            if (ImGui.BeginMenu(Service.MainWindow.Partition.Name))
+            if (ImGui.BeginMenu(Service.MainWindow.Partition.Abbreviation))
             {
                 foreach (var partition in GameDataManager.AvailablePartitions)
                 {

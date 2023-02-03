@@ -26,8 +26,8 @@ public class GameDataManager : IDisposable
 
     public static readonly List<Partition> AvailablePartitions = new()
     {
-        new Partition { Name = "Standard", Id = -1 },
-        new Partition { Name = "Non-Standard", Id = -2 },
+        new Partition { Name = "Standard", Abbreviation = "S", Id = -1 },
+        new Partition { Name = "Non-Standard", Abbreviation = "N-S", Id = -2 },
     };
 
     public volatile bool IsDataReady;
