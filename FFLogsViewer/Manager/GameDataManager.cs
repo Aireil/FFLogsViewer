@@ -16,12 +16,12 @@ public class GameDataManager : IDisposable
         new Metric { Name = "aDPS", InternalName = "dps" },
         new Metric { Name = "nDPS", InternalName = "ndps" },
         new Metric { Name = "HPS", InternalName = "hps" },
-        new Metric { Name = "Healer Combined rDPS", InternalName = "healercombinedrdps" },
-        new Metric { Name = "Healer Combined aDPS", InternalName = "healercombineddps" },
-        new Metric { Name = "Healer Combined nDPS", InternalName = "healercombinedndps" },
-        new Metric { Name = "Tank Combined rDPS", InternalName = "tankcombinedrdps" },
-        new Metric { Name = "Tank Combined aDPS", InternalName = "tankcombineddps" },
-        new Metric { Name = "Tank Combined nDPS", InternalName = "tankcombinedndps" },
+        new Metric { Name = "Healer Combined rDPS", Abbreviation = "HC rDPS", InternalName = "healercombinedrdps" },
+        new Metric { Name = "Healer Combined aDPS", Abbreviation = "HC aDPS", InternalName = "healercombineddps" },
+        new Metric { Name = "Healer Combined nDPS", Abbreviation = "HC nDPS", InternalName = "healercombinedndps" },
+        new Metric { Name = "Tank Combined rDPS", Abbreviation = "TC rDPS", InternalName = "tankcombinedrdps" },
+        new Metric { Name = "Tank Combined aDPS", Abbreviation = "TC aDPS", InternalName = "tankcombineddps" },
+        new Metric { Name = "Tank Combined nDPS", Abbreviation = "TC nDPS", InternalName = "tankcombinedndps" },
     };
 
     public static readonly List<Partition> AvailablePartitions = new()

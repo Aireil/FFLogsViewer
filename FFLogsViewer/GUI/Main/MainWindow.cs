@@ -91,6 +91,11 @@ public class MainWindow : Window
         this.Partition = GameDataManager.GetDefaultPartition();
     }
 
+    public Metric GetCurrentMetric()
+    {
+        return this.OverriddenMetric ?? Service.Configuration.Metric;
+    }
+
     public bool IsTimeframeHistorical()
     {
         return this.IsOverridingTimeframe ? !Service.Configuration.IsHistoricalDefault : Service.Configuration.IsHistoricalDefault;
