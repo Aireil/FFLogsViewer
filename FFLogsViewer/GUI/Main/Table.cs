@@ -14,15 +14,48 @@ public class Table
 
     public void Draw()
     {
+        if (!Service.CharDataManager.DisplayedChar.IsDataReady && !Service.MainWindow.IsPartyView)
+        {
+            return;
+        }
+
+        if (Service.MainWindow.IsPartyView)
+        {
+            this.DrawPartyView();
+        }
+        else
+        {
+            this.DrawSingleView();
+        }
+    }
+
+    public void ResetSwapGroups()
+    {
+        this.currSwaps = new Dictionary<string, int>();
+    }
+
+    private void DrawPartyView()
+    {
+        if (ImGui.BeginTable(
+                "##MainWindowTablePartyView",
+                9,
+                Service.Configuration.Style.MainTableFlags))
+        {
+
+
+            ImGui.EndTable();
+        }
+    }
+
+    private void DrawSingleView()
+    {
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
         if (ImGui.BeginTable(
-                    "##MainWindowTable",
+                    "##MainWindowTableSingleView",
                     enabledStats.Count + 1,
                     Service.Configuration.Style.MainTableFlags))
         {
-            var displayedEntries = Service.Configuration.Layout.Where(entry => entry.SwapId == string.Empty
-                                                                                                || (this.currSwaps.ContainsKey(entry.SwapId) && this.currSwaps[entry.SwapId] == entry.SwapNumber)
-                                                                                                || (!this.currSwaps.ContainsKey(entry.SwapId) && this.AddSwapIfDefault(entry.SwapId, entry.SwapNumber))).ToList();
+            var displayedEntries = this.GetDisplayedEntries();
             for (var i = 0; i < displayedEntries.Count; i++)
             {
                 if (i != 0)
@@ -217,11 +250,6 @@ public class Table
         }
     }
 
-    public void ResetSwapGroups()
-    {
-        this.currSwaps = new Dictionary<string, int>();
-    }
-
     private static bool IsDefaultSwap(string swapId, int swapNumber)
     {
         return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber < swapNumber);
@@ -230,6 +258,13 @@ public class Table
     private static bool IsFinaleSwap(string swapId, int swapNumber)
     {
         return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber);
+    }
+
+    private List<LayoutEntry> GetDisplayedEntries()
+    {
+        return Service.Configuration.Layout.Where(entry => entry.SwapId == string.Empty
+                                                           || (this.currSwaps.ContainsKey(entry.SwapId) && this.currSwaps[entry.SwapId] == entry.SwapNumber)
+                                                           || (!this.currSwaps.ContainsKey(entry.SwapId) && this.AddSwapIfDefault(entry.SwapId, entry.SwapNumber))).ToList();
     }
 
     private bool AddSwapIfDefault(string swapId, int swapNumber)
