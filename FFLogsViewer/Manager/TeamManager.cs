@@ -31,7 +31,7 @@ public class TeamManager
             if (cwProxy->IsInCrossRealmParty != 0)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
-                AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[localIndex]);
+                AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[localIndex], true);
 
                 for (var i = 0; i < cwProxy->CrossRealmGroupSpan.Length; i++)
                 {
@@ -61,7 +61,7 @@ public class TeamManager
         return teamMembers;
     }
 
-    private static unsafe void AddMembersFromCRGroup(ICollection<TeamMember> teamMembers, CrossRealmGroup crossRealmGroup)
+    private static unsafe void AddMembersFromCRGroup(ICollection<TeamMember> teamMembers, CrossRealmGroup crossRealmGroup, bool isLocalPlayerGroup = false)
     {
         foreach (var groupMember in crossRealmGroup.GroupMemberSpan)
         {
@@ -74,7 +74,7 @@ public class TeamManager
             }
 
             var name = Util.ReadSeString(groupMember.Name);
-            teamMembers.Add(new TeamMember { Name = name.ToString(), World = world.Name, JobId = groupMember.ClassJobId });
+            teamMembers.Add(new TeamMember { Name = name.ToString(), World = world.Name, JobId = groupMember.ClassJobId, IsInParty = isLocalPlayerGroup });
         }
     }
 
@@ -84,7 +84,7 @@ public class TeamManager
         {
             var partyMember = groupManager->GetPartyMemberByIndex(i);
 
-            var teamMember = GetTeamMember(partyMember);
+            var teamMember = GetTeamMember(partyMember, true);
             if (teamMember != null && teamMember.Name != string.Empty && teamMember.World != string.Empty)
             {
                 teamMembers.Add(teamMember);
@@ -103,14 +103,14 @@ public class TeamManager
         }
     }
 
-    private static unsafe TeamMember? GetTeamMember(PartyMember* teamMember)
+    private static unsafe TeamMember? GetTeamMember(PartyMember* partyMember, bool isLocalPlayerParty = false)
     {
-        if (teamMember == null)
+        if (partyMember == null)
         {
             return null;
         }
 
-        var worldId = teamMember->HomeWorld;
+        var worldId = partyMember->HomeWorld;
         var world = Service.DataManager.GetExcelSheet<World>()
                            ?.FirstOrDefault(x => x.RowId == worldId);
         if (world == null)
@@ -118,7 +118,7 @@ public class TeamManager
             return null;
         }
 
-        var name = Util.ReadSeString(teamMember->Name);
-        return new TeamMember { Name = name.ToString(), World = world.Name, JobId = teamMember->ClassJob };
+        var name = Util.ReadSeString(partyMember->Name);
+        return new TeamMember { Name = name.ToString(), World = world.Name, JobId = partyMember->ClassJob, IsInParty = isLocalPlayerParty };
     }
 }
