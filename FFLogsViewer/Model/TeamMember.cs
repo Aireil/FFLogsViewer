@@ -1,6 +1,6 @@
 ﻿namespace FFLogsViewer.Model;
 
-public class PartyMember
+public class TeamMember
 {
     private readonly string name = null!;
     public string Name
@@ -17,4 +17,5 @@ public class PartyMember
     public string Abbreviation = null!;
     public string World = null!;
     public uint JobId;
+    public bool IsInParty;
 }

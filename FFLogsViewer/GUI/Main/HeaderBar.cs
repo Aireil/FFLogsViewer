@@ -95,16 +95,16 @@ public class HeaderBar
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.UsersCog))
         {
-            ImGui.OpenPopup("##PartyList");
+            ImGui.OpenPopup("##TeamList");
         }
 
         Util.SetHoverTooltip("Party members");
 
-        if (ImGui.BeginPopup("##PartyList", ImGuiWindowFlags.NoMove))
+        if (ImGui.BeginPopup("##TeamList", ImGuiWindowFlags.NoMove))
         {
-            Util.UpdateDelayed(this.partyListStopwatch, TimeSpan.FromSeconds(1), Service.PartyListManager.UpdatePartyList);
+            Util.UpdateDelayed(this.partyListStopwatch, TimeSpan.FromSeconds(1), Service.TeamManager.UpdateTeamList);
 
-            var partyList = Service.PartyListManager.PartyList;
+            var partyList = Service.TeamManager.TeamList;
             if (partyList.Count != 0)
             {
                 if (ImGui.BeginTable("##PartyListTable", 3, ImGuiTableFlags.RowBg))

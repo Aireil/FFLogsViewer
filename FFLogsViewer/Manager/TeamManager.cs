@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FFLogsViewer.Model;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using Lumina.Excel.GeneratedSheets;
-using PartyMember = FFLogsViewer.Model.PartyMember;
 
 namespace FFLogsViewer.Manager;
 
-public class PartyListManager
+public class TeamManager
 {
-    public List<PartyMember> PartyList = new();
+    public List<TeamMember> TeamList = new();
 
-    public void UpdatePartyList()
+    public void UpdateTeamList()
     {
-        this.PartyList = GetPartyMembers();
+        this.TeamList = GetTeamMembers();
     }
 
-    private static unsafe List<PartyMember> GetPartyMembers()
+    private static unsafe List<TeamMember> GetTeamMembers()
     {
-        var partyMembers = new List<PartyMember>();
+        var teamMembers = new List<TeamMember>();
 
         var groupManager = GroupManager.Instance();
         if (groupManager->MemberCount > 0)
         {
-            AddMembersFromGroupManager(partyMembers, groupManager);
+            AddMembersFromGroupManager(teamMembers, groupManager);
         }
         else
         {
@@ -31,7 +31,7 @@ public class PartyListManager
             if (cwProxy->IsInCrossRealmParty != 0)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
-                AddMembersFromCRGroup(partyMembers, cwProxy->CrossRealmGroupSpan[localIndex]);
+                AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[localIndex]);
 
                 for (var i = 0; i < cwProxy->CrossRealmGroupSpan.Length; i++)
                 {
@@ -40,12 +40,12 @@ public class PartyListManager
                         continue;
                     }
 
-                    AddMembersFromCRGroup(partyMembers, cwProxy->CrossRealmGroupSpan[i]);
+                    AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[i]);
                 }
             }
         }
 
-        if (partyMembers.Count == 0)
+        if (teamMembers.Count == 0)
         {
             var selfName = Service.ClientState.LocalPlayer?.Name;
             var selfWorldId = Service.ClientState.LocalPlayer?.HomeWorld.Id;
@@ -54,14 +54,14 @@ public class PartyListManager
             var selfJobId = Service.ClientState.LocalPlayer?.ClassJob.Id;
             if (selfName != null && selfWorld != null && selfJobId != null)
             {
-                partyMembers.Add(new PartyMember { Name = selfName.ToString(), World = selfWorld.Name, JobId = selfJobId.Value });
+                teamMembers.Add(new TeamMember { Name = selfName.ToString(), World = selfWorld.Name, JobId = selfJobId.Value });
             }
         }
 
-        return partyMembers;
+        return teamMembers;
     }
 
-    private static unsafe void AddMembersFromCRGroup(ICollection<PartyMember> partyMembers, CrossRealmGroup crossRealmGroup)
+    private static unsafe void AddMembersFromCRGroup(ICollection<TeamMember> teamMembers, CrossRealmGroup crossRealmGroup)
     {
         foreach (var groupMember in crossRealmGroup.GroupMemberSpan)
         {
@@ -74,20 +74,20 @@ public class PartyListManager
             }
 
             var name = Util.ReadSeString(groupMember.Name);
-            partyMembers.Add(new PartyMember { Name = name.ToString(), World = world.Name, JobId = groupMember.ClassJobId });
+            teamMembers.Add(new TeamMember { Name = name.ToString(), World = world.Name, JobId = groupMember.ClassJobId });
         }
     }
 
-    private static unsafe void AddMembersFromGroupManager(ICollection<PartyMember> partyMembers, GroupManager* groupManager)
+    private static unsafe void AddMembersFromGroupManager(ICollection<TeamMember> teamMembers, GroupManager* groupManager)
     {
         for (var i = 0; i < groupManager->MemberCount; i++)
         {
-            var groupMember = groupManager->GetPartyMemberByIndex(i);
+            var partyMember = groupManager->GetPartyMemberByIndex(i);
 
-            var partyMember = GetPartyMember(groupMember);
-            if (partyMember != null && partyMember.Name != string.Empty && partyMember.World != string.Empty)
+            var teamMember = GetTeamMember(partyMember);
+            if (teamMember != null && teamMember.Name != string.Empty && teamMember.World != string.Empty)
             {
-                partyMembers.Add(partyMember);
+                teamMembers.Add(teamMember);
             }
         }
 
@@ -95,23 +95,22 @@ public class PartyListManager
         {
             var allianceMember = groupManager->GetAllianceMemberByIndex(i);
 
-            var partyMember = GetPartyMember(allianceMember);
-            if (partyMember != null && partyMember.Name != string.Empty && partyMember.World != string.Empty)
+            var teamMember = GetTeamMember(allianceMember);
+            if (teamMember != null && teamMember.Name != string.Empty && teamMember.World != string.Empty)
             {
-                partyMembers.Add(partyMember);
+                teamMembers.Add(teamMember);
             }
         }
     }
 
-    private static unsafe PartyMember? GetPartyMember(
-        FFXIVClientStructs.FFXIV.Client.Game.Group.PartyMember* partyMember)
+    private static unsafe TeamMember? GetTeamMember(PartyMember* teamMember)
     {
-        if (partyMember == null)
+        if (teamMember == null)
         {
             return null;
         }
 
-        var worldId = partyMember->HomeWorld;
+        var worldId = teamMember->HomeWorld;
         var world = Service.DataManager.GetExcelSheet<World>()
                            ?.FirstOrDefault(x => x.RowId == worldId);
         if (world == null)
@@ -119,7 +118,7 @@ public class PartyListManager
             return null;
         }
 
-        var name = Util.ReadSeString(partyMember->Name);
-        return new PartyMember { Name = name.ToString(), World = world.Name, JobId = partyMember->ClassJob };
+        var name = Util.ReadSeString(teamMember->Name);
+        return new TeamMember { Name = name.ToString(), World = world.Name, JobId = teamMember->ClassJob };
     }
 }
