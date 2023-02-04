@@ -17,7 +17,7 @@ public class MenuBar
             if (ImGui.MenuItem(FontAwesomeIcon.Eraser.ToIconString()))
             {
                 Service.CharDataManager.ResetDisplayedChar();
-                Service.MainWindow.SetErrorMessage(string.Empty);
+                MainWindow.ResetError();
                 Service.MainWindow.ResetSize();
             }
 

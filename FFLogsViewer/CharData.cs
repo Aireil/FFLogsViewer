@@ -17,6 +17,7 @@ namespace FFLogsViewer;
 public class CharData
 {
     public Metric? LoadedMetric;
+    public CharacterError? CharError;
     public string FirstName = string.Empty;
     public string LastName = string.Empty;
     public string WorldName = string.Empty;
@@ -40,7 +41,7 @@ public class CharData
     {
         if (playerCharacter.HomeWorld.GameData?.Name == null)
         {
-            Service.MainWindow.SetErrorMessage("An error occured, please try again");
+            this.CharError = CharacterError.GenericError;
             PluginLog.Error("SetInfo character world was null");
             return false;
         }
@@ -68,7 +69,7 @@ public class CharData
         }
         else
         {
-            Service.MainWindow.SetErrorMessage("Not a valid target");
+            this.CharError = CharacterError.InvalidTarget;
         }
     }
 
@@ -79,18 +80,18 @@ public class CharData
             return;
         }
 
-        Service.MainWindow.SetErrorMessage(string.Empty);
+        this.CharError = null;
 
         if (!this.IsInfoSet())
         {
-            Service.MainWindow.SetErrorMessage("Please fill first name, last name, and world");
+            this.CharError = CharacterError.MissingInputs;
             return;
         }
 
         var regionName = CharDataManager.GetRegionName(this.WorldName);
         if (regionName == null)
         {
-            Service.MainWindow.SetErrorMessage("World not supported or invalid");
+            this.CharError = CharacterError.InvalidWorld;
             return;
         }
 
@@ -104,7 +105,7 @@ public class CharData
             if (rawData == null)
             {
                 this.IsDataLoading = false;
-                Service.MainWindow.SetErrorMessage("Could not reach FF Logs servers");
+                this.CharError = CharacterError.Unreachable;
                 PluginLog.Error("rawData is null");
                 return;
             }
@@ -114,7 +115,7 @@ public class CharData
                 if (rawData.error != null && rawData.error == "Unauthenticated.")
                 {
                     this.IsDataLoading = false;
-                    Service.MainWindow.SetErrorMessage("API Client not valid, check config");
+                    this.CharError = CharacterError.Unauthenticated;
                     PluginLog.Log($"Unauthenticated: {rawData}");
                     return;
                 }
@@ -122,13 +123,13 @@ public class CharData
                 if (rawData.errors != null)
                 {
                     this.IsDataLoading = false;
-                    Service.MainWindow.SetErrorMessage("Malformed GraphQL query.");
+                    this.CharError = CharacterError.MalformedQuery;
                     PluginLog.Log($"Malformed GraphQL query: {rawData}");
                     return;
                 }
 
                 this.IsDataLoading = false;
-                Service.MainWindow.SetErrorMessage("Character not found on FF Logs");
+                this.CharError = CharacterError.CharacterNotFoundFFLogs;
                 return;
             }
 
@@ -137,8 +138,7 @@ public class CharData
             if (character.hidden == "true")
             {
                 this.IsDataLoading = false;
-                Service.MainWindow.SetErrorMessage(
-                    $"{this.FirstName} {this.LastName}@{this.WorldName}'s logs are hidden");
+                this.CharError = CharacterError.HiddenLogs;
                 return;
             }
 
@@ -162,7 +162,7 @@ public class CharData
             this.IsDataLoading = false;
             if (!t.IsFaulted) return;
             if (t.Exception == null) return;
-            Service.MainWindow.SetErrorMessage("Networking error, please try again");
+            this.CharError = CharacterError.NetworkError;
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
                 PluginLog.Error(e, "Networking error");
@@ -232,7 +232,7 @@ public class CharData
         {
             if (ImGui.GetClipboardText() == null)
             {
-                Service.MainWindow.SetErrorMessage("Couldn't get clipboard text");
+                this.CharError = CharacterError.ClipboardError;
                 return;
             }
 
@@ -240,7 +240,7 @@ public class CharData
         }
         catch
         {
-            Service.MainWindow.SetErrorMessage("Couldn't get clipboard text");
+            this.CharError = CharacterError.ClipboardError;
             return;
         }
 
@@ -251,7 +251,7 @@ public class CharData
     {
         if (!this.ParseTextForChar(text))
         {
-            Service.MainWindow.SetErrorMessage("No character found.");
+            this.CharError = CharacterError.CharacterNotFound;
             return;
         }
 
@@ -265,7 +265,7 @@ public class CharData
 
         if (world == null)
         {
-            Service.MainWindow.SetErrorMessage("World not found.");
+            this.CharError = CharacterError.WorldNotFound;
             return;
         }
 

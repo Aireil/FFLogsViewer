@@ -26,6 +26,37 @@ public class MainWindow : Window
         this.ResetSize();
     }
 
+    public static void ResetError()
+    {
+        Service.CharDataManager.DisplayedChar.CharError = null;
+    }
+
+    public static string GetErrorMessage()
+    {
+        return GetErrorMessage(Service.CharDataManager.DisplayedChar);
+    }
+
+    public static string GetErrorMessage(CharData charData)
+    {
+        return charData.CharError switch
+        {
+            CharacterError.CharacterNotFoundFFLogs => "Character not found on FF Logs",
+            CharacterError.CharacterNotFound => "Character not found",
+            CharacterError.ClipboardError => "Couldn't get clipboard text",
+            CharacterError.GenericError => "An error occured, please try again",
+            CharacterError.HiddenLogs => $"{charData.FirstName} {charData.LastName}@{charData.WorldName}'s logs are hidden",
+            CharacterError.InvalidTarget => "Not a valid target",
+            CharacterError.InvalidWorld => "World not supported or invalid",
+            CharacterError.MalformedQuery => "Malformed GraphQL query.",
+            CharacterError.MissingInputs => "Please fill first name, last name, and world",
+            CharacterError.NetworkError => "Networking error, please try again",
+            CharacterError.Unauthenticated => "API Client not valid, check config",
+            CharacterError.Unreachable => "Could not reach FF Logs servers",
+            CharacterError.WorldNotFound => "World not found",
+            _ => "If you see this, something went wrong",
+        };
+    }
+
     public override bool DrawConditions()
     {
         if (Service.Configuration.HideInCombat && Service.Condition[ConditionFlag.InCombat])
@@ -67,11 +98,6 @@ public class MainWindow : Window
         {
             this.table.Draw();
         }
-    }
-
-    public void SetErrorMessage(string message)
-    {
-        this.headerBar.ErrorMessage = message;
     }
 
     public void ResetSize()

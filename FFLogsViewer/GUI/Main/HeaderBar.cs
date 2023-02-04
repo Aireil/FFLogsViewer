@@ -10,7 +10,6 @@ namespace FFLogsViewer.GUI.Main;
 
 public class HeaderBar
 {
-    public string ErrorMessage = string.Empty;
     public uint ResetSizeCount;
 
     private readonly Stopwatch partyListStopwatch = new();
@@ -181,7 +180,7 @@ public class HeaderBar
             return;
         }
 
-        if (this.ErrorMessage == string.Empty)
+        if (Service.CharDataManager.DisplayedChar.CharError == null)
         {
             if (Service.CharDataManager.DisplayedChar.IsDataLoading)
             {
@@ -205,7 +204,7 @@ public class HeaderBar
         }
         else
         {
-            Util.CenterTextColored(ImGuiColors.DalamudRed, this.ErrorMessage);
+            Util.CenterTextColored(ImGuiColors.DalamudRed, MainWindow.GetErrorMessage());
         }
 
         if (Service.Configuration.Layout.Count == 0)
