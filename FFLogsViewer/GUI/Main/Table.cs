@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Colors;
+using Dalamud.Utility;
 using FFLogsViewer.Model;
 using ImGuiNET;
 
@@ -34,6 +35,138 @@ public class Table
         this.currSwaps = new Dictionary<string, int>();
     }
 
+    private static (string EncounterName, string HoverMessage) GetEncounterInfo(Encounter? encounter, LayoutEntry entry, CharData charData)
+    {
+        var isValid = charData.Encounters.FirstOrDefault(
+            enc => enc.ZoneId == entry.ZoneId)?.IsValid;
+
+        var hoverMessage = string.Empty;
+        var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
+        if (encounter == null)
+        {
+            if (isValid != null && !isValid.Value)
+            {
+                encounterName += " (NS)";
+                hoverMessage = "This metric or partition is not supported by this encounter.\nFor some content, aDPS and HPS are the only allowed metrics.";
+            }
+            else
+            {
+                encounterName += " (N/A)";
+                hoverMessage = "No data available.\n" +
+                               "\n" +
+                               "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
+                               "If neither of these is the case, please " +
+                               (Service.Configuration.IsDefaultLayout
+                                    ? "report the issue on GitHub."
+                                    : "try adding the encounter again.");
+            }
+        }
+        else if (encounter is { IsLockedIn: false })
+        {
+            encounterName += " (NL)";
+            hoverMessage = "Not locked in.";
+        }
+
+        return (encounterName, hoverMessage);
+    }
+
+    private static void DrawStatHeader(Stat stat, CharData charData)
+    {
+        ImGui.TableNextColumn();
+        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        {
+            ImGui.Separator();
+        }
+
+        if (stat.Type == StatType.BestAmount &&
+            stat.Alias.Equals("/metric/", StringComparison.OrdinalIgnoreCase))
+        {
+            var metricAbbreviation = charData.LoadedMetric != null
+                                         ? charData.LoadedMetric.Abbreviation
+                                         : Service.Configuration.Metric.Abbreviation;
+            Util.CenterText(metricAbbreviation);
+        }
+        else
+        {
+            Util.CenterText(stat.Alias != string.Empty ? stat.Alias : stat.Name);
+        }
+
+        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        {
+            ImGui.Separator();
+        }
+    }
+
+    private static void DrawEncounterStat(Encounter? encounter, Stat stat)
+    {
+        ImGui.TableNextColumn();
+
+        string? text = null;
+        Vector4? color = null;
+        switch (stat.Type)
+        {
+            case StatType.Best:
+                text = Util.GetFormattedLog(encounter?.Best, Service.Configuration.NbOfDecimalDigits);
+                color = Util.GetLogColor(encounter?.Best);
+                break;
+            case StatType.Median:
+                text = Util.GetFormattedLog(encounter?.Median, Service.Configuration.NbOfDecimalDigits);
+                color = Util.GetLogColor(encounter?.Median);
+                break;
+            case StatType.Kills:
+                text = encounter?.Kills?.ToString();
+                break;
+            case StatType.Fastest:
+                if (encounter?.Fastest != null)
+                {
+                    text = TimeSpan.FromMilliseconds(encounter.Fastest.Value).ToString("mm':'ss");
+                }
+
+                break;
+            case StatType.BestAmount:
+                text = encounter?.BestAmount?.ToString();
+                break;
+            case StatType.Job:
+                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.Job?.Abbreviation : encounter?.Job?.Name;
+                color = encounter?.Job?.Color;
+                break;
+            case StatType.BestJob:
+                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.BestJob?.Abbreviation : encounter?.BestJob?.Name;
+                color = encounter?.BestJob?.Color;
+                break;
+            case StatType.AllStarsPoints:
+                // points have a lot of decimals if fresh log
+                text = encounter?.AllStarsPoints?.ToString("0.00");
+                break;
+            case StatType.AllStarsRank:
+                text = encounter?.AllStarsRank?.ToString();
+                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
+                break;
+            case StatType.AllStarsRankPercent:
+                text = Util.GetFormattedLog(encounter?.AllStarsRankPercent, Service.Configuration.NbOfDecimalDigits);
+                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
+                break;
+            default:
+                text = "?";
+                break;
+        }
+
+        text ??= encounter is null or { IsValid: false } ? "?" : "-";
+        color ??= new Vector4(1, 1, 1, 1);
+
+        Util.CenterTextColored(color.Value, text);
+    }
+
+    private static bool IsDefaultSwap(string swapId, int swapNumber)
+    {
+        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber < swapNumber);
+    }
+
+    private static bool IsFinaleSwap(string swapId, int swapNumber)
+    {
+        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber);
+    }
+
     private void DrawPartyView()
     {
         if (ImGui.BeginTable(
@@ -41,8 +174,6 @@ public class Table
                 9,
                 Service.Configuration.Style.MainTableFlags))
         {
-
-
             ImGui.EndTable();
         }
     }
@@ -56,192 +187,36 @@ public class Table
                     Service.Configuration.Style.MainTableFlags))
         {
             var displayedEntries = this.GetDisplayedEntries();
-            for (var i = 0; i < displayedEntries.Count; i++)
+            for (var row = 0; row < displayedEntries.Count; row++)
             {
-                if (i != 0)
+                if (row != 0)
                 {
                     ImGui.TableNextRow();
                 }
 
                 ImGui.TableNextColumn();
 
-                var entry = displayedEntries[i];
-
+                var entry = displayedEntries[row];
                 if (entry.Type == LayoutEntryType.Header)
                 {
-                    var separatorCursorY = 0.0f;
-                    if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-                    {
-                        ImGui.Separator();
-                        separatorCursorY = ImGui.GetCursorPosY();
-                    }
-
-                    if (entry.SwapId == string.Empty)
-                    {
-                        ImGui.TextUnformatted(entry.Alias);
-                    }
-                    else
-                    {
-                        if (ImGui.Selectable($"{entry.Alias}##{i}"))
-                        {
-                            this.Swap(entry.SwapId, entry.SwapNumber);
-                        }
-                    }
-
-                    if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-                    {
-                        ImGui.Separator();
-                    }
+                    this.DrawStatAlias(entry, row);
 
                     foreach (var stat in enabledStats)
                     {
-                        ImGui.TableNextColumn();
-                        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-                        {
-                            ImGui.Separator();
-                            ImGui.SetCursorPosY(separatorCursorY);
-                        }
-
-                        if (stat.Type == StatType.BestAmount &&
-                            stat.Alias.Equals("/metric/", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var metricAbbreviation = Service.CharDataManager.DisplayedChar.LoadedMetric != null
-                                                 ? Service.CharDataManager.DisplayedChar.LoadedMetric.Abbreviation
-                                                 : Service.Configuration.Metric.Abbreviation;
-                            Util.CenterText(metricAbbreviation);
-                        }
-                        else
-                        {
-                            Util.CenterText(stat.Alias != string.Empty ? stat.Alias : stat.Name);
-                        }
-
-                        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-                        {
-                            ImGui.Separator();
-                        }
+                        DrawStatHeader(stat, Service.CharDataManager.DisplayedChar);
                     }
                 }
                 else if (entry.Type == LayoutEntryType.Encounter)
                 {
-                    var encounter =
-                        Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
-                            enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
+                    var encounter = Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
+                        enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
+                    var (encounterName, hoverMessage) = GetEncounterInfo(encounter, entry, Service.CharDataManager.DisplayedChar);
 
-                    var isValid = Service.CharDataManager.DisplayedChar.Encounters.FirstOrDefault(
-                                    enc => enc.ZoneId == entry.ZoneId)?.IsValid;
-
-                    var encounterName = entry.Alias != string.Empty ? entry.Alias : entry.Encounter;
-                    if (encounter == null)
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                        if (isValid != null && !isValid.Value)
-                        {
-                            encounterName += " (NS)";
-                        }
-                        else
-                        {
-                            encounterName += " (N/A)";
-                        }
-                    }
-                    else if (encounter is { IsLockedIn: false })
-                    {
-                        ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                        encounterName += " (NL)";
-                    }
-
-                    if (entry.SwapId == string.Empty)
-                    {
-                        ImGui.TextUnformatted(encounterName);
-                    }
-                    else
-                    {
-                        if (ImGui.Selectable($"{encounterName}##{i}"))
-                        {
-                            this.Swap(entry.SwapId, entry.SwapNumber);
-                        }
-                    }
-
-                    if (encounter == null)
-                    {
-                        ImGui.PopStyleColor();
-                        if (isValid != null && !isValid.Value)
-                        {
-                            Util.SetHoverTooltip("This metric or partition is not supported by this encounter.\nFor some content, aDPS and HPS are the only allowed metrics.");
-                        }
-                        else
-                        {
-                            Util.SetHoverTooltip("No data available.\n" +
-                                                 "\n" +
-                                                 "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
-                                                 "If neither of these is the case, please " +
-                                                 (Service.Configuration.IsDefaultLayout
-                                                     ? "report the issue on GitHub."
-                                                     : "try adding the encounter again."));
-                        }
-                    }
-                    else if (encounter is { IsLockedIn: false })
-                    {
-                        ImGui.PopStyleColor();
-                        Util.SetHoverTooltip("Not locked in.");
-                    }
+                    this.DrawEncounterName(entry, encounterName, hoverMessage, row);
 
                     foreach (var stat in enabledStats)
                     {
-                        ImGui.TableNextColumn();
-                        string? text = null;
-                        Vector4? color = null;
-                        switch (stat.Type)
-                        {
-                            case StatType.Best:
-                                text = Util.GetFormattedLog(encounter?.Best, Service.Configuration.NbOfDecimalDigits);
-                                color = Util.GetLogColor(encounter?.Best);
-                                break;
-                            case StatType.Median:
-                                text = Util.GetFormattedLog(encounter?.Median, Service.Configuration.NbOfDecimalDigits);
-                                color = Util.GetLogColor(encounter?.Median);
-                                break;
-                            case StatType.Kills:
-                                text = encounter?.Kills?.ToString();
-                                break;
-                            case StatType.Fastest:
-                                if (encounter?.Fastest != null)
-                                {
-                                    text = TimeSpan.FromMilliseconds(encounter.Fastest.Value).ToString("mm':'ss");
-                                }
-
-                                break;
-                            case StatType.BestAmount:
-                                text = encounter?.BestAmount?.ToString();
-                                break;
-                            case StatType.Job:
-                                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.Job?.Abbreviation : encounter?.Job?.Name;
-                                color = encounter?.Job?.Color;
-                                break;
-                            case StatType.BestJob:
-                                text = Service.Configuration.Style.AbbreviateJobNames ? encounter?.BestJob?.Abbreviation : encounter?.BestJob?.Name;
-                                color = encounter?.BestJob?.Color;
-                                break;
-                            case StatType.AllStarsPoints:
-                                // points have a lot of decimals if fresh log
-                                text = encounter?.AllStarsPoints?.ToString("0.00");
-                                break;
-                            case StatType.AllStarsRank:
-                                text = encounter?.AllStarsRank?.ToString();
-                                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
-                                break;
-                            case StatType.AllStarsRankPercent:
-                                text = Util.GetFormattedLog(encounter?.AllStarsRankPercent, Service.Configuration.NbOfDecimalDigits);
-                                color = Util.GetLogColor(encounter?.AllStarsRankPercent);
-                                break;
-                            default:
-                                text = "?";
-                                break;
-                        }
-
-                        text ??= encounter is null or { IsValid: false } ? "?" : "-";
-                        color ??= new Vector4(1, 1, 1, 1);
-
-                        Util.CenterTextColored(color.Value, text);
+                        DrawEncounterStat(encounter, stat);
                     }
                 }
             }
@@ -250,14 +225,50 @@ public class Table
         }
     }
 
-    private static bool IsDefaultSwap(string swapId, int swapNumber)
+    private void DrawEncounterName(LayoutEntry entry, string encounterName, string hoverMessage, int row)
     {
-        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber < swapNumber);
+        if (!hoverMessage.IsNullOrEmpty())
+        {
+            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+        }
+
+        this.DrawSwapAlias(entry, encounterName, row);
+
+        if (!hoverMessage.IsNullOrEmpty())
+        {
+            ImGui.PopStyleColor();
+            Util.SetHoverTooltip(hoverMessage);
+        }
     }
 
-    private static bool IsFinaleSwap(string swapId, int swapNumber)
+    private void DrawSwapAlias(LayoutEntry entry, string displayedName, int row)
     {
-        return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber);
+        if (entry.SwapId == string.Empty)
+        {
+            ImGui.TextUnformatted(displayedName);
+        }
+        else
+        {
+            if (ImGui.Selectable($"{displayedName}##{row}"))
+            {
+                this.Swap(entry.SwapId, entry.SwapNumber);
+            }
+        }
+    }
+
+    private void DrawStatAlias(LayoutEntry entry, int row)
+    {
+        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        {
+            ImGui.Separator();
+        }
+
+        this.DrawSwapAlias(entry, entry.Alias, row);
+
+        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        {
+            ImGui.Separator();
+        }
     }
 
     private List<LayoutEntry> GetDisplayedEntries()
