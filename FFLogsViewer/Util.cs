@@ -217,4 +217,19 @@ public class Util
             _ => "If you see this, something went wrong",
         };
     }
+
+    public static string GetMetricAbbreviation(CharData? charData)
+    {
+        if (charData?.LoadedMetric != null)
+        {
+            return charData.LoadedMetric.Abbreviation;
+        }
+
+        if (Service.MainWindow.OverriddenMetric != null)
+        {
+            return Service.MainWindow.OverriddenMetric.Abbreviation;
+        }
+
+        return Service.Configuration.Metric.Abbreviation;
+    }
 }

@@ -68,16 +68,15 @@ public class Table
         return (encounterName, hoverMessage);
     }
 
-    private static void DrawStatHeader(Stat stat, CharData charData)
+    private static void DrawStatHeader(Stat stat, CharData? charData)
     {
         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
         {
             ImGui.Separator();
         }
 
-        var metricAbbreviation = charData.LoadedMetric != null
-                                     ? charData.LoadedMetric.Abbreviation
-                                     : Service.Configuration.Metric.Abbreviation;
+        var metricAbbreviation = Util.GetMetricAbbreviation(charData);
+
         Util.CenterText(stat.GetFinalAlias(metricAbbreviation));
 
         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
@@ -179,17 +178,7 @@ public class Table
             ImGui.TableNextColumn();
 
             ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
-            string metricAbbreviation;
-            if (currentParty.Count > 0)
-            {
-                metricAbbreviation = currentParty[0].LoadedMetric != null
-                                     ? currentParty[0].LoadedMetric!.Abbreviation
-                                     : Service.Configuration.Metric.Abbreviation;
-            }
-            else
-            {
-                metricAbbreviation = Service.Configuration.Metric.Abbreviation;
-            }
+            var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
 
             if (ImGui.BeginCombo(string.Empty, this.currentStat.GetFinalAlias(metricAbbreviation)))
             {
@@ -242,10 +231,11 @@ public class Table
                 {
                     this.DrawStatAlias(entry, row);
 
-                    for (var partyMember = 0; partyMember < 7; partyMember++)
+                    for (var i = 0; i < 7; i++)
                     {
                         ImGui.TableNextColumn();
-                        DrawStatHeader(this.currentStat, Service.CharDataManager.DisplayedChar);
+                        var charData = i < currentParty.Count ? currentParty[i] : null;
+                        DrawStatHeader(this.currentStat, charData);
                     }
                 }
                 else if (entry.Type == LayoutEntryType.Encounter)
