@@ -75,18 +75,10 @@ public class Table
             ImGui.Separator();
         }
 
-        if (stat.Type == StatType.BestAmount &&
-            stat.Alias.Equals("/metric/", StringComparison.OrdinalIgnoreCase))
-        {
-            var metricAbbreviation = charData.LoadedMetric != null
-                                         ? charData.LoadedMetric.Abbreviation
-                                         : Service.Configuration.Metric.Abbreviation;
-            Util.CenterText(metricAbbreviation);
-        }
-        else
-        {
-            Util.CenterText(stat.Alias != string.Empty ? stat.Alias : stat.Name);
-        }
+        var metricAbbreviation = charData.LoadedMetric != null
+                                     ? charData.LoadedMetric.Abbreviation
+                                     : Service.Configuration.Metric.Abbreviation;
+        Util.CenterText(stat.GetFinalAlias(metricAbbreviation));
 
         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
         {
@@ -186,7 +178,32 @@ public class Table
         {
             ImGui.TableNextColumn();
 
-            ImGui.Text($"{this.currentStat.Name}");
+            ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+            string metricAbbreviation;
+            if (currentParty.Count > 0)
+            {
+                metricAbbreviation = currentParty[0].LoadedMetric != null
+                                     ? currentParty[0].LoadedMetric!.Abbreviation
+                                     : Service.Configuration.Metric.Abbreviation;
+            }
+            else
+            {
+                metricAbbreviation = Service.Configuration.Metric.Abbreviation;
+            }
+
+            if (ImGui.BeginCombo(string.Empty, this.currentStat.GetFinalAlias(metricAbbreviation)))
+            {
+                foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
+                {
+                    if (ImGui.Selectable(stat.Name))
+                    {
+                        this.currentStat = stat;
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+
             for (var i = 0; i < 7; i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
