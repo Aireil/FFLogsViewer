@@ -33,6 +33,16 @@ public class MenuBar
             ImGui.PopFont();
             Util.SetHoverTooltip("Configuration");
 
+            var swapViewIcon = Service.MainWindow.IsPartyView ? FontAwesomeIcon.User : FontAwesomeIcon.UsersCog;
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.MenuItem(swapViewIcon.ToIconString()))
+            {
+                Service.MainWindow.IsPartyView = !Service.MainWindow.IsPartyView;
+            }
+
+            ImGui.PopFont();
+            Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to Single View" : "Swap to Party View");
+
             var hasTmpSettingChanged = false;
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
