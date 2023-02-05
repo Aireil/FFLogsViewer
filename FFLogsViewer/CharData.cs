@@ -25,10 +25,47 @@ public class CharData
     public string LoadedFirstName = string.Empty;
     public string LoadedLastName = string.Empty;
     public string LoadedWorldName = string.Empty;
+    public uint JobId; // only used in party view
     public volatile bool IsDataLoading;
     public volatile bool IsDataReady;
 
+    public string Abbreviation
+    {
+        get
+        {
+            if (this.FirstName == string.Empty || this.LastName == string.Empty)
+            {
+                return "-";
+            }
+
+            return $"{this.FirstName[0]}. {this.LastName[0]}.";
+        }
+    }
+
     public List<Encounter> Encounters = new();
+
+    public CharData(string? firstName = null, string? lastName = null, string? worldName = null, uint? jobId = null)
+    {
+        if (firstName != null)
+        {
+            this.FirstName = firstName;
+        }
+
+        if (lastName != null)
+        {
+            this.LastName = lastName;
+        }
+
+        if (worldName != null)
+        {
+            this.WorldName = worldName;
+        }
+
+        if (jobId != null)
+        {
+            this.JobId = (uint)jobId;
+        }
+    }
 
     public void SetInfo(string firstName, string lastName, string worldName)
     {
