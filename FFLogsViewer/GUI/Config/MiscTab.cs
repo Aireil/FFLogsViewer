@@ -94,9 +94,27 @@ public class MiscTab
         }
 
         if (Service.FfLogsClient.IsTokenValid)
+        {
             ImGui.TextColored(ImGuiColors.HealerGreen, "This client is valid.");
+        }
         else
+        {
             ImGui.TextColored(ImGuiColors.DalamudRed, "This client is NOT valid.");
+            if (FFLogsClient.IsConfigSet())
+            {
+                ImGui.TextColored(ImGuiColors.DalamudRed, "If you are certain that the API client is valid,\nthis may indicate that FF Logs is down.\nMake sure you can open it in your browser before trying again.");
+                if (ImGui.Button("Open FF Logs"))
+                {
+                    Util.OpenLink("https://www.fflogs.com/");
+                }
+
+                ImGui.SameLine();
+                if (ImGui.Button("Try again"))
+                {
+                    Service.FfLogsClient.SetToken();
+                }
+            }
+        }
 
         if (ImGui.CollapsingHeader("How to get a client ID and a client secret:"))
         {
