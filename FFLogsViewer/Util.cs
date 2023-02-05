@@ -83,10 +83,15 @@ public class Util
         return color / 255;
     }
 
+    public static void CenterCursor(float width)
+    {
+        var offset = (ImGui.GetContentRegionAvail().X - width) / 2;
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offset);
+    }
+
     public static void CenterCursor(string text)
     {
-        var offset = (ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(text).X) / 2;
-        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offset);
+        CenterCursor(ImGui.CalcTextSize(text).X);
     }
 
     public static void CenterTextColored(Vector4 color, string text)
