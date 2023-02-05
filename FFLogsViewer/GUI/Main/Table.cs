@@ -193,6 +193,17 @@ public class Table
                 ImGui.EndCombo();
             }
 
+            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+            {
+                this.ShiftCurrentStat(-1);
+            }
+
+            ImGui.SameLine();
+            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+            {
+                this.ShiftCurrentStat(1);
+            }
+
             for (var i = 0; i < 7; i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -246,6 +257,12 @@ public class Table
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
+                        if (charData is { IsDataLoading: true })
+                        {
+                            Util.CenterText("...");
+                            continue;
+                        }
+
                         if (charData is not { IsDataReady: true })
                         {
                             Util.CenterTextWithError("-", charData);
@@ -389,5 +406,21 @@ public class Table
 
         this.currSwaps[swapId] = newSwapNumber;
         Service.MainWindow.ResetSize();
+    }
+
+    private void ShiftCurrentStat(int shift)
+    {
+        var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
+        if (enabledStats.Count == 0)
+        {
+            return;
+        }
+
+        var currIndex = enabledStats.IndexOf(this.currentStat);
+        var newIndex = Util.MathMod(currIndex + shift, enabledStats.Count);
+        if (newIndex < enabledStats.Count)
+        {
+            this.currentStat = enabledStats[newIndex];
+        }
     }
 }

@@ -37,7 +37,10 @@ public class MenuBar
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.MenuItem(swapViewIcon.ToIconString()))
             {
-                Service.MainWindow.IsPartyView = !Service.MainWindow.IsPartyView;
+                if (Service.FfLogsClient.IsTokenValid)
+                {
+                    Service.MainWindow.IsPartyView = !Service.MainWindow.IsPartyView;
+                }
             }
 
             ImGui.PopFont();

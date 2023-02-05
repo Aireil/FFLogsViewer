@@ -232,4 +232,9 @@ public class Util
 
         return Service.Configuration.Metric.Abbreviation;
     }
+
+    public static int MathMod(int a, int b)
+    {
+        return (Math.Abs(a * b) + a) % b;
+    }
 }

@@ -102,7 +102,9 @@ public class MiscTab
             ImGui.TextColored(ImGuiColors.DalamudRed, "This client is NOT valid.");
             if (FFLogsClient.IsConfigSet())
             {
-                ImGui.TextColored(ImGuiColors.DalamudRed, "If you are certain that the API client is valid,\nthis may indicate that FF Logs is down.\nMake sure you can open it in your browser before trying again.");
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudRed);
+                ImGui.TextWrapped("If you are certain that the API client is valid, this may indicate that FF Logs is unreachable.\nMake sure you can open it in your browser before trying again.");
+                ImGui.PopStyleColor();
                 if (ImGui.Button("Open FF Logs"))
                 {
                     Util.OpenLink("https://www.fflogs.com/");
