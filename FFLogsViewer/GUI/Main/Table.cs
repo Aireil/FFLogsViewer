@@ -85,7 +85,7 @@ public class Table
         }
     }
 
-    private static void DrawEncounterStat(Encounter? encounter, Stat stat)
+    private static void DrawEncounterStat(Encounter? encounter, Stat stat, string hoverMessage)
     {
         string? text = null;
         Vector4? color = null;
@@ -141,6 +141,10 @@ public class Table
         color ??= new Vector4(1, 1, 1, 1);
 
         Util.CenterTextColored(color.Value, text);
+        if (hoverMessage != string.Empty)
+        {
+            Util.SetHoverTooltip(hoverMessage);
+        }
     }
 
     private static void DrawHeaderSeparator()
@@ -272,7 +276,8 @@ public class Table
                         var encounter = charData.Encounters.FirstOrDefault(
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
 
-                        DrawEncounterStat(encounter, this.currentStat);
+                        var (_, hoverMessage) = GetEncounterInfo(encounter, entry, charData);
+                        DrawEncounterStat(encounter, this.currentStat, hoverMessage);
                     }
                 }
             }
@@ -321,7 +326,7 @@ public class Table
                     foreach (var stat in enabledStats)
                     {
                         ImGui.TableNextColumn();
-                        DrawEncounterStat(encounter, stat);
+                        DrawEncounterStat(encounter, stat, hoverMessage);
                     }
                 }
             }
