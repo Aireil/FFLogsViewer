@@ -113,10 +113,7 @@ public class MenuBar
             if (hasTmpSettingChanged)
             {
                 Service.MainWindow.ResetSize();
-                if (Service.CharDataManager.DisplayedChar.IsInfoSet())
-                {
-                    Service.CharDataManager.DisplayedChar.FetchData();
-                }
+                Service.CharDataManager.FetchLogs();
             }
 
             /*if (!Service.Configuration.IsUpdateDismissed2060)

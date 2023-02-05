@@ -70,7 +70,7 @@ public class HeaderBar
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.Search))
         {
-            Service.CharDataManager.DisplayedChar.FetchData();
+            Service.CharDataManager.DisplayedChar.FetchLogs();
         }
 
         Util.SetHoverTooltip("Search");
@@ -123,7 +123,7 @@ public class HeaderBar
 
                         if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
                         {
-                            Service.CharDataManager.DisplayedChar.FetchCharacter($"{partyMember.Name}@{partyMember.World}");
+                            Service.CharDataManager.DisplayedChar.FetchCharacter($"{partyMember.FirstName} {partyMember.LastName}@{partyMember.World}");
                         }
 
                         var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(partyMember.JobId);
@@ -136,16 +136,12 @@ public class HeaderBar
                         {
                             ImGui.SetCursorPosY(middleCursorPosY);
                             ImGui.Text("(?)");
-                            Util.SetHoverTooltip("An error occured with icons.\n" +
-                                                 "Please create an issue on the GitHub with a screenshot of the red lines in /xllog.\n" +
-                                                 "This is probably due to TexTools corrupting your game files.\n" +
-                                                 "This shouldn't affect the party members functionality.");
                         }
 
                         ImGui.TableNextColumn();
 
                         ImGui.SetCursorPosY(middleCursorPosY);
-                        ImGui.Text(partyMember.Name);
+                        ImGui.Text($"{partyMember.FirstName} {partyMember.LastName}");
 
                         ImGui.TableNextColumn();
 
@@ -204,7 +200,7 @@ public class HeaderBar
         }
         else
         {
-            Util.CenterTextColored(ImGuiColors.DalamudRed, MainWindow.GetErrorMessage());
+            Util.CenterTextColored(ImGuiColors.DalamudRed, Util.GetErrorMessage(Service.CharDataManager.DisplayedChar));
         }
 
         if (Service.Configuration.Layout.Count == 0)

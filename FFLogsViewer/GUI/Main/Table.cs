@@ -2,29 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Utility;
 using FFLogsViewer.Model;
 using ImGuiNET;
+using FFLogsViewer_Util = FFLogsViewer.Util;
 
 namespace FFLogsViewer.GUI.Main;
 
 public class Table
 {
     private Dictionary<string, int> currSwaps = new();
+    private Stat currentStat = Service.Configuration.Stats.First(stat => stat.Type == StatType.Best);
 
     public void Draw()
     {
-        if (!Service.CharDataManager.DisplayedChar.IsDataReady && !Service.MainWindow.IsPartyView)
-        {
-            return;
-        }
-
         if (Service.MainWindow.IsPartyView)
         {
             this.DrawPartyView();
         }
-        else
+        else if (Service.CharDataManager.DisplayedChar.IsDataReady)
         {
             this.DrawSingleView();
         }
@@ -72,7 +70,6 @@ public class Table
 
     private static void DrawStatHeader(Stat stat, CharData charData)
     {
-        ImGui.TableNextColumn();
         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
         {
             ImGui.Separator();
@@ -99,8 +96,6 @@ public class Table
 
     private static void DrawEncounterStat(Encounter? encounter, Stat stat)
     {
-        ImGui.TableNextColumn();
-
         string? text = null;
         Vector4? color = null;
         switch (stat.Type)
@@ -157,6 +152,14 @@ public class Table
         Util.CenterTextColored(color.Value, text);
     }
 
+    private static void DrawHeaderSeparator()
+    {
+        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        {
+            ImGui.Separator();
+        }
+    }
+
     private static bool IsDefaultSwap(string swapId, int swapNumber)
     {
         return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber < swapNumber);
@@ -169,11 +172,87 @@ public class Table
 
     private void DrawPartyView()
     {
+        if (ImGui.Button("Update"))
+        {
+            Service.CharDataManager.UpdatePartyMembers();
+        }
+
+        var currentParty = Service.CharDataManager.PartyMembers;
+
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyView",
-                9,
+                8,
                 Service.Configuration.Style.MainTableFlags))
         {
+            ImGui.TableNextColumn();
+
+            ImGui.Text($"{this.currentStat.Name}");
+            for (var i = 0; i < 7; i++)
+            {
+                var charData = i < currentParty.Count ? currentParty[i] : null;
+
+                ImGui.TableNextColumn();
+
+                Util.CenterTextWithError(charData?.Abbreviation ?? "-", charData);
+
+                var iconSize = new Vector2(25 * ImGuiHelpers.GlobalScale);
+                Util.CenterCursor(iconSize.X);
+                var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
+                if (icon != null)
+                {
+                    ImGui.Image(icon.ImGuiHandle, iconSize);
+                }
+                else
+                {
+                    ImGui.Text("(?)");
+                }
+
+                if (charData != null)
+                {
+                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                }
+            }
+
+            var displayedEntries = this.GetDisplayedEntries();
+            for (var row = 0; row < displayedEntries.Count; row++)
+            {
+                ImGui.TableNextRow();
+
+                ImGui.TableNextColumn();
+
+                var entry = displayedEntries[row];
+                if (entry.Type == LayoutEntryType.Header)
+                {
+                    this.DrawStatAlias(entry, row);
+
+                    for (var partyMember = 0; partyMember < 7; partyMember++)
+                    {
+                        ImGui.TableNextColumn();
+                        DrawStatHeader(this.currentStat, Service.CharDataManager.DisplayedChar);
+                    }
+                }
+                else if (entry.Type == LayoutEntryType.Encounter)
+                {
+                    this.DrawEncounterName(entry, entry.Alias == string.Empty ? entry.Encounter : entry.Alias, string.Empty, row);
+
+                    for (var i = 0; i < 7; i++)
+                    {
+                        ImGui.TableNextColumn();
+                        var charData = i < currentParty.Count ? currentParty[i] : null;
+                        if (charData is not { IsDataReady: true })
+                        {
+                            Util.CenterTextWithError("-", charData);
+                            continue;
+                        }
+
+                        var encounter = charData.Encounters.FirstOrDefault(
+                            enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
+
+                        DrawEncounterStat(encounter, this.currentStat);
+                    }
+                }
+            }
+
             ImGui.EndTable();
         }
     }
@@ -203,6 +282,7 @@ public class Table
 
                     foreach (var stat in enabledStats)
                     {
+                        ImGui.TableNextColumn();
                         DrawStatHeader(stat, Service.CharDataManager.DisplayedChar);
                     }
                 }
@@ -216,6 +296,7 @@ public class Table
 
                     foreach (var stat in enabledStats)
                     {
+                        ImGui.TableNextColumn();
                         DrawEncounterStat(encounter, stat);
                     }
                 }
@@ -258,17 +339,11 @@ public class Table
 
     private void DrawStatAlias(LayoutEntry entry, int row)
     {
-        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-        {
-            ImGui.Separator();
-        }
+        DrawHeaderSeparator();
 
         this.DrawSwapAlias(entry, entry.Alias, row);
 
-        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
-        {
-            ImGui.Separator();
-        }
+        DrawHeaderSeparator();
     }
 
     private List<LayoutEntry> GetDisplayedEntries()

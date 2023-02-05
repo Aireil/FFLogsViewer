@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -10,7 +11,34 @@ namespace FFLogsViewer.Manager;
 public class CharDataManager
 {
     public CharData DisplayedChar = new();
+    public List<CharData> PartyMembers = new();
     public string[] ValidWorlds;
+
+    public void UpdatePartyMembers()
+    {
+        Service.TeamManager.UpdateTeamList();
+        var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToArray();
+
+        foreach (var partyMember in currPartyMembers)
+        {
+            var member = this.PartyMembers.FirstOrDefault(x => x.FirstName == partyMember.FirstName && x.LastName == partyMember.LastName && x.WorldName == partyMember.World);
+            if (member == null)
+            {
+                // add new member
+                this.PartyMembers.Add(new CharData(partyMember.FirstName, partyMember.LastName, partyMember.World, partyMember.JobId));
+            }
+            else
+            {
+                // update existing member
+                member.JobId = partyMember.JobId;
+            }
+        }
+
+        // remove members that are no longer in party
+        this.PartyMembers.RemoveAll(x => !currPartyMembers.Any(y => y.FirstName == x.FirstName && y.LastName == x.LastName && y.World == x.WorldName));
+
+        this.FetchLogs();
+    }
 
     public CharDataManager()
     {
@@ -82,6 +110,27 @@ public class CharDataManager
         if (charData.ParseTextForChar(name))
         {
             Util.OpenLink(charData);
+        }
+    }
+
+    public void FetchLogs()
+    {
+        if (Service.MainWindow.IsPartyView)
+        {
+            foreach (var partyMember in this.PartyMembers)
+            {
+                if (partyMember.IsInfoSet())
+                {
+                    partyMember.FetchLogs();
+                }
+            }
+        }
+        else
+        {
+            if (this.DisplayedChar.IsInfoSet())
+            {
+                this.DisplayedChar.FetchLogs();
+            }
         }
     }
 

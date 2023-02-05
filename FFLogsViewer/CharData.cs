@@ -101,7 +101,7 @@ public class CharData
         {
             if (this.SetInfo(targetCharacter))
             {
-                this.FetchData();
+                this.FetchLogs();
             }
         }
         else
@@ -110,7 +110,7 @@ public class CharData
         }
     }
 
-    public void FetchData()
+    public void FetchLogs()
     {
         if (this.IsDataLoading)
         {
@@ -292,7 +292,7 @@ public class CharData
             return;
         }
 
-        this.FetchData();
+        this.FetchLogs();
     }
 
     public void FetchCharacter(string fullName, ushort worldId)

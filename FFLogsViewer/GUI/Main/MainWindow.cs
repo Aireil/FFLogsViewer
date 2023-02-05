@@ -12,6 +12,7 @@ public class MainWindow : Window
     public Partition Partition = GameDataManager.GetDefaultPartition();
     public Metric? OverriddenMetric;
     public bool IsOverridingTimeframe;
+    public bool IsPartyView;
 
     private readonly HeaderBar headerBar = new();
     private readonly Table table = new();
@@ -29,32 +30,6 @@ public class MainWindow : Window
     public static void ResetError()
     {
         Service.CharDataManager.DisplayedChar.CharError = null;
-    }
-
-    public static string GetErrorMessage()
-    {
-        return GetErrorMessage(Service.CharDataManager.DisplayedChar);
-    }
-
-    public static string GetErrorMessage(CharData charData)
-    {
-        return charData.CharError switch
-        {
-            CharacterError.CharacterNotFoundFFLogs => "Character not found on FF Logs",
-            CharacterError.CharacterNotFound => "Character not found",
-            CharacterError.ClipboardError => "Couldn't get clipboard text",
-            CharacterError.GenericError => "An error occured, please try again",
-            CharacterError.HiddenLogs => $"{charData.FirstName} {charData.LastName}@{charData.WorldName}'s logs are hidden",
-            CharacterError.InvalidTarget => "Not a valid target",
-            CharacterError.InvalidWorld => "World not supported or invalid",
-            CharacterError.MalformedQuery => "Malformed GraphQL query.",
-            CharacterError.MissingInputs => "Please fill first name, last name, and world",
-            CharacterError.NetworkError => "Networking error, please try again",
-            CharacterError.Unauthenticated => "API Client not valid, check config",
-            CharacterError.Unreachable => "Could not reach FF Logs servers",
-            CharacterError.WorldNotFound => "World not found",
-            _ => "If you see this, something went wrong",
-        };
     }
 
     public override bool DrawConditions()
@@ -90,14 +65,19 @@ public class MainWindow : Window
 
     public override void Draw()
     {
+        if (this.IsPartyView && !Service.FfLogsClient.IsTokenValid)
+        {
+            this.IsPartyView = false;
+        }
+
         MenuBar.Draw();
 
-        this.headerBar.Draw();
-
-        if (Service.CharDataManager.DisplayedChar.IsDataReady)
+        if (!this.IsPartyView)
         {
-            this.table.Draw();
+            this.headerBar.Draw();
         }
+
+        this.table.Draw();
     }
 
     public void ResetSize()
