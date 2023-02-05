@@ -11,19 +11,14 @@ public class TeamManager
 {
     public List<TeamMember> TeamList = new();
 
-    public void UpdateTeamList()
+    public unsafe void UpdateTeamList()
     {
-        this.TeamList = GetTeamMembers();
-    }
-
-    private static unsafe List<TeamMember> GetTeamMembers()
-    {
-        var teamMembers = new List<TeamMember>();
+        this.TeamList = new List<TeamMember>();
 
         var groupManager = GroupManager.Instance();
         if (groupManager->MemberCount > 0)
         {
-            AddMembersFromGroupManager(teamMembers, groupManager);
+            this.AddMembersFromGroupManager(groupManager);
         }
         else
         {
@@ -31,7 +26,7 @@ public class TeamManager
             if (cwProxy->IsInCrossRealmParty != 0)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
-                AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[localIndex], true);
+                this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupSpan[localIndex], true);
 
                 for (var i = 0; i < cwProxy->CrossRealmGroupSpan.Length; i++)
                 {
@@ -40,85 +35,69 @@ public class TeamManager
                         continue;
                     }
 
-                    AddMembersFromCRGroup(teamMembers, cwProxy->CrossRealmGroupSpan[i]);
+                    this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupSpan[i]);
                 }
             }
         }
 
-        if (teamMembers.Count == 0)
+        // Add self if not in party
+        if (this.TeamList.Count == 0 && Service.ClientState.LocalPlayer != null)
         {
-            var selfName = Service.ClientState.LocalPlayer?.Name;
-            var selfWorldId = Service.ClientState.LocalPlayer?.HomeWorld.Id;
-            var selfWorld = Service.DataManager.GetExcelSheet<World>()
-                                   ?.FirstOrDefault(x => x.RowId == selfWorldId);
-            var selfJobId = Service.ClientState.LocalPlayer?.ClassJob.Id;
-            if (selfName != null && selfWorld != null && selfJobId != null)
-            {
-                teamMembers.Add(new TeamMember { Name = selfName.ToString(), World = selfWorld.Name, JobId = selfJobId.Value });
-            }
+            var selfName = Service.ClientState.LocalPlayer.Name.TextValue;
+            var selfWorldId = Service.ClientState.LocalPlayer.HomeWorld.Id;
+            var selfJobId = Service.ClientState.LocalPlayer.ClassJob.Id;
+            this.AddTeamMember(selfName, (ushort)selfWorldId, selfJobId, true);
         }
-
-        return teamMembers;
     }
 
-    private static unsafe void AddMembersFromCRGroup(ICollection<TeamMember> teamMembers, CrossRealmGroup crossRealmGroup, bool isLocalPlayerGroup = false)
+    private unsafe void AddMembersFromCRGroup(CrossRealmGroup crossRealmGroup, bool isLocalPlayerGroup = false)
     {
         foreach (var groupMember in crossRealmGroup.GroupMemberSpan)
         {
-            var worldId = groupMember.HomeWorld;
-            var world = Service.DataManager.GetExcelSheet<World>()
-                               ?.FirstOrDefault(x => x.RowId == worldId);
-            if (world == null)
-            {
-                continue;
-            }
-
-            var name = Util.ReadSeString(groupMember.Name);
-            teamMembers.Add(new TeamMember { Name = name.ToString(), World = world.Name, JobId = groupMember.ClassJobId, IsInParty = isLocalPlayerGroup });
+            this.AddTeamMember(Util.ReadSeString(groupMember.Name).TextValue, (ushort)groupMember.HomeWorld, groupMember.ClassJobId, isLocalPlayerGroup);
         }
     }
 
-    private static unsafe void AddMembersFromGroupManager(ICollection<TeamMember> teamMembers, GroupManager* groupManager)
+    private unsafe void AddMembersFromGroupManager(GroupManager* groupManager)
     {
         for (var i = 0; i < groupManager->MemberCount; i++)
         {
             var partyMember = groupManager->GetPartyMemberByIndex(i);
-
-            var teamMember = GetTeamMember(partyMember, true);
-            if (teamMember != null && teamMember.Name != string.Empty && teamMember.World != string.Empty)
+            if (partyMember != null)
             {
-                teamMembers.Add(teamMember);
+                this.AddTeamMember(Util.ReadSeString(partyMember->Name).TextValue, partyMember->HomeWorld, partyMember->ClassJob, true);
             }
         }
 
         for (var i = 0; i < 20; i++)
         {
             var allianceMember = groupManager->GetAllianceMemberByIndex(i);
-
-            var teamMember = GetTeamMember(allianceMember);
-            if (teamMember != null && teamMember.Name != string.Empty && teamMember.World != string.Empty)
+            if (allianceMember != null)
             {
-                teamMembers.Add(teamMember);
+                this.AddTeamMember(Util.ReadSeString(allianceMember->Name).TextValue, allianceMember->HomeWorld, allianceMember->ClassJob, false);
             }
         }
     }
 
-    private static unsafe TeamMember? GetTeamMember(PartyMember* partyMember, bool isLocalPlayerParty = false)
+    private void AddTeamMember(string fullName, ushort worldId, uint jobId, bool isInParty)
     {
-        if (partyMember == null)
-        {
-            return null;
-        }
-
-        var worldId = partyMember->HomeWorld;
-        var world = Service.DataManager.GetExcelSheet<World>()
-                           ?.FirstOrDefault(x => x.RowId == worldId);
+        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
         if (world == null)
         {
-            return null;
+            return;
         }
 
-        var name = Util.ReadSeString(partyMember->Name);
-        return new TeamMember { Name = name.ToString(), World = world.Name, JobId = partyMember->ClassJob, IsInParty = isLocalPlayerParty };
+        if (fullName == string.Empty)
+        {
+            return;
+        }
+
+        var splitName = fullName.Split(' ');
+        if (splitName.Length != 2)
+        {
+            return;
+        }
+
+        this.TeamList.Add(new TeamMember { FirstName = splitName[0], LastName = splitName[1], World = world.Name, JobId = jobId, IsInParty = isInParty });
     }
 }
