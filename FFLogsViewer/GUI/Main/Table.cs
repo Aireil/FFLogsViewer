@@ -209,39 +209,41 @@ public class Table
         var currentParty = Service.CharDataManager.PartyMembers;
         var displayedEntries = this.GetDisplayedEntries();
 
+        ImGui.SameLine();
+        ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
+
+        if (ImGui.BeginCombo(string.Empty, this.currentStat.GetFinalAlias(metricAbbreviation)))
+        {
+            foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
+            {
+                if (ImGui.Selectable(stat.Name))
+                {
+                    this.currentStat = stat;
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
+        ImGui.SameLine();
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        {
+            this.ShiftCurrentStat(-1);
+        }
+
+        ImGui.SameLine();
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        {
+            this.ShiftCurrentStat(1);
+        }
+
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
                 8,
                 Service.Configuration.Style.MainTableFlags))
         {
             ImGui.TableNextColumn();
-
-            ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
-            var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
-
-            if (ImGui.BeginCombo(string.Empty, this.currentStat.GetFinalAlias(metricAbbreviation)))
-            {
-                foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
-                {
-                    if (ImGui.Selectable(stat.Name))
-                    {
-                        this.currentStat = stat;
-                    }
-                }
-
-                ImGui.EndCombo();
-            }
-
-            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-            {
-                this.ShiftCurrentStat(-1);
-            }
-
-            ImGui.SameLine();
-            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-            {
-                this.ShiftCurrentStat(1);
-            }
 
             var separatorY = ImGui.GetCursorPosY();
             if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
@@ -347,6 +349,47 @@ public class Table
         var currentParty = Service.CharDataManager.PartyMembers;
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
 
+        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        var encounterAbbreviation = this.currentEncounter.Alias != string.Empty
+                                        ? this.currentEncounter.Alias
+                                        : this.currentEncounter.Encounter;
+
+        ImGui.SameLine();
+        if (ImGui.BeginCombo(string.Empty, encounterAbbreviation))
+        {
+            for (var i = 0; i < Service.Configuration.Layout.Count; i++)
+            {
+                var entry = Service.Configuration.Layout[i];
+                if (entry.Type == LayoutEntryType.Header)
+                {
+                    ImGui.BeginDisabled();
+                    ImGui.Selectable($"- {entry.Alias}##{i}");
+                    ImGui.EndDisabled();
+                }
+                else
+                {
+                    if (ImGui.Selectable($"{entry.Encounter}##{i}"))
+                    {
+                        this.currentEncounter = entry;
+                    }
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
+        ImGui.SameLine();
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        {
+            this.ShiftCurrentEncounter(-1);
+        }
+
+        ImGui.SameLine();
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        {
+            this.ShiftCurrentEncounter(1);
+        }
+
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewStatLayout",
                 enabledStats.Count + 1,
@@ -354,46 +397,8 @@ public class Table
         {
             ImGui.TableNextColumn();
 
-            ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
-            var encounterAbbreviation = this.currentEncounter.Alias != string.Empty
-                                            ? this.currentEncounter.Alias
-                                            : this.currentEncounter.Encounter;
-
-            if (ImGui.BeginCombo(string.Empty, encounterAbbreviation))
-            {
-                for (var i = 0; i < Service.Configuration.Layout.Count; i++)
-                {
-                    var entry = Service.Configuration.Layout[i];
-                    if (entry.Type == LayoutEntryType.Header)
-                    {
-                        ImGui.BeginDisabled();
-                        ImGui.Selectable($"- {entry.Alias}##{i}");
-                        ImGui.EndDisabled();
-                    }
-                    else
-                    {
-                        if (ImGui.Selectable($"{entry.Encounter}##{i}"))
-                        {
-                            this.currentEncounter = entry;
-                        }
-                    }
-                }
-
-                ImGui.EndCombo();
-            }
-
-            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-            {
-                this.ShiftCurrentEncounter(-1);
-            }
-
-            ImGui.SameLine();
-            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-            {
-                this.ShiftCurrentEncounter(1);
-            }
-
-            var separatorY = ImGui.GetCursorPosY();
+            var separatorY = ImGui.GetCursorPosY() + ImGui.GetFontSize() + ImGui.GetStyle().ItemSpacing.Y;
+            ImGui.SetCursorPosY(separatorY);
             if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
             {
                 ImGui.Separator();
@@ -402,8 +407,6 @@ public class Table
             foreach (var stat in enabledStats)
             {
                 ImGui.TableNextColumn();
-                var offsetY = 2 * ImGui.GetFontSize() / 3.0f;
-                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + offsetY);
                 DrawStatHeader(stat, currentParty.Count > 0 ? currentParty[0] : null, false);
 
                 if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
