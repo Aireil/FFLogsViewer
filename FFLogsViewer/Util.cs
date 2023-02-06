@@ -92,39 +92,50 @@ public class Util
 
     public static void CenterCursor(string text)
     {
-        CenterCursor(ImGui.CalcTextSize(text).X);
+        CenterCursor(ImGui.CalcTextSize(text, true).X);
     }
 
-    public static void CenterTextColored(Vector4 color, string text)
+    public static void CenterText(string text, Vector4? color = null)
     {
         CenterCursor(text);
-        ImGui.TextColored(color, text);
+
+        color ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
+        ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
+        ImGui.TextUnformatted(text);
+        ImGui.PopStyleColor();
     }
 
     public static void CenterTextWithError(string text, CharData? charData)
     {
-        if (charData?.CharError == null)
+        CenterText(text, charData?.CharError != null ? ImGuiColors.DalamudRed : null);
+
+        if (charData?.CharError != null)
         {
-            CenterText(text);
-        }
-        else
-        {
-            CenterTextColored(ImGuiColors.DalamudRed, text);
             SetHoverTooltip(GetErrorMessage(charData));
         }
     }
 
-    public static void CenterText(string text)
+    public static bool CenterSelectableWithError(string text, CharData? charData)
     {
-        CenterCursor(text);
-        ImGui.TextUnformatted(text);
+        var ret = CenterSelectable(text, charData?.CharError != null ? ImGuiColors.DalamudRed : null);
+        if (charData?.CharError != null)
+        {
+            SetHoverTooltip(GetErrorMessage(charData));
+        }
+
+        return ret;
     }
 
-    public static bool CenterSelectable(string text)
+    public static bool CenterSelectable(string text, Vector4? color = null)
     {
         CenterCursor(text);
-        var textSize = ImGui.CalcTextSize(text);
-        return ImGui.Selectable(text, false, ImGuiSelectableFlags.None, textSize);
+
+        color ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
+        ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
+        var ret = ImGui.Selectable(text, false, ImGuiSelectableFlags.None, ImGui.CalcTextSize(text, true));
+        ImGui.PopStyleColor();
+
+        return ret;
     }
 
     public static void SetHoverTooltip(string tooltip)

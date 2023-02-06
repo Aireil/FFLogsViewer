@@ -140,7 +140,7 @@ public class Table
         text ??= encounter is null or { IsValid: false } ? "?" : "-";
         color ??= new Vector4(1, 1, 1, 1);
 
-        Util.CenterTextColored(color.Value, text);
+        Util.CenterText(text, color.Value);
         if (hoverMessage != string.Empty)
         {
             Util.SetHoverTooltip(hoverMessage);
@@ -214,7 +214,19 @@ public class Table
 
                 ImGui.TableNextColumn();
 
-                Util.CenterTextWithError(charData?.Abbreviation ?? "-", charData);
+                if (charData != null)
+                {
+                    if (Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData))
+                    {
+                        Util.OpenLink(charData);
+                    }
+
+                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                }
+                else
+                {
+                    Util.CenterText("-");
+                }
 
                 var iconSize = new Vector2(25 * ImGuiHelpers.GlobalScale);
                 Util.CenterCursor(iconSize.X);
@@ -226,11 +238,6 @@ public class Table
                 else
                 {
                     ImGui.Text("(?)");
-                }
-
-                if (charData != null)
-                {
-                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
                 }
             }
 

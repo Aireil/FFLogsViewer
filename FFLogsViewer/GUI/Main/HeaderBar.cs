@@ -192,7 +192,7 @@ public class HeaderBar
         }
         else
         {
-            Util.CenterTextColored(ImGuiColors.DalamudRed, Util.GetErrorMessage(Service.CharDataManager.DisplayedChar));
+            Util.CenterText(Util.GetErrorMessage(Service.CharDataManager.DisplayedChar), ImGuiColors.DalamudRed);
         }
 
         if (Service.Configuration.Layout.Count == 0)
