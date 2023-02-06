@@ -13,23 +13,9 @@ public class HeaderBar
     public uint ResetSizeCount;
 
     private readonly Stopwatch partyListStopwatch = new();
-    private bool isProfileLinkClicked;
-    private bool isConfigClicked;
 
     public void Draw()
     {
-        if (this.isConfigClicked)
-        {
-            Service.ConfigWindow.IsOpen = true;
-            this.isConfigClicked = false;
-        }
-
-        if (this.isProfileLinkClicked)
-        {
-            Util.OpenLink(Service.CharDataManager.DisplayedChar);
-            this.isProfileLinkClicked = false;
-        }
-
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4 * ImGuiHelpers.GlobalScale, ImGui.GetStyle().ItemSpacing.Y));
 
         var buttonsWidth = GetButtonsWidth();
@@ -170,7 +156,11 @@ public class HeaderBar
                               ? "API client not valid, click to open settings."
                               : "API client not setup, click to open settings.";
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-            Util.CenterSelectable(message, ref this.isConfigClicked);
+            if (Util.CenterSelectable(message))
+            {
+                Service.ConfigWindow.IsOpen = true;
+            }
+
             ImGui.PopStyleColor();
 
             return;
@@ -186,9 +176,11 @@ public class HeaderBar
             {
                 if (Service.CharDataManager.DisplayedChar.IsDataReady)
                 {
-                    Util.CenterSelectable(
-                        $"Viewing {Service.CharDataManager.DisplayedChar.LoadedFirstName} {Service.CharDataManager.DisplayedChar.LoadedLastName}@{Service.CharDataManager.DisplayedChar.LoadedWorldName}'s logs",
-                        ref this.isProfileLinkClicked);
+                    if (Util.CenterSelectable(
+                            $"Viewing {Service.CharDataManager.DisplayedChar.LoadedFirstName} {Service.CharDataManager.DisplayedChar.LoadedLastName}@{Service.CharDataManager.DisplayedChar.LoadedWorldName}'s logs"))
+                    {
+                        Util.OpenLink(Service.CharDataManager.DisplayedChar);
+                    }
 
                     Util.SetHoverTooltip("Click to open on FF Logs");
                 }
@@ -205,7 +197,10 @@ public class HeaderBar
 
         if (Service.Configuration.Layout.Count == 0)
         {
-            Util.CenterSelectable("You have no layout set up. Click to open settings.", ref this.isConfigClicked);
+            if (Util.CenterSelectable("You have no layout set up. Click to open settings."))
+            {
+                Service.ConfigWindow.IsOpen = true;
+            }
         }
     }
 

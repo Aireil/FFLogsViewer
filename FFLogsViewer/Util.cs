@@ -120,11 +120,11 @@ public class Util
         ImGui.TextUnformatted(text);
     }
 
-    public static void CenterSelectable(string text, ref bool isClicked)
+    public static bool CenterSelectable(string text)
     {
         CenterCursor(text);
         var textSize = ImGui.CalcTextSize(text);
-        ImGui.Selectable(text, ref isClicked, ImGuiSelectableFlags.None, textSize);
+        return ImGui.Selectable(text, false, ImGuiSelectableFlags.None, textSize);
     }
 
     public static void SetHoverTooltip(string tooltip)
