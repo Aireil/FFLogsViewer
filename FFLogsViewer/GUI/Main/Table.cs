@@ -257,7 +257,10 @@ public class Table
                         Util.OpenLink(charData);
                     }
 
-                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                    if (charData.CharError == null)
+                    {
+                        Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                    }
                 }
                 else
                 {
@@ -432,12 +435,15 @@ public class Table
                 ImGui.SetCursorPosY(middleCursorPosY);
                 if (charData != null)
                 {
-                    if (ImGui.Selectable($"{charData.FirstName} {charData.LastName}##Selectable{i}"))
+                    if (Util.SelectableWithError($"{charData.FirstName} {charData.LastName}##Selectable{i}", charData))
                     {
                         Util.OpenLink(charData);
                     }
 
-                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                    if (charData.CharError == null)
+                    {
+                        Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                    }
                 }
                 else
                 {

@@ -138,6 +138,22 @@ public class Util
         return ret;
     }
 
+    public static bool SelectableWithError(string text, CharData? charData)
+    {
+        var color = charData?.CharError != null
+                        ? ImGuiColors.DalamudRed
+                        : ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
+        ImGui.PushStyleColor(ImGuiCol.Text, color);
+        var ret = ImGui.Selectable(text);
+        ImGui.PopStyleColor();
+        if (charData?.CharError != null)
+        {
+            SetHoverTooltip(GetErrorMessage(charData));
+        }
+
+        return ret;
+    }
+
     public static void SetHoverTooltip(string tooltip)
     {
         if (ImGui.IsItemHovered())
