@@ -286,6 +286,8 @@ public class CharData
 
     public void FetchCharacter(string text)
     {
+        Service.MainWindow.IsPartyView = false;
+
         if (!this.ParseTextForChar(text))
         {
             this.CharError = CharacterError.CharacterNotFound;
