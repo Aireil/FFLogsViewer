@@ -167,6 +167,16 @@ public class Table
 
     private void DrawPartyView()
     {
+        if (Service.Configuration.Layout.Count == 0)
+        {
+            if (Util.CenterSelectable("You have no layout set up. Click to open settings."))
+            {
+                Service.ConfigWindow.IsOpen = true;
+            }
+
+            return;
+        }
+
         if (ImGui.Button("Update"))
         {
             Service.CharDataManager.UpdatePartyMembers();
@@ -192,6 +202,7 @@ public class Table
     private void DrawStatLayout()
     {
         var currentParty = Service.CharDataManager.PartyMembers;
+        var displayedEntries = this.GetDisplayedEntries();
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewStatLayout",
@@ -227,6 +238,12 @@ public class Table
                 this.ShiftCurrentStat(1);
             }
 
+            var separatorY = ImGui.GetCursorPosY();
+            if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
+            {
+                ImGui.Separator();
+            }
+
             for (var i = 0; i < 7; i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -258,9 +275,14 @@ public class Table
                 {
                     ImGui.Text("(?)");
                 }
+
+                ImGui.SetCursorPosY(separatorY);
+                if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
+                {
+                    ImGui.Separator();
+                }
             }
 
-            var displayedEntries = this.GetDisplayedEntries();
             for (var row = 0; row < displayedEntries.Count; row++)
             {
                 ImGui.TableNextRow();
@@ -318,7 +340,7 @@ public class Table
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
 
         if (ImGui.BeginTable(
-                "##MainWindowTablePartyViewStatLayout",
+                "##MainWindowTablePartyViewEncounterLayout",
                 enabledStats.Count + 1,
                 Service.Configuration.Style.MainTableFlags))
         {
@@ -364,7 +386,10 @@ public class Table
             }
 
             var separatorY = ImGui.GetCursorPosY();
-            ImGui.Separator();
+            if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+            {
+                ImGui.Separator();
+            }
 
             foreach (var stat in enabledStats)
             {
@@ -373,8 +398,11 @@ public class Table
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + offsetY);
                 DrawStatHeader(stat, currentParty.Count > 0 ? currentParty[0] : null, false);
 
-                ImGui.SetCursorPosY(separatorY);
-                ImGui.Separator();
+                if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+                {
+                    ImGui.SetCursorPosY(separatorY);
+                    ImGui.Separator();
+                }
             }
 
             for (var i = 0; i < 7; i++)
@@ -413,7 +441,7 @@ public class Table
                 }
                 else
                 {
-                    Util.CenterText("-");
+                    ImGui.Text("-");
                 }
 
                 foreach (var stat in enabledStats)
