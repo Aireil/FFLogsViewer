@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Utility;
@@ -177,35 +178,39 @@ public class Table
             return;
         }
 
-        if (ImGui.Button("Update"))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.Redo))
         {
-            Service.CharDataManager.UpdatePartyMembers();
+            Service.CharDataManager.UpdatePartyMembers(!Service.KeyState[VirtualKey.CONTROL]);
         }
 
+        Util.SetHoverTooltip(Service.KeyState[VirtualKey.CONTROL] ? "Update all members." : "Update new members.\nHold CTRL to refresh loaded members as well.");
+
         ImGui.SameLine();
-        if (ImGui.Button("Change layout"))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ExchangeAlt))
         {
-            Service.Configuration.IsStatLayout = !Service.Configuration.IsStatLayout;
+            Service.Configuration.IsEncounterLayout = !Service.Configuration.IsEncounterLayout;
             Service.Configuration.Save();
         }
 
-        if (Service.Configuration.IsStatLayout)
-        {
-            this.DrawStatLayout();
-        }
-        else
+        Util.SetHoverTooltip(Service.Configuration.IsEncounterLayout ? "Swap to stat layout." : "Swap to encounter layout.");
+
+        if (Service.Configuration.IsEncounterLayout)
         {
             this.DrawEncounterLayout();
         }
+        else
+        {
+            this.DrawStatLayout();
+        }
     }
 
-    private void DrawStatLayout()
+    private void DrawEncounterLayout()
     {
         var currentParty = Service.CharDataManager.PartyMembers;
         var displayedEntries = this.GetDisplayedEntries();
 
         if (ImGui.BeginTable(
-                "##MainWindowTablePartyViewStatLayout",
+                "##MainWindowTablePartyViewEncounterLayout",
                 8,
                 Service.Configuration.Style.MainTableFlags))
         {
@@ -337,13 +342,13 @@ public class Table
         }
     }
 
-    private void DrawEncounterLayout()
+    private void DrawStatLayout()
     {
         var currentParty = Service.CharDataManager.PartyMembers;
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
 
         if (ImGui.BeginTable(
-                "##MainWindowTablePartyViewEncounterLayout",
+                "##MainWindowTablePartyViewStatLayout",
                 enabledStats.Count + 1,
                 Service.Configuration.Style.MainTableFlags))
         {
@@ -419,7 +424,7 @@ public class Table
 
                 ImGui.TableNextColumn();
                 var iconSize = 25 * ImGuiHelpers.GlobalScale;
-                var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
+                var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
                 var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
                 if (icon != null)
                 {

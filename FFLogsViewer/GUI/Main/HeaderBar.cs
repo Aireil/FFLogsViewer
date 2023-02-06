@@ -105,7 +105,7 @@ public class HeaderBar
 
                         var partyMember = partyList[i];
                         var iconSize = 25 * ImGuiHelpers.GlobalScale;
-                        var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
+                        var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
 
                         if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
                         {
