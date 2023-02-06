@@ -149,23 +149,36 @@ public class CharData
 
             if (rawData.data?.characterData?.character == null)
             {
-                if (rawData.error != null && rawData.error == "Unauthenticated.")
+                this.IsDataLoading = false;
+
+                if (rawData.error != null)
                 {
-                    this.IsDataLoading = false;
-                    this.CharError = CharacterError.Unauthenticated;
-                    PluginLog.Log($"Unauthenticated: {rawData}");
+                    if (rawData.error == "Unauthenticated.")
+                    {
+                        this.CharError = CharacterError.Unauthenticated;
+                        PluginLog.Information($"Unauthenticated: {rawData}");
+                        return;
+                    }
+
+                    if (rawData.status != null && rawData.status == 429)
+                    {
+                        this.CharError = CharacterError.OutOfPoints;
+                        PluginLog.Information($"Ran out of points: {rawData}");
+                        return;
+                    }
+
+                    this.CharError = CharacterError.GenericError;
+                    PluginLog.Information($"Generic error: {rawData}");
                     return;
                 }
 
                 if (rawData.errors != null)
                 {
-                    this.IsDataLoading = false;
                     this.CharError = CharacterError.MalformedQuery;
-                    PluginLog.Log($"Malformed GraphQL query: {rawData}");
+                    PluginLog.Information($"Malformed GraphQL query: {rawData}");
                     return;
                 }
 
-                this.IsDataLoading = false;
                 this.CharError = CharacterError.CharacterNotFoundFFLogs;
                 return;
             }

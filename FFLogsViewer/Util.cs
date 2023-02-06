@@ -238,6 +238,7 @@ public class Util
             CharacterError.MalformedQuery => "Malformed GraphQL query.",
             CharacterError.MissingInputs => "Please fill first name, last name, and world",
             CharacterError.NetworkError => "Networking error, please try again",
+            CharacterError.OutOfPoints => "Ran out of API points, see Layout tab in config for more info.",
             CharacterError.Unauthenticated => "API Client not valid, check config",
             CharacterError.Unreachable => "Could not reach FF Logs servers",
             CharacterError.WorldNotFound => "World not found",

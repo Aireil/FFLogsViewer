@@ -12,6 +12,7 @@ public enum CharacterError
     MalformedQuery,
     MissingInputs,
     NetworkError,
+    OutOfPoints,
     Unauthenticated,
     Unreachable,
     WorldNotFound,
