@@ -15,6 +15,7 @@ public class Table
 {
     private Dictionary<string, int> currSwaps = new();
     private Stat currentStat = Service.Configuration.Stats.First(stat => stat.Type == StatType.Best);
+    private LayoutEntry currentEncounter = Service.Configuration.Layout.First(entry => entry.Type == LayoutEntryType.Encounter);
 
     public void Draw()
     {
@@ -68,18 +69,17 @@ public class Table
         return (encounterName, hoverMessage);
     }
 
-    private static void DrawStatHeader(Stat stat, CharData? charData)
+    private static void DrawStatHeader(Stat stat, CharData? charData, bool drawSeparator = true)
     {
-        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        if (drawSeparator && Service.Configuration.Style.IsHeaderSeparatorDrawn)
         {
             ImGui.Separator();
         }
 
         var metricAbbreviation = Util.GetMetricAbbreviation(charData);
-
         Util.CenterText(stat.GetFinalAlias(metricAbbreviation));
 
-        if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
+        if (drawSeparator && Service.Configuration.Style.IsHeaderSeparatorDrawn)
         {
             ImGui.Separator();
         }
@@ -194,7 +194,7 @@ public class Table
         var currentParty = Service.CharDataManager.PartyMembers;
 
         if (ImGui.BeginTable(
-                "##MainWindowTablePartyView",
+                "##MainWindowTablePartyViewStatLayout",
                 8,
                 Service.Configuration.Style.MainTableFlags))
         {
@@ -247,12 +247,12 @@ public class Table
                     Util.CenterText("-");
                 }
 
-                var iconSize = new Vector2(25 * ImGuiHelpers.GlobalScale);
-                Util.CenterCursor(iconSize.X);
+                var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                Util.CenterCursor(iconSize);
                 var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
                 if (icon != null)
                 {
-                    ImGui.Image(icon.ImGuiHandle, iconSize);
+                    ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
                 }
                 else
                 {
@@ -314,12 +314,141 @@ public class Table
 
     private void DrawEncounterLayout()
     {
-        ImGui.Text(":)");
+        var currentParty = Service.CharDataManager.PartyMembers;
+        var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
+
+        if (ImGui.BeginTable(
+                "##MainWindowTablePartyViewStatLayout",
+                enabledStats.Count + 1,
+                Service.Configuration.Style.MainTableFlags))
+        {
+            ImGui.TableNextColumn();
+
+            ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+            var encounterAbbreviation = this.currentEncounter.Alias != string.Empty
+                                            ? this.currentEncounter.Alias
+                                            : this.currentEncounter.Encounter;
+
+            if (ImGui.BeginCombo(string.Empty, encounterAbbreviation))
+            {
+                for (var i = 0; i < Service.Configuration.Layout.Count; i++)
+                {
+                    var entry = Service.Configuration.Layout[i];
+                    if (entry.Type == LayoutEntryType.Header)
+                    {
+                        ImGui.BeginDisabled();
+                        ImGui.Selectable($"- {entry.Alias}##{i}");
+                        ImGui.EndDisabled();
+                    }
+                    else
+                    {
+                        if (ImGui.Selectable($"{entry.Encounter}##{i}"))
+                        {
+                            this.currentEncounter = entry;
+                        }
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+
+            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+            {
+                this.ShiftCurrentEncounter(-1);
+            }
+
+            ImGui.SameLine();
+            if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+            {
+                this.ShiftCurrentEncounter(1);
+            }
+
+            var separatorY = ImGui.GetCursorPosY();
+            ImGui.Separator();
+
+            foreach (var stat in enabledStats)
+            {
+                ImGui.TableNextColumn();
+                var offsetY = 2 * ImGui.GetFontSize() / 3.0f;
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() + offsetY);
+                DrawStatHeader(stat, currentParty.Count > 0 ? currentParty[0] : null, false);
+
+                ImGui.SetCursorPosY(separatorY);
+                ImGui.Separator();
+            }
+
+            for (var i = 0; i < 7; i++)
+            {
+                var charData = i < currentParty.Count ? currentParty[i] : null;
+
+                if (i != 0)
+                {
+                    ImGui.TableNextRow();
+                }
+
+                ImGui.TableNextColumn();
+                var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.CalcTextSize("R").Y / 2);
+                var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
+                if (icon != null)
+                {
+                    ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
+                }
+                else
+                {
+                    ImGui.SetCursorPosY(middleCursorPosY);
+                    ImGui.Text("(?)");
+                }
+
+                ImGui.SameLine();
+                ImGui.SetCursorPosY(middleCursorPosY);
+                if (charData != null)
+                {
+                    if (ImGui.Selectable($"{charData.FirstName} {charData.LastName}##Selectable{i}"))
+                    {
+                        Util.OpenLink(charData);
+                    }
+
+                    Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                }
+                else
+                {
+                    Util.CenterText("-");
+                }
+
+                foreach (var stat in enabledStats)
+                {
+                    ImGui.TableNextColumn();
+                    ImGui.SetCursorPosY(middleCursorPosY);
+
+                    if (charData is { IsDataLoading: true })
+                    {
+                        Util.CenterText("...");
+                        continue;
+                    }
+
+                    if (charData is not { IsDataReady: true })
+                    {
+                        Util.CenterTextWithError("-", charData);
+                        continue;
+                    }
+
+                    var encounter = charData.Encounters.FirstOrDefault(
+                        enc => enc.Id == this.currentEncounter.EncounterId && enc.Difficulty == this.currentEncounter.DifficultyId);
+
+                    var (_, hoverMessage) = GetEncounterInfo(encounter, this.currentEncounter, charData);
+                    DrawEncounterStat(encounter, stat, hoverMessage);
+                }
+            }
+
+            ImGui.EndTable();
+        }
     }
 
     private void DrawSingleView()
     {
         var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
+
         if (ImGui.BeginTable(
                     "##MainWindowTableSingleView",
                     enabledStats.Count + 1,
@@ -457,6 +586,22 @@ public class Table
         if (newIndex < enabledStats.Count)
         {
             this.currentStat = enabledStats[newIndex];
+        }
+    }
+
+    private void ShiftCurrentEncounter(int shift)
+    {
+        var displayedEncounters = this.GetDisplayedEntries().Where(encounter => encounter.Type == LayoutEntryType.Encounter).ToList();
+        if (displayedEncounters.Count == 0)
+        {
+            return;
+        }
+
+        var currIndex = displayedEncounters.IndexOf(this.currentEncounter);
+        var newIndex = Util.MathMod(currIndex + shift, displayedEncounters.Count);
+        if (newIndex < displayedEncounters.Count)
+        {
+            this.currentEncounter = displayedEncounters[newIndex];
         }
     }
 }
