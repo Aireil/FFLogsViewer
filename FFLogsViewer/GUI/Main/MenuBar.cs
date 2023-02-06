@@ -16,8 +16,7 @@ public class MenuBar
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.MenuItem(FontAwesomeIcon.Eraser.ToIconString()))
             {
-                Service.CharDataManager.ResetDisplayedChar();
-                MainWindow.ResetError();
+                Service.CharDataManager.Reset();
                 Service.MainWindow.ResetSize();
             }
 

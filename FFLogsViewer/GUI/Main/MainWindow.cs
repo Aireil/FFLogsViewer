@@ -27,11 +27,6 @@ public class MainWindow : Window
         this.ResetSize();
     }
 
-    public static void ResetError()
-    {
-        Service.CharDataManager.DisplayedChar.CharError = null;
-    }
-
     public override bool DrawConditions()
     {
         if (Service.Configuration.HideInCombat && Service.Condition[ConditionFlag.InCombat])

@@ -134,8 +134,15 @@ public class CharDataManager
         }
     }
 
-    public void ResetDisplayedChar()
+    public void Reset()
     {
-        this.DisplayedChar = new CharData();
+        if (Service.MainWindow.IsPartyView)
+        {
+            this.PartyMembers.Clear();
+        }
+        else
+        {
+            this.DisplayedChar = new CharData();
+        }
     }
 }
