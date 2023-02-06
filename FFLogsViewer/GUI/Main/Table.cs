@@ -172,6 +172,25 @@ public class Table
             Service.CharDataManager.UpdatePartyMembers();
         }
 
+        ImGui.SameLine();
+        if (ImGui.Button("Change layout"))
+        {
+            Service.Configuration.IsStatLayout = !Service.Configuration.IsStatLayout;
+            Service.Configuration.Save();
+        }
+
+        if (Service.Configuration.IsStatLayout)
+        {
+            this.DrawStatLayout();
+        }
+        else
+        {
+            this.DrawEncounterLayout();
+        }
+    }
+
+    private void DrawStatLayout()
+    {
         var currentParty = Service.CharDataManager.PartyMembers;
 
         if (ImGui.BeginTable(
@@ -291,6 +310,11 @@ public class Table
 
             ImGui.EndTable();
         }
+    }
+
+    private void DrawEncounterLayout()
+    {
+        ImGui.Text(":)");
     }
 
     private void DrawSingleView()
