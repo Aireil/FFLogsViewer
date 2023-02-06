@@ -630,7 +630,7 @@ public class Table
 
     private void ShiftCurrentEncounter(int shift)
     {
-        var displayedEncounters = this.GetDisplayedEntries().Where(encounter => encounter.Type == LayoutEntryType.Encounter).ToList();
+        var displayedEncounters = Service.Configuration.Layout.Where(encounter => encounter.Type == LayoutEntryType.Encounter).ToList();
         if (displayedEncounters.Count == 0)
         {
             return;
