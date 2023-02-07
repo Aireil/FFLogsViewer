@@ -178,6 +178,16 @@ public class Table
             return;
         }
 
+        if (!Service.Configuration.Stats.Any(stat => stat.IsEnabled))
+        {
+            if (Util.CenterSelectable("You have no stat enabled. Click to open settings."))
+            {
+                Service.ConfigWindow.IsOpen = true;
+            }
+
+            return;
+        }
+
         if (Util.DrawButtonIcon(FontAwesomeIcon.Redo))
         {
             Service.CharDataManager.UpdatePartyMembers(!Service.KeyState[VirtualKey.CONTROL]);
