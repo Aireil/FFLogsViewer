@@ -8,15 +8,60 @@ using Dalamud.Interface.Colors;
 using Dalamud.Utility;
 using FFLogsViewer.Model;
 using ImGuiNET;
-using FFLogsViewer_Util = FFLogsViewer.Util;
 
 namespace FFLogsViewer.GUI.Main;
 
 public class Table
 {
     private Dictionary<string, int> currSwaps = new();
-    private Stat currentStat = Service.Configuration.Stats.First(stat => stat.Type == StatType.Best);
-    private LayoutEntry currentEncounter = Service.Configuration.Layout.First(entry => entry.Type == LayoutEntryType.Encounter);
+
+    private StatType? currentStatType;
+    private Stat CurrentStat
+    {
+        get
+        {
+            if (this.currentStatType == null)
+            {
+                if (Service.Configuration.DefaultStatTypePartyView != null)
+                {
+                    var stat = Service.Configuration.Stats.First(
+                        stat => stat.Type == Service.Configuration.DefaultStatTypePartyView);
+                    this.currentStatType = stat.Type;
+                }
+
+                this.currentStatType ??= Service.Configuration.Stats.First(stat => stat.IsEnabled).Type;
+            }
+
+            return Service.Configuration.Stats.First(stat => stat.Type == this.currentStatType);
+        }
+        set => this.currentStatType = value.Type;
+    }
+
+    private LayoutEntry? currentEncounter;
+    private LayoutEntry CurrentEncounter
+    {
+        get
+        {
+            if (this.currentEncounter == null)
+            {
+                var defaultEncounter = Service.Configuration.DefaultEncounterPartyView;
+                if (defaultEncounter != null)
+                {
+                    var entry = Service.Configuration.Layout.Find(
+                        entry => entry.EncounterId == defaultEncounter.EncounterId && entry.DifficultyId == defaultEncounter.DifficultyId);
+                    if (entry != null)
+                    {
+                        this.currentEncounter = entry;
+                    }
+                }
+
+                this.currentEncounter ??= Service.Configuration.Layout.First(entry => entry.Type == LayoutEntryType.Encounter);
+            }
+
+            return this.currentEncounter;
+        }
+        set => this.currentEncounter = value;
+    }
 
     public void Draw()
     {
@@ -185,7 +230,7 @@ public class Table
             Service.CharDataManager.UpdatePartyMembers(!Service.KeyState[VirtualKey.CONTROL]);
         }
 
-        Util.SetHoverTooltip(Service.KeyState[VirtualKey.CONTROL] ? "Update all members." : "Update new members.\nHold CTRL to refresh loaded members as well.");
+        Util.SetHoverTooltip(Service.KeyState[VirtualKey.CONTROL] ? "Update all members" : "Update new members\nHold CTRL to refresh loaded members as well");
 
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.ExchangeAlt))
@@ -194,7 +239,24 @@ public class Table
             Service.Configuration.Save();
         }
 
-        Util.SetHoverTooltip(Service.Configuration.IsEncounterLayout ? "Swap to stat layout." : "Swap to encounter layout.");
+        Util.SetHoverTooltip(Service.Configuration.IsEncounterLayout ? "Swap to stat layout" : "Swap to encounter layout");
+
+        ImGui.SameLine();
+        if (Util.DrawButtonIcon(FontAwesomeIcon.Star))
+        {
+            if (Service.Configuration.IsEncounterLayout)
+            {
+                Service.Configuration.DefaultStatTypePartyView = this.CurrentStat.Type;
+            }
+            else
+            {
+                Service.Configuration.DefaultEncounterPartyView = this.CurrentEncounter;
+            }
+
+            Service.Configuration.Save();
+        }
+
+        Util.SetHoverTooltip($"Set the current {(Service.Configuration.IsEncounterLayout ? "stat" : "encounter")} as default");
 
         if (Service.Configuration.IsEncounterLayout)
         {
@@ -212,16 +274,29 @@ public class Table
         var displayedEntries = this.GetDisplayedEntries();
 
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max()
+                                                                                                + (30 * ImGuiHelpers.GlobalScale)
+                                                                                                + ImGui.CalcTextSize(" (★)").X);
         var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
+        var comboPreview = this.CurrentStat.GetFinalAlias(metricAbbreviation);
+        if (Service.Configuration.DefaultStatTypePartyView == this.CurrentStat.Type)
+        {
+            comboPreview += " (★)";
+        }
 
-        if (ImGui.BeginCombo("##EncounterLayoutCombo", this.currentStat.GetFinalAlias(metricAbbreviation), ImGuiComboFlags.HeightLargest))
+        if (ImGui.BeginCombo("##EncounterLayoutCombo", comboPreview, ImGuiComboFlags.HeightLargest))
         {
             foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
             {
-                if (ImGui.Selectable(stat.Name))
+                var statName = stat.Name;
+                if (Service.Configuration.DefaultStatTypePartyView == stat.Type)
                 {
-                    this.currentStat = stat;
+                    statName += " (★)";
+                }
+
+                if (ImGui.Selectable(statName))
+                {
+                    this.CurrentStat = stat;
                 }
             }
 
@@ -300,7 +375,7 @@ public class Table
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
-                        DrawStatHeader(this.currentStat, charData);
+                        DrawStatHeader(this.CurrentStat, charData);
                     }
                 }
                 else if (entry.Type == LayoutEntryType.Encounter)
@@ -327,7 +402,7 @@ public class Table
                             enc => enc.Id == entry.EncounterId && enc.Difficulty == entry.DifficultyId);
 
                         var (_, hoverMessage) = GetEncounterInfo(encounter, entry, charData);
-                        DrawEncounterStat(encounter, this.currentStat, hoverMessage);
+                        DrawEncounterStat(encounter, this.CurrentStat, hoverMessage);
                     }
                 }
             }
@@ -338,12 +413,20 @@ public class Table
 
     private void DrawStatLayoutHeader()
     {
-        var encounterAbbreviation = this.currentEncounter.Alias != string.Empty
-                                        ? this.currentEncounter.Alias
-                                        : this.currentEncounter.Encounter;
+        var encounterAbbreviation = this.CurrentEncounter.Alias != string.Empty
+                                        ? this.CurrentEncounter.Alias
+                                        : this.CurrentEncounter.Encounter;
+
+        if (this.CurrentEncounter.EncounterId == Service.Configuration.DefaultEncounterPartyView?.EncounterId
+            && this.CurrentEncounter.DifficultyId == Service.Configuration.DefaultEncounterPartyView?.DifficultyId)
+        {
+            encounterAbbreviation += " (★)";
+        }
 
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max()
+                                                                            + (30 * ImGuiHelpers.GlobalScale)
+                                                                            + ImGui.CalcTextSize(" (★)").X);
         if (ImGui.BeginCombo("##StatLayoutCombo", encounterAbbreviation, ImGuiComboFlags.HeightLargest))
         {
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
@@ -358,7 +441,14 @@ public class Table
                 }
                 else
                 {
-                    if (ImGui.Selectable($"{entry.Encounter}##{i}"))
+                    var encounterName = entry.Encounter;
+                    if (entry.EncounterId == Service.Configuration.DefaultEncounterPartyView?.EncounterId
+                        && entry.DifficultyId == Service.Configuration.DefaultEncounterPartyView?.DifficultyId)
+                    {
+                        encounterName += " (★)";
+                    }
+
+                    if (ImGui.Selectable($"{encounterName}##{i}"))
                     {
                         this.currentEncounter = entry;
                     }
@@ -479,9 +569,9 @@ public class Table
                     }
 
                     var encounter = charData.Encounters.FirstOrDefault(
-                        enc => enc.Id == this.currentEncounter.EncounterId && enc.Difficulty == this.currentEncounter.DifficultyId);
+                        enc => enc.Id == this.CurrentEncounter.EncounterId && enc.Difficulty == this.CurrentEncounter.DifficultyId);
 
-                    var (_, hoverMessage) = GetEncounterInfo(encounter, this.currentEncounter, charData);
+                    var (_, hoverMessage) = GetEncounterInfo(encounter, this.CurrentEncounter, charData);
                     DrawEncounterStat(encounter, stat, hoverMessage);
                 }
             }
@@ -626,11 +716,11 @@ public class Table
             return;
         }
 
-        var currIndex = enabledStats.IndexOf(this.currentStat);
+        var currIndex = enabledStats.IndexOf(this.CurrentStat);
         var newIndex = Util.MathMod(currIndex + shift, enabledStats.Count);
         if (newIndex < enabledStats.Count)
         {
-            this.currentStat = enabledStats[newIndex];
+            this.CurrentStat = enabledStats[newIndex];
         }
     }
 
@@ -642,7 +732,7 @@ public class Table
             return;
         }
 
-        var currIndex = displayedEncounters.IndexOf(this.currentEncounter);
+        var currIndex = displayedEncounters.IndexOf(this.CurrentEncounter);
         var newIndex = Util.MathMod(currIndex + shift, displayedEncounters.Count);
         if (newIndex < displayedEncounters.Count)
         {

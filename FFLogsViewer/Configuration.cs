@@ -23,6 +23,8 @@ public class Configuration : IPluginConfiguration
     public bool IsHistoricalDefault { get; set; } = true;
     public bool IsEncounterLayout { get; set; } = true;
     public int NbOfDecimalDigits { get; set; }
+    public StatType? DefaultStatTypePartyView { get; set; }
+    public LayoutEntry? DefaultEncounterPartyView { get; set; }
     public List<LayoutEntry> Layout { get; set; } = new();
     public List<Stat> Stats { get; set; } = new();
     public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
