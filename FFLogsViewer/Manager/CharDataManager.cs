@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Logging;
+using FFLogsViewer.Model;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Lumina.Excel.GeneratedSheets;
@@ -125,7 +126,11 @@ public class CharDataManager
         {
             foreach (var partyMember in this.PartyMembers)
             {
-                if (partyMember.IsInfoSet() && (!onlyFetchNewMembers || !partyMember.IsDataReady))
+                if (partyMember.IsInfoSet() && (!onlyFetchNewMembers
+                                                || (!partyMember.IsDataReady
+                                                    && (partyMember.CharError == null
+                                                        || (partyMember.CharError != CharacterError.CharacterNotFoundFFLogs
+                                                            && partyMember.CharError != CharacterError.HiddenLogs)))))
                 {
                     partyMember.FetchLogs();
                 }
