@@ -17,7 +17,7 @@ public class CharDataManager
     public void UpdatePartyMembers(bool onlyFetchNewMembers = false)
     {
         Service.TeamManager.UpdateTeamList();
-        var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToArray();
+        var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToList();
 
         foreach (var partyMember in currPartyMembers)
         {
@@ -36,6 +36,12 @@ public class CharDataManager
 
         // remove members that are no longer in party
         this.PartyMembers.RemoveAll(x => !currPartyMembers.Any(y => y.FirstName == x.FirstName && y.LastName == x.LastName && y.World == x.WorldName));
+
+        this.PartyMembers = this.PartyMembers.OrderBy(
+            charData => currPartyMembers.FindIndex(
+                member => member.FirstName == charData.FirstName &&
+                                member.LastName == charData.LastName &&
+                                member.World == charData.WorldName)).ToList();
 
         this.FetchLogs(onlyFetchNewMembers);
     }

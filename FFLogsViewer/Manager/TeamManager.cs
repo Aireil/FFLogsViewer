@@ -2,6 +2,7 @@
 using System.Linq;
 using FFLogsViewer.Model;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using Lumina.Excel.GeneratedSheets;
 
@@ -60,12 +61,37 @@ public class TeamManager
 
     private unsafe void AddMembersFromGroupManager(GroupManager* groupManager)
     {
-        for (var i = 0; i < groupManager->MemberCount; i++)
+        // Use CS struct when updated in Dalamud
+        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMemberList;
+        var groupManagerIndexLeft = Enumerable.Range(0, groupManager->MemberCount).ToList();
+        for (var i = 0; i < 8; i++)
         {
-            var partyMember = groupManager->GetPartyMemberByIndex(i);
-            if (partyMember != null)
+            var targetOffset = i * sizeof(HudPartyMember);
+            var hudPartyMember = (HudPartyMember*)(partyMemberList + targetOffset);
+            var hudPartyMemberName = hudPartyMember->Name;
+            if (hudPartyMemberName != null)
             {
-                this.AddTeamMember(Util.ReadSeString(partyMember->Name).TextValue, partyMember->HomeWorld, partyMember->ClassJob, true);
+                var hudName = Util.ReadSeString(hudPartyMemberName).TextValue;
+                for (var j = 0; j < groupManager->MemberCount; j++)
+                {
+                    // handle duplicate names from different worlds
+                    if (!groupManagerIndexLeft.Contains(j))
+                    {
+                        continue;
+                    }
+
+                    var partyMember = groupManager->GetPartyMemberByIndex(j);
+                    if (partyMember != null)
+                    {
+                        var partyMemberName = Util.ReadSeString(partyMember->Name).TextValue;
+                        if (hudName.Equals(partyMemberName))
+                        {
+                            this.AddTeamMember(partyMemberName, partyMember->HomeWorld, partyMember->ClassJob, true);
+                            groupManagerIndexLeft.Remove(j);
+                            break;
+                        }
+                    }
+                }
             }
         }
 
