@@ -213,7 +213,7 @@ public class Table
         ImGui.SetNextItemWidth(Service.Configuration.Stats.Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max() + (30 * ImGuiHelpers.GlobalScale));
         var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
 
-        if (ImGui.BeginCombo(string.Empty, this.currentStat.GetFinalAlias(metricAbbreviation)))
+        if (ImGui.BeginCombo("##EncounterLayoutCombo", this.currentStat.GetFinalAlias(metricAbbreviation), ImGuiComboFlags.HeightLargest))
         {
             foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
             {
@@ -226,17 +226,7 @@ public class Table
             ImGui.EndCombo();
         }
 
-        ImGui.SameLine();
-        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-        {
-            this.ShiftCurrentStat(-1);
-        }
-
-        ImGui.SameLine();
-        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
-        {
-            this.ShiftCurrentStat(1);
-        }
+        this.DrawPartyViewArrows();
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
@@ -344,22 +334,20 @@ public class Table
         }
     }
 
-    private void DrawStatLayout()
+    private void DrawStatLayoutHeader()
     {
-        var currentParty = Service.CharDataManager.PartyMembers;
-        var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
-
-        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
         var encounterAbbreviation = this.currentEncounter.Alias != string.Empty
                                         ? this.currentEncounter.Alias
                                         : this.currentEncounter.Encounter;
 
         ImGui.SameLine();
-        if (ImGui.BeginCombo(string.Empty, encounterAbbreviation))
+        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        if (ImGui.BeginCombo("##StatLayoutCombo", encounterAbbreviation, ImGuiComboFlags.HeightLargest))
         {
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
             {
                 var entry = Service.Configuration.Layout[i];
+
                 if (entry.Type == LayoutEntryType.Header)
                 {
                     ImGui.BeginDisabled();
@@ -378,17 +366,30 @@ public class Table
             ImGui.EndCombo();
         }
 
+        this.DrawPartyViewArrows();
+    }
+
+    private void DrawPartyViewArrows()
+    {
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
         {
-            this.ShiftCurrentEncounter(-1);
+            this.ShiftCurrentLayout(-1);
         }
 
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
         {
-            this.ShiftCurrentEncounter(1);
+            this.ShiftCurrentLayout(1);
         }
+    }
+
+    private void DrawStatLayout()
+    {
+        var currentParty = Service.CharDataManager.PartyMembers;
+        var enabledStats = Service.Configuration.Stats.Where(stat => stat.IsEnabled).ToList();
+
+        this.DrawStatLayoutHeader();
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewStatLayout",
@@ -644,6 +645,18 @@ public class Table
         if (newIndex < displayedEncounters.Count)
         {
             this.currentEncounter = displayedEncounters[newIndex];
+        }
+    }
+
+    private void ShiftCurrentLayout(int shift)
+    {
+        if (Service.Configuration.IsEncounterLayout)
+        {
+            this.ShiftCurrentStat(shift);
+        }
+        else
+        {
+            this.ShiftCurrentEncounter(shift);
         }
     }
 }
