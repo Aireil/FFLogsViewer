@@ -18,7 +18,14 @@ public class CharDataManager
     public void UpdatePartyMembers(bool onlyFetchNewMembers = false)
     {
         Service.TeamManager.UpdateTeamList();
+        var localPLayer = Service.ClientState.LocalPlayer;
         var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToList();
+        var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
+                                                         && member.World == localPLayer.HomeWorld.GameData?.Name.RawString);
+        if (index >= 0)
+        {
+            currPartyMembers.RemoveAt(index);
+        }
 
         foreach (var partyMember in currPartyMembers)
         {
