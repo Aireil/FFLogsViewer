@@ -168,19 +168,11 @@ public class Table
 
     private void DrawPartyView()
     {
-        if (Service.Configuration.Layout.Count == 0)
+        var configErrorMessage = Service.Configuration.Layout.Count == 0 ? "You have no layout set up." : null;
+        configErrorMessage ??= Service.Configuration.Stats.Any(stat => stat.IsEnabled) ? null : "You have no stat enabled.";
+        if (configErrorMessage != null)
         {
-            if (Util.CenterSelectable("You have no layout set up. Click to open settings."))
-            {
-                Service.ConfigWindow.IsOpen = true;
-            }
-
-            return;
-        }
-
-        if (!Service.Configuration.Stats.Any(stat => stat.IsEnabled))
-        {
-            if (Util.CenterSelectable("You have no stat enabled. Click to open settings."))
+            if (Util.CenterSelectable($"{configErrorMessage} Click to open settings."))
             {
                 Service.ConfigWindow.IsOpen = true;
             }
