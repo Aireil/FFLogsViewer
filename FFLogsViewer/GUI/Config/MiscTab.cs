@@ -82,7 +82,7 @@ public class MiscTab
             hasChanged = true;
         }
 
-        Util.DrawHelp("Builds a cache of fetched characters to avoid using too much API points (see Layout tab for more info on points).\n" +
+        Util.DrawHelp("Build a cache of fetched characters to avoid using too much API points (see Layout tab for more info on points).\n" +
                       "The cache is cleared every hour, you can also manually clear it in the main window.");
 
         ImGui.Text("API client:");

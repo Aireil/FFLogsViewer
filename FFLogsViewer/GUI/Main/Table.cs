@@ -227,10 +227,10 @@ public class Table
 
         if (Util.DrawButtonIcon(FontAwesomeIcon.Redo))
         {
-            Service.CharDataManager.UpdatePartyMembers(!Service.KeyState[VirtualKey.CONTROL]);
+            Service.CharDataManager.UpdatePartyMembers();
         }
 
-        Util.SetHoverTooltip(Service.KeyState[VirtualKey.CONTROL] ? "Update all members" : "Update new members\nHold CTRL to refresh loaded members as well");
+        Util.SetHoverTooltip("Refresh party state");
 
         ImGui.SameLine();
         if (Util.DrawButtonIcon(FontAwesomeIcon.ExchangeAlt))
@@ -307,7 +307,7 @@ public class Table
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
-                8,
+                Service.Configuration.Style.IsLocalPlayerInPartyView ? 9 : 8,
                 Service.Configuration.Style.MainTableFlags))
         {
             ImGui.TableNextColumn();
@@ -318,7 +318,7 @@ public class Table
                 ImGui.Separator();
             }
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
 
@@ -371,7 +371,7 @@ public class Table
                 {
                     this.DrawStatAlias(entry, row);
 
-                    for (var i = 0; i < 7; i++)
+                    for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -382,7 +382,7 @@ public class Table
                 {
                     this.DrawEncounterName(entry, entry.Alias == string.Empty ? entry.Encounter : entry.Alias, string.Empty, row);
 
-                    for (var i = 0; i < 7; i++)
+                    for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -509,7 +509,7 @@ public class Table
                 }
             }
 
-            for (var i = 0; i < 7; i++)
+            for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
 

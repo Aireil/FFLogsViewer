@@ -11,4 +11,5 @@ public class Style
     public bool IsSizeFixed;
     public bool IsCloseHotkeyRespected = true;
     public bool AbbreviateJobNames = true;
+    public bool IsLocalPlayerInPartyView = true;
 }

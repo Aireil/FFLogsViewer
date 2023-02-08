@@ -20,11 +20,15 @@ public class CharDataManager
         Service.TeamManager.UpdateTeamList();
         var localPLayer = Service.ClientState.LocalPlayer;
         var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToList();
-        var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
-                                                         && member.World == localPLayer.HomeWorld.GameData?.Name.RawString);
-        if (index >= 0)
+
+        if (!Service.Configuration.Style.IsLocalPlayerInPartyView)
         {
-            currPartyMembers.RemoveAt(index);
+            var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
+                                                             && member.World == localPLayer.HomeWorld.GameData?.Name.RawString);
+            if (index >= 0)
+            {
+                currPartyMembers.RemoveAt(index);
+            }
         }
 
         foreach (var partyMember in currPartyMembers)
