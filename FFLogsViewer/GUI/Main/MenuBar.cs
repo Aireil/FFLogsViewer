@@ -45,6 +45,17 @@ public class MenuBar
             ImGui.PopFont();
             Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to Single View" : "Swap to Party View");
 
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (Service.Configuration.IsCachingEnabled && ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
+            {
+                Service.FFLogsClient.ClearCache();
+                Service.CharDataManager.FetchLogs();
+                Service.MainWindow.ResetSize();
+            }
+
+            ImGui.PopFont();
+            Util.SetHoverTooltip("Clear cache and refresh current logs");
+
             var hasTmpSettingChanged = false;
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);

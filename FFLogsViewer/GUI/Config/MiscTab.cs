@@ -75,6 +75,16 @@ public class MiscTab
             ImGui.Unindent();
         }
 
+        var isCachingEnabled = Service.Configuration.IsCachingEnabled;
+        if (ImGui.Checkbox("Enable caching", ref isCachingEnabled))
+        {
+            Service.Configuration.IsCachingEnabled = isCachingEnabled;
+            hasChanged = true;
+        }
+
+        Util.DrawHelp("Builds a cache of fetched characters to avoid using too much API points (see Layout tab for more info on points).\n" +
+                      "The cache is cleared every hour, you can also manually clear it in the main window.");
+
         ImGui.Text("API client:");
 
         var configurationClientId = Service.Configuration.ClientId;

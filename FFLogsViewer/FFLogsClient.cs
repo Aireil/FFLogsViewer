@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,8 +19,11 @@ public class FFLogsClient
     public int LimitPerHour;
 
     private readonly HttpClient httpClient;
+    private readonly object lastCacheRefreshLock = new();
+    private readonly ConcurrentDictionary<string, dynamic?> cache = new();
     private volatile bool isRateLimitDataLoading;
     private volatile int rateLimitDataFetchAttempts;
+    private DateTime? lastCacheRefresh;
 
     public class Token
     {
@@ -58,6 +62,11 @@ public class FFLogsClient
         }
 
         return GetZoneInfo().Count * 5;
+    }
+
+    public void ClearCache()
+    {
+        this.cache.Clear();
     }
 
     public void SetToken()
@@ -152,13 +161,31 @@ public class FFLogsClient
 
         query.Append("}}}\"}");
 
-        var content = new StringContent(query.ToString(), Encoding.UTF8, "application/json");
-
         try
         {
-            var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
-            var jsonContent = await dataResponse.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject(jsonContent);
+            var isCaching = Service.Configuration.IsCachingEnabled;
+            if (isCaching)
+            {
+                this.CheckCache();
+            }
+
+            dynamic? deserializeJson = null;
+            var isCached = isCaching && this.cache.TryGetValue(query.ToString(), out deserializeJson);
+
+            if (!isCached)
+            {
+                var content = new StringContent(query.ToString(), Encoding.UTF8, "application/json");
+                var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
+                var jsonContent = await dataResponse.Content.ReadAsStringAsync();
+                deserializeJson = JsonConvert.DeserializeObject(jsonContent);
+
+                if (isCaching)
+                {
+                    this.cache.TryAdd(query.ToString(), deserializeJson);
+                }
+            }
+
+            return deserializeJson;
         }
         catch (Exception ex)
         {
@@ -262,6 +289,25 @@ public class FFLogsClient
         }
 
         return info;
+    }
+
+    private void CheckCache()
+    {
+        lock (this.lastCacheRefreshLock)
+        {
+            if (this.lastCacheRefresh == null)
+            {
+                this.lastCacheRefresh = DateTime.Now;
+                return;
+            }
+
+            // clear cache after an hour
+            if ((DateTime.Now - this.lastCacheRefresh.Value).TotalHours > 1)
+            {
+                this.ClearCache();
+                this.lastCacheRefresh = DateTime.Now;
+            }
+        }
     }
 
     private async Task<JObject?> FetchRateLimitData()
