@@ -132,34 +132,7 @@ public class FFLogsClient
 
         const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
-        var query = new StringBuilder();
-        query.Append(
-            $"{{\"query\":\"query {{characterData{{character(name: \\\"{charData.FirstName} {charData.LastName}\\\"serverSlug: \\\"{charData.WorldName}\\\"serverRegion: \\\"{charData.RegionName}\\\"){{");
-        query.Append("hidden ");
-
-        var metric = Service.MainWindow.GetCurrentMetric();
-        charData.LoadedMetric = metric;
-        foreach (var (id, difficulty) in GetZoneInfo())
-        {
-            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}");
-
-            // do not add if standard, avoid issues with alliance raids that do not support any partition
-            if (Service.MainWindow.Partition.Id != -1)
-            {
-                query.Append($", partition: {Service.MainWindow.Partition.Id}");
-            }
-
-            if (Service.MainWindow.Job.Name != "All jobs")
-            {
-                query.Append($", specName: \\\"{Service.MainWindow.Job.Name.Replace(" ", string.Empty)}\\\"");
-            }
-
-            query.Append($", timeframe: {(Service.MainWindow.IsTimeframeHistorical() ? "Historical" : "Today")}");
-
-            query.Append(')');
-        }
-
-        query.Append("}}}\"}");
+        var query = BuildQuery(charData);
 
         try
         {
@@ -170,7 +143,7 @@ public class FFLogsClient
             }
 
             dynamic? deserializeJson = null;
-            var isCached = isCaching && this.cache.TryGetValue(query.ToString(), out deserializeJson);
+            var isCached = isCaching && this.cache.TryGetValue(query, out deserializeJson);
 
             if (!isCached)
             {
@@ -181,7 +154,7 @@ public class FFLogsClient
 
                 if (isCaching)
                 {
-                    this.cache.TryAdd(query.ToString(), deserializeJson);
+                    this.cache.TryAdd(query, deserializeJson);
                 }
             }
 
@@ -234,6 +207,49 @@ public class FFLogsClient
 
             this.isRateLimitDataLoading = false;
         });
+    }
+
+    public void InvalidateCache(CharData charData)
+    {
+        if (Service.Configuration.IsCachingEnabled)
+        {
+            var query = BuildQuery(charData);
+            this.cache.Remove(query, out _);
+        }
+    }
+
+    private static string BuildQuery(CharData charData)
+    {
+        var query = new StringBuilder();
+        query.Append(
+            $"{{\"query\":\"query {{characterData{{character(name: \\\"{charData.FirstName} {charData.LastName}\\\"serverSlug: \\\"{charData.WorldName}\\\"serverRegion: \\\"{charData.RegionName}\\\"){{");
+        query.Append("hidden ");
+
+        var metric = Service.MainWindow.GetCurrentMetric();
+        charData.LoadedMetric = metric;
+        foreach (var (id, difficulty) in GetZoneInfo())
+        {
+            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}");
+
+            // do not add if standard, avoid issues with alliance raids that do not support any partition
+            if (Service.MainWindow.Partition.Id != -1)
+            {
+                query.Append($", partition: {Service.MainWindow.Partition.Id}");
+            }
+
+            if (Service.MainWindow.Job.Name != "All jobs")
+            {
+                query.Append($", specName: \\\"{Service.MainWindow.Job.Name.Replace(" ", string.Empty)}\\\"");
+            }
+
+            query.Append($", timeframe: {(Service.MainWindow.IsTimeframeHistorical() ? "Historical" : "Today")}");
+
+            query.Append(')');
+        }
+
+        query.Append("}}}\"}");
+
+        return query.ToString();
     }
 
     private static async Task<Token?> FetchToken()

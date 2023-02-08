@@ -142,6 +142,7 @@ public class CharData
             if (rawData == null)
             {
                 this.IsDataLoading = false;
+                Service.FFLogsClient.InvalidateCache(this);
                 this.CharError = CharacterError.Unreachable;
                 PluginLog.Error("rawData is null");
                 return;
@@ -156,6 +157,7 @@ public class CharData
                     if (rawData.error == "Unauthenticated.")
                     {
                         this.CharError = CharacterError.Unauthenticated;
+                        Service.FFLogsClient.InvalidateCache(this);
                         PluginLog.Information($"Unauthenticated: {rawData}");
                         return;
                     }
@@ -163,11 +165,13 @@ public class CharData
                     if (rawData.status != null && rawData.status == 429)
                     {
                         this.CharError = CharacterError.OutOfPoints;
+                        Service.FFLogsClient.InvalidateCache(this);
                         PluginLog.Information($"Ran out of points: {rawData}");
                         return;
                     }
 
                     this.CharError = CharacterError.GenericError;
+                    Service.FFLogsClient.InvalidateCache(this);
                     PluginLog.Information($"Generic error: {rawData}");
                     return;
                 }
@@ -175,6 +179,7 @@ public class CharData
                 if (rawData.errors != null)
                 {
                     this.CharError = CharacterError.MalformedQuery;
+                    Service.FFLogsClient.InvalidateCache(this);
                     PluginLog.Information($"Malformed GraphQL query: {rawData}");
                     return;
                 }
