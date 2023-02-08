@@ -14,5 +14,5 @@
     "FFLo",
     "FFL"
   ],
-    "Changelog": "- 2.0.10.0:\n   Add timeframe setting, allowing to choose Historical vs Today rankings.\n   Like metrics, the default is in the settings and can be temporarily overwritten in the main window."
+    "Changelog": "- 2.1.0.0:\n   Add party view, caching, and abbreviated names (see the update message in the main window for more info)."
 }
