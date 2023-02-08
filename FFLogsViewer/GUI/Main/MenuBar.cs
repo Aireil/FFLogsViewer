@@ -1,5 +1,8 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Style;
 using FFLogsViewer.Manager;
 using ImGuiNET;
 
@@ -32,7 +35,7 @@ public class MenuBar
             ImGui.PopFont();
             Util.SetHoverTooltip("Configuration");
 
-            var swapViewIcon = Service.MainWindow.IsPartyView ? FontAwesomeIcon.User : FontAwesomeIcon.UsersCog;
+            var swapViewIcon = Service.MainWindow.IsPartyView ? FontAwesomeIcon.User : FontAwesomeIcon.Users;
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.MenuItem(swapViewIcon.ToIconString()))
             {
@@ -43,7 +46,7 @@ public class MenuBar
             }
 
             ImGui.PopFont();
-            Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to Single View" : "Swap to Party View");
+            Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to single view" : "Swap to party view");
 
             ImGui.PushFont(UiBuilder.IconFont);
             if (Service.Configuration.IsCachingEnabled && ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
@@ -129,51 +132,75 @@ public class MenuBar
                 Service.CharDataManager.FetchLogs();
             }
 
-            /*if (!Service.Configuration.IsUpdateDismissed2060)
+            var isButtonHidden = Service.Configuration.IsUpdateDismissed2100 || (!ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0);
+            if (isButtonHidden)
             {
-                var isButtonHidden = !ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0;
-                if (isButtonHidden)
-                {
-                    ImGui.PushStyleColor(ImGuiCol.Text, Vector4.Zero);
-                }
+                ImGui.PushStyleColor(ImGuiCol.Text, Vector4.Zero);
+            }
+
+            ImGui.PushFont(UiBuilder.IconFont);
+
+            ImGui.SameLine();
+            if (ImGui.MenuItem(FontAwesomeIcon.InfoCircle.ToIconString()))
+            {
+                ImGui.OpenPopup("##UpdateMessage");
+            }
+
+            ImGui.PopFont();
+
+            if (isButtonHidden)
+            {
+                ImGui.PopStyleColor();
+            }
+
+            Util.SetHoverTooltip("Update message");
+
+            if (ImGui.BeginPopup("##UpdateMessage", ImGuiWindowFlags.NoMove))
+            {
+                ImGui.Text("New feature:");
+                ImGui.Text("- Party view:");
 
                 ImGui.PushFont(UiBuilder.IconFont);
-
                 ImGui.SameLine();
-                if (ImGui.MenuItem(FontAwesomeIcon.InfoCircle.ToIconString()))
-                {
-                    ImGui.OpenPopup("##UpdateMessage");
-                }
-
+                ImGui.Text(FontAwesomeIcon.Users.ToIconString());
                 ImGui.PopFont();
 
-                if (isButtonHidden)
+                ImGui.Text("   Using the 3rd button on this line, you will switch the main window in party view.\n" +
+                           "   This view allows you to easily see the logs of your current party.\n" +
+                           "   Two layouts are available:\n" +
+                           "      - Encounter layout: one stat => all encounters\n" +
+                           "      - Stat layout: one encounter => all stats\n");
+                ImGui.Text("Misc changes:");
+                ImGui.Text("- Cache:");
+
+                ImGui.PushFont(UiBuilder.IconFont);
+                ImGui.SameLine();
+                ImGui.Text(FontAwesomeIcon.Trash.ToIconString());
+                ImGui.PopFont();
+
+                ImGui.Text("   Requests are now cached.\n" +
+                           "   The cache is cleared every hour and the 4th button on this line allows you to clear it manually.\n" +
+                           "   You can disable this in the settings if you wish to.");
+                ImGui.Text("- New style setting to abbreviate job names");
+                ImGui.Text("\nIf you encounter any problem or if you have a suggestion, feel free to open an issue on the GitHub:");
+
+                if (ImGui.Button("Open the GitHub repo"))
                 {
-                    ImGui.PopStyleColor();
+                    Util.OpenLink("https://github.com/Aireil/FFLogsViewer");
                 }
 
-                if (!Service.Configuration.IsUpdateDismissed2060)
+                if (ImGui.Button("Hide##UpdateMessage"))
                 {
-                    Util.SetHoverTooltip("Update message");
+                    Service.Configuration.IsUpdateDismissed2100 = true;
+                    Service.Configuration.Save();
+                    ImGui.CloseCurrentPopup();
                 }
 
-                if (ImGui.BeginPopup("##UpdateMessage", ImGuiWindowFlags.NoMove))
-                {
-                    ImGui.Text(Service.Configuration.IsDefaultLayout
-                                   ? "Click an Abyssos encounter/header to swap to Asphodelos and vice versa.\n"
-                                   : "A swap group has been added to the default layout to swap from Abyssos to Asphodelos and vice versa.\n" +
-                                     "Should you want the same feature, you will have to add the swap yourself in your layout.\n");
+                ImGui.SameLine();
+                ImGui.TextColored(ImGuiColors.DalamudGrey, "Click on the same spot to open this again.");
 
-                    if (ImGui.Button("Dismiss##UpdateMessage"))
-                    {
-                        Service.Configuration.IsUpdateDismissed2060 = true;
-                        Service.Configuration.Save();
-                        ImGui.CloseCurrentPopup();
-                    }
-
-                    ImGui.EndPopup();
-                }
-            }*/
+                ImGui.EndPopup();
+            }
 
             ImGui.EndMenuBar();
         }
