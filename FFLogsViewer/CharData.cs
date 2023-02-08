@@ -138,7 +138,7 @@ public class CharData
         this.ResetData();
         Task.Run(async () =>
         {
-            var rawData = await Service.FfLogsClient.FetchLogs(this).ConfigureAwait(false);
+            var rawData = await Service.FFLogsClient.FetchLogs(this).ConfigureAwait(false);
             if (rawData == null)
             {
                 this.IsDataLoading = false;

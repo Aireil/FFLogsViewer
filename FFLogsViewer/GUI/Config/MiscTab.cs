@@ -81,7 +81,7 @@ public class MiscTab
         if (ImGui.InputText("Client ID##ClientId", ref configurationClientId, 50))
         {
             Service.Configuration.ClientId = configurationClientId;
-            Service.FfLogsClient.SetToken();
+            Service.FFLogsClient.SetToken();
             hasChanged = true;
         }
 
@@ -89,11 +89,11 @@ public class MiscTab
         if (ImGui.InputText("Client secret##ClientSecret", ref configurationClientSecret, 50))
         {
             Service.Configuration.ClientSecret = configurationClientSecret;
-            Service.FfLogsClient.SetToken();
+            Service.FFLogsClient.SetToken();
             hasChanged = true;
         }
 
-        if (Service.FfLogsClient.IsTokenValid)
+        if (Service.FFLogsClient.IsTokenValid)
         {
             ImGui.TextColored(ImGuiColors.HealerGreen, "This client is valid.");
         }
@@ -113,7 +113,7 @@ public class MiscTab
                 ImGui.SameLine();
                 if (ImGui.Button("Try again"))
                 {
-                    Service.FfLogsClient.SetToken();
+                    Service.FFLogsClient.SetToken();
                 }
             }
         }

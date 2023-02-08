@@ -31,7 +31,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.CharDataManager = new CharDataManager();
         Service.TeamManager = new TeamManager();
         Service.OpenWithManager = new OpenWithManager();
-        Service.FfLogsClient = new FFLogsClient();
+        Service.FFLogsClient = new FFLogsClient();
 
         Service.MainWindow = new MainWindow();
         Service.ConfigWindow = new ConfigWindow();

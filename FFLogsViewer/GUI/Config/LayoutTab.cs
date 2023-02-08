@@ -240,23 +240,23 @@ public class LayoutTab
             ImGui.EndPopup();
         }
 
-        if (!Service.FfLogsClient.IsTokenValid)
+        if (!Service.FFLogsClient.IsTokenValid)
         {
             ImGui.Text("API client is not valid, points information unavailable.");
         }
         else
         {
-            if (Service.FfLogsClient.LimitPerHour <= 0)
+            if (Service.FFLogsClient.LimitPerHour <= 0)
             {
-                Service.FfLogsClient.RefreshRateLimitData();
+                Service.FFLogsClient.RefreshRateLimitData();
             }
 
             var pointsPerRequest = FFLogsClient.EstimateCurrentLayoutPoints();
 
             ImGui.SameLine();
-            ImGui.Text($"Possible requests per hour: {(Service.FfLogsClient.LimitPerHour > 0 ? Service.FfLogsClient.LimitPerHour / pointsPerRequest : "Loading...")}");
+            ImGui.Text($"Possible requests per hour: {(Service.FFLogsClient.LimitPerHour > 0 ? Service.FFLogsClient.LimitPerHour / pointsPerRequest : "Loading...")}");
             Util.DrawHelp(
-                $"Points per hour: {(Service.FfLogsClient.LimitPerHour > 0 ? Service.FfLogsClient.LimitPerHour : "Loading...")}\n" +
+                $"Points per hour: {(Service.FFLogsClient.LimitPerHour > 0 ? Service.FFLogsClient.LimitPerHour : "Loading...")}\n" +
                 "Points are used by the FF Logs API every time you make a request.\n" +
                 "This limit can be increased by subscribing to the FF Logs Patreon.\n" +
                 "If you are subscribed, make sure to create the API client on that account.\n" +

@@ -150,7 +150,7 @@ public class HeaderBar
 
         ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
 
-        if (!Service.FfLogsClient.IsTokenValid)
+        if (!Service.FFLogsClient.IsTokenValid)
         {
             var message = FFLogsClient.IsConfigSet()
                               ? "API client not valid, click to open settings."

@@ -71,7 +71,7 @@ public class GameDataManager : IDisposable
         this.IsDataLoading = true;
         Task.Run(async () =>
         {
-            await Service.FfLogsClient.FetchGameData().ConfigureAwait(false);
+            await Service.FFLogsClient.FetchGameData().ConfigureAwait(false);
         }).ContinueWith(t =>
         {
             if (!this.IsDataReady)
