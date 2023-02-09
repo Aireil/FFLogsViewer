@@ -165,7 +165,7 @@ public class MenuBar
                 ImGui.Text(FontAwesomeIcon.Users.ToIconString());
                 ImGui.PopFont();
 
-                ImGui.Text("   Using the 3rd button on this line, you will switch the main window in party view.\n" +
+                ImGui.Text("   Using the 3rd button on this line, you will switch the main window to party view.\n" +
                            "   This view allows you to easily see the logs of your current party.\n" +
                            "   Two layouts are available:\n" +
                            "      - Encounter layout: one stat => all encounters\n" +

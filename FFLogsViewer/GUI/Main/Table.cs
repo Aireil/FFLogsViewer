@@ -323,23 +323,6 @@ public class Table
 
                 ImGui.TableNextColumn();
 
-                if (charData != null)
-                {
-                    if (Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData))
-                    {
-                        Util.OpenLink(charData);
-                    }
-
-                    if (charData.CharError == null)
-                    {
-                        Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
-                    }
-                }
-                else
-                {
-                    Util.CenterText("-");
-                }
-
                 var iconSize = 25 * ImGuiHelpers.GlobalScale;
                 Util.CenterCursor(iconSize);
                 var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
@@ -352,10 +335,28 @@ public class Table
                     ImGui.Text("(?)");
                 }
 
+                if (charData != null)
+                {
+                    if (Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData))
+                    {
+                        Util.OpenLink(charData);
+                    }
+
+                    if (charData.CharError == null)
+                    {
+                        Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
+                    }
+                }
+
                 ImGui.SetCursorPosY(separatorY);
                 if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
                 {
                     ImGui.Separator();
+                }
+
+                else
+                {
+                    Util.CenterText("-");
                 }
             }
 
