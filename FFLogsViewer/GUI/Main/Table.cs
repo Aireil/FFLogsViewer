@@ -347,16 +347,15 @@ public class Table
                         Util.SetHoverTooltip($"{charData.FirstName} {charData.LastName}@{charData.WorldName}");
                     }
                 }
+                else
+                {
+                    Util.CenterText("-");
+                }
 
                 ImGui.SetCursorPosY(separatorY);
                 if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
                 {
                     ImGui.Separator();
-                }
-
-                else
-                {
-                    Util.CenterText("-");
                 }
             }
 
