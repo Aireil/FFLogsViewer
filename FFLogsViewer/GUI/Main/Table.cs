@@ -273,10 +273,11 @@ public class Table
         var displayedEntries = this.GetDisplayedEntries();
 
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.Alias).X).Max()
+        var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
+        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.GetFinalAlias(metricAbbreviation)).X).Max()
                                                                                                 + (30 * ImGuiHelpers.GlobalScale)
                                                                                                 + ImGui.CalcTextSize(" (★)").X);
-        var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
+
         var comboPreview = this.CurrentStat.GetFinalAlias(metricAbbreviation);
         if (Service.Configuration.DefaultStatTypePartyView == this.CurrentStat.Type)
         {
