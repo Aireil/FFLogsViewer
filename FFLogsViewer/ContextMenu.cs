@@ -50,6 +50,7 @@ public class ContextMenu : IDisposable
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
+            case "BlackList":
                 return args.Text != null && args.ObjectWorld != 0 && args.ObjectWorld != 65535;
 
             default:
