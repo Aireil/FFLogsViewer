@@ -246,7 +246,7 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: 6.28, look in this function
                 var hasFailed = *(byte*)(packetData + 84) == 0; // (*(byte*)(packetData + 83) & 1) == 0 for World parties (?)
-                var isJoining = *(byte*)(something + 11169) != 0;
+                var isJoining = *(byte*)(something + 11409) != 0; // need a rework, offset is too big
 
                 if (!hasFailed && !isJoining)
                 {
