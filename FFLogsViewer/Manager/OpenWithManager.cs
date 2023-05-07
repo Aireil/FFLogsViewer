@@ -110,23 +110,14 @@ public unsafe class OpenWithManager
     {
         try
         {
-            // AgentCharaCard_Update => state == 3 => last function => last function
             this.charaCardAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 74 24 ?? 48 8B 74 24 ?? 48 8B 5C 24 ?? 48 83 C4 30");
-
-            // Get opcode from examining someone and look in the big switch
             this.processInspectPacketAddress = Service.SigScanner.ScanText("48 89 5C 24 ?? 56 41 56 41 57 48 83 EC 20 8B DA");
-
-            // Look what accesses social detail agent when opening search info
             this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? BE");
-
-            // Client::UI::UIModule_vf109 in 6.28, look what accesses a4 when opening a PF
             this.processPartyFinderDetailPacketAddress = Service.SigScanner.ScanText("E9 ?? ?? ?? ?? CC CC CC CC CC CC 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D AC 24");
-
             this.atkUnitBaseFinalizeAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C9 8D 57 01 41 B8");
 
             try
             {
-                // Is in Client::UI::UIModule_vf109 in 6.28, but got un-inlined between 6.28 and 6.38, so just look in one of the functions in there
                 this.isJoiningPartyFinderOffset = *(short*)Service.SigScanner.ScanModule("?? ?? 00 00 00 00 8B C3 48 8D 54 24 ?? 33 C9");
             }
             catch (Exception ex)
