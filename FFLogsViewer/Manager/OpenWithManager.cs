@@ -14,6 +14,7 @@ public unsafe class OpenWithManager
     public bool HasBeenEnabled;
 
     private DateTime wasOpenedLast = DateTime.Now;
+    private short isJoiningPartyFinderOffset;
     private IntPtr charaCardAtkCreationAddress;
     private IntPtr processInspectPacketAddress;
     private IntPtr socialDetailAtkCreationAddress;
@@ -122,6 +123,15 @@ public unsafe class OpenWithManager
             this.processPartyFinderDetailPacketAddress = Service.SigScanner.ScanText("E9 ?? ?? ?? ?? CC CC CC CC CC CC 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D AC 24");
 
             this.atkUnitBaseFinalizeAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C9 8D 57 01 41 B8");
+
+            try
+            {
+                this.isJoiningPartyFinderOffset = *(short*)Service.SigScanner.ScanModule("?? ?? 00 00 00 00 8B C3 48 8D 54 24 ?? 33 C9");
+            }
+            catch (Exception ex)
+            {
+                PluginLog.Error(ex, "isJoiningPartyFinderOffset sig scan failed.");
+            }
         }
         catch (Exception ex)
         {
@@ -246,7 +256,7 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: 6.28, look in this function
                 var hasFailed = *(byte*)(packetData + 84) == 0; // (*(byte*)(packetData + 83) & 1) == 0 for World parties (?)
-                var isJoining = *(byte*)(something + 11409) != 0; // need a rework, offset is too big
+                var isJoining = this.isJoiningPartyFinderOffset != 0 && (*(byte*)(something + this.isJoiningPartyFinderOffset) != 0);
 
                 if (!hasFailed && !isJoining)
                 {
