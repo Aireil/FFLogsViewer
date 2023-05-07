@@ -126,6 +126,7 @@ public unsafe class OpenWithManager
 
             try
             {
+                // Is in Client::UI::UIModule_vf109 in 6.28, but got un-inlined between 6.28 and 6.38, so just look in one of the functions in there
                 this.isJoiningPartyFinderOffset = *(short*)Service.SigScanner.ScanModule("?? ?? 00 00 00 00 8B C3 48 8D 54 24 ?? 33 C9");
             }
             catch (Exception ex)
