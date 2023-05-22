@@ -98,7 +98,7 @@ public class Table
                 encounterName += " (N/A)";
                 hoverMessage = "No data available.\n" +
                                "\n" +
-                               "This error is expected when the encounter is a recent addition to the layout or not yet listed on FF Logs.\n" +
+                               "This error is expected when the encounter is a recent addition to the layout or is not yet listed on FF Logs.\n" +
                                "If neither of these is the case, please " +
                                (Service.Configuration.IsDefaultLayout
                                     ? "report the issue on GitHub."
