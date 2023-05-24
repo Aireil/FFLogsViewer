@@ -654,7 +654,8 @@ public class Table
         }
         else
         {
-            if (ImGui.Selectable($"{displayedName}##{row}"))
+            //  == mouse character from game's font
+            if (ImGui.Selectable($"{displayedName} {(entry.Type == LayoutEntryType.Header ? "" : string.Empty)}##{row}"))
             {
                 this.Swap(entry.SwapId, entry.SwapNumber);
             }
