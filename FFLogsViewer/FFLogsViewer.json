@@ -11,5 +11,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.0.0:\n   Add party view, caching, and abbreviated names (see the update message in the main window for more info).\n- 2.1.1.0:\n   Add context menu on blacklist + misc small fixes"
+    "Changelog": "- 2.1.2.0:\n   Add support for 6.4 encounters in the default layout.\n   Swapping headers will now display a mouse icon to indicate you can click on it."
 }
