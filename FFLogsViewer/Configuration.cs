@@ -86,12 +86,17 @@ public class Configuration : IPluginConfiguration
     {
         return new List<LayoutEntry>
         {
-            new() { Type = LayoutEntryType.Header, Alias = "Abyssos", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Proto-Carbuncle", EncounterId = 83, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hegemone", EncounterId = 84, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Agdistis", EncounterId = 85, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hephaistos", EncounterId = 86, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hephaistos II", EncounterId = 87, Difficulty = "Savage", DifficultyId = 101 },
+            new() { Type = LayoutEntryType.Header, Alias = "Anabaseios", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "6.4", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 0 },
+            new() { Type = LayoutEntryType.Header, Alias = "Abyssos", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "6.4", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Proto-Carbuncle", EncounterId = 83, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hegemone", EncounterId = 84, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Agdistis", EncounterId = 85, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hephaistos", EncounterId = 86, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 1 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 49, Encounter = "Hephaistos II", EncounterId = 87, Difficulty = "Savage", DifficultyId = 101, SwapId = "6.4", SwapNumber = 1 },
             new() { Type = LayoutEntryType.Header, Alias = "Ultimates (EW)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Unending Coil of Bahamut", EncounterId = 1060, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Weapon's Refrain", EncounterId = 1061, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU" },
@@ -99,8 +104,8 @@ public class Configuration : IPluginConfiguration
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Dragonsong's Reprise", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "The Omega Protocol", ZoneId = 53, Encounter = "The Omega Protocol", EncounterId = 1068, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP" },
             new() { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials I (Extreme)", ZoneId = 42, Encounter = "Barbariccia", EncounterId = 1066, Difficulty = "Normal", DifficultyId = 100 },
             new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials II (Extreme)", ZoneId = 50, Encounter = "Rubicante", EncounterId = 1067, Difficulty = "Normal", DifficultyId = 100 },
+            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials III (Extreme)", ZoneId = 55, Encounter = "Golbez", EncounterId = 1069, Difficulty = "Normal", DifficultyId = 100 },
         };
     }
 
