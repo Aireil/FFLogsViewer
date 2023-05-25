@@ -230,8 +230,8 @@ public unsafe class OpenWithManager
             if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
             {
                 // To get offsets: look in the function
-                var fullNamePtr = data + 34;
-                var worldId = *(ushort*)(data + 24);
+                var fullNamePtr = data + 42;
+                var worldId = *(ushort*)(data + 32);
 
                 this.Open(fullNamePtr, worldId);
             }
