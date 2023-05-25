@@ -11,5 +11,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.2.0:\n   Add support for 6.4 encounters in the default layout.\n   Swapping headers will now display a mouse icon to indicate you can click on it."
+    "Changelog": "- 2.1.2.1:\n   Fixes open with not working for search info.\n- 2.1.2.0:\n   Adds support for 6.4 encounters in the default layout.\n   Swapping headers will now display a mouse icon to indicate you can click on it."
 }
