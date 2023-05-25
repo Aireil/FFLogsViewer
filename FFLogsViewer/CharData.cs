@@ -317,12 +317,11 @@ public class CharData
 
     public void FetchCharacter(string fullName, ushort worldId)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()
-                           ?.FirstOrDefault(x => x.RowId == worldId);
-
-        if (world == null)
+        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
+        if (world is not { IsPublic: true })
         {
-            this.CharError = CharacterError.WorldNotFound;
+            PluginLog.Error($"{worldId}");
+            this.CharError = CharacterError.InvalidWorld;
             return;
         }
 

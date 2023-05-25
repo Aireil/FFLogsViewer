@@ -108,7 +108,7 @@ public class TeamManager
     private void AddTeamMember(string fullName, ushort worldId, uint jobId, bool isInParty)
     {
         var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
-        if (world == null)
+        if (world is not { IsPublic: true })
         {
             return;
         }

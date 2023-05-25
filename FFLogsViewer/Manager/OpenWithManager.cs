@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Lumina.Excel.GeneratedSheets;
 
 namespace FFLogsViewer.Manager;
 
@@ -15,22 +16,22 @@ public unsafe class OpenWithManager
 
     private DateTime wasOpenedLast = DateTime.Now;
     private short isJoiningPartyFinderOffset;
-    private IntPtr charaCardAtkCreationAddress;
-    private IntPtr processInspectPacketAddress;
-    private IntPtr socialDetailAtkCreationAddress;
-    private IntPtr processPartyFinderDetailPacketAddress;
-    private IntPtr atkUnitBaseFinalizeAddress;
+    private nint charaCardAtkCreationAddress;
+    private nint processInspectPacketAddress;
+    private nint socialDetailAtkCreationAddress;
+    private nint processPartyFinderDetailPacketAddress;
+    private nint atkUnitBaseFinalizeAddress;
 
-    private delegate void* CharaCardAtkCreationDelegate(IntPtr agentCharaCard);
+    private delegate void* CharaCardAtkCreationDelegate(nint agentCharaCard);
     private Hook<CharaCardAtkCreationDelegate>? charaCardAtkCreationHook;
 
-    private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, IntPtr packetData);
+    private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, nint packetData);
     private Hook<ProcessInspectPacketDelegate>? processInspectPacketHook;
 
-    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, IntPtr data, long a3, void* a4);
+    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, nint data, long a3, void* a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
 
-    private delegate void* ProcessPartyFinderDetailPacketDelegate(IntPtr something, IntPtr packetData);
+    private delegate void* ProcessPartyFinderDetailPacketDelegate(nint something, nint packetData);
     private Hook<ProcessPartyFinderDetailPacketDelegate>? processPartyFinderDetailPacketHook;
 
     private delegate void AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
@@ -79,15 +80,27 @@ public unsafe class OpenWithManager
         return true;
     }
 
-    private void Open(SeString fullName, ushort worldId)
+    private void Open(nint fullNamePtr, ushort worldId)
     {
         if (!IsEnabled())
         {
             return;
         }
 
+        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
+        if (world is not { IsPublic: true })
+        {
+            return;
+        }
+
+        var fullName = MemoryHelper.ReadStringNullTerminated(fullNamePtr);
+        if (fullName == string.Empty)
+        {
+            return;
+        }
+
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
-            && Service.ClientState.LocalPlayer?.Name.TextValue == fullName.TextValue
+            && Service.ClientState.LocalPlayer?.Name.TextValue == fullName
             && Service.ClientState.LocalPlayer?.HomeWorld.Id == worldId)
         {
             return;
@@ -102,7 +115,7 @@ public unsafe class OpenWithManager
 
         if (Service.MainWindow.IsOpen)
         {
-            Service.CharDataManager.DisplayedChar.FetchCharacter(fullName.TextValue, worldId);
+            Service.CharDataManager.DisplayedChar.FetchCharacter(fullName, worldId);
         }
     }
 
@@ -165,7 +178,7 @@ public unsafe class OpenWithManager
         this.HasBeenEnabled = true;
     }
 
-    private void* CharaCardAtkCreationDetour(IntPtr agentCharaCard)
+    private void* CharaCardAtkCreationDetour(nint agentCharaCard)
     {
         try
         {
@@ -174,13 +187,10 @@ public unsafe class OpenWithManager
                 && Service.GameGui.GetAddonByName("CharaCardDesignSetting") == nint.Zero)
             {
                 // To get offsets: 6.21 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
-                var worldId = *(ushort*)(*(IntPtr*)(agentCharaCard + 40) + 192);
-                if (worldId != 0 && worldId != 65535)
-                {
-                    var fullName = MemoryHelper.ReadSeStringNullTerminated(*(IntPtr*)(*(IntPtr*)(agentCharaCard + 40) + 88));
+                var fullNamePtr = *(nint*)(*(nint*)(agentCharaCard + 40) + 88);
+                var worldId = *(ushort*)(*(nint*)(agentCharaCard + 40) + 192);
 
-                    this.Open(fullName, worldId);
-                }
+                this.Open(fullNamePtr, worldId);
             }
         }
         catch (Exception ex)
@@ -191,20 +201,17 @@ public unsafe class OpenWithManager
         return this.charaCardAtkCreationHook!.Original(agentCharaCard);
     }
 
-    private void* ProcessInspectPacketDetour(void* someAgent, void* a2, IntPtr packetData)
+    private void* ProcessInspectPacketDetour(void* someAgent, void* a2, nint packetData)
     {
         try
         {
             if (Service.Configuration.OpenWith.IsExamineEnabled)
             {
                 // To get offsets: 6.21 process inspect network packet 48 89 5C 24 ?? 56 41 56 41 57 48 83 EC 20 8B DA
+                var fullNamePtr = packetData + 624;
                 var worldId = *(ushort*)(packetData + 50);
-                if (worldId != 0 && worldId != 65535)
-                {
-                    var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 624);
 
-                    this.Open(fullName, worldId);
-                }
+                this.Open(fullNamePtr, worldId);
             }
         }
         catch (Exception ex)
@@ -215,21 +222,18 @@ public unsafe class OpenWithManager
         return this.processInspectPacketHook!.Original(someAgent, a2, packetData);
     }
 
-    private void* SocialDetailAtkCreationDetour(void* someAgent, IntPtr data, long a3, void* a4)
+    private void* SocialDetailAtkCreationDetour(void* someAgent, nint data, long a3, void* a4)
     {
         try
         {
             // a3 != 0 => editing
             if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
             {
-                // To get offsets: look pointed memory by a2 in CE
+                // To get offsets: look in the function
+                var fullNamePtr = data + 34;
                 var worldId = *(ushort*)(data + 24);
-                if (worldId != 0 && worldId != 65535)
-                {
-                    var fullName = MemoryHelper.ReadSeStringNullTerminated(data + 34);
 
-                    this.Open(fullName, worldId);
-                }
+                this.Open(fullNamePtr, worldId);
             }
         }
         catch (Exception ex)
@@ -240,7 +244,7 @@ public unsafe class OpenWithManager
         return this.socialDetailAtkCreationHook!.Original(someAgent, data, a3, a4);
     }
 
-    private void* ProcessPartyFinderDetailPacketDetour(IntPtr something, IntPtr packetData)
+    private void* ProcessPartyFinderDetailPacketDetour(nint something, nint packetData)
     {
         try
         {
@@ -248,17 +252,14 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: 6.28, look in this function
                 var hasFailed = *(byte*)(packetData + 84) == 0; // (*(byte*)(packetData + 83) & 1) == 0 for World parties (?)
-                var isJoining = this.isJoiningPartyFinderOffset != 0 && (*(byte*)(something + this.isJoiningPartyFinderOffset) != 0);
+                var isJoining = this.isJoiningPartyFinderOffset != 0 && *(byte*)(something + this.isJoiningPartyFinderOffset) != 0;
 
                 if (!hasFailed && !isJoining)
                 {
+                    var fullName = packetData + 712;
                     var worldId = *(ushort*)(packetData + 74); // is not used in the function, just search it again if it breaks
-                    if (worldId != 0 && worldId != 65535)
-                    {
-                        var fullName = MemoryHelper.ReadSeStringNullTerminated(packetData + 712);
 
-                        this.Open(fullName, worldId);
-                    }
+                    this.Open(fullName, worldId);
                 }
             }
         }
@@ -276,10 +277,10 @@ public unsafe class OpenWithManager
         {
             if (IsEnabled() && Service.Configuration.OpenWith.ShouldCloseMainWindow)
             {
-                if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharaCard")
-                    || (Service.Configuration.OpenWith.IsExamineEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "CharacterInspect")
-                    || (Service.Configuration.OpenWith.IsSearchInfoEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "SocialDetailB")
-                    || (Service.Configuration.OpenWith.IsPartyFinderEnabled && MemoryHelper.ReadSeStringNullTerminated((IntPtr)addon->Name).TextValue == "LookingForGroupDetail"))
+                if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "CharaCard")
+                    || (Service.Configuration.OpenWith.IsExamineEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "CharacterInspect")
+                    || (Service.Configuration.OpenWith.IsSearchInfoEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "SocialDetailB")
+                    || (Service.Configuration.OpenWith.IsPartyFinderEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "LookingForGroupDetail"))
                 {
                     // do not close the window if it was just opened, avoid issue of race condition with the addon closing
                     if (DateTime.Now - this.wasOpenedLast > TimeSpan.FromMilliseconds(100))

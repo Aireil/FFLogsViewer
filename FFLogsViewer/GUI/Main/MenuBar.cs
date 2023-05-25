@@ -2,7 +2,6 @@
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
-using Dalamud.Interface.Style;
 using FFLogsViewer.Manager;
 using ImGuiNET;
 

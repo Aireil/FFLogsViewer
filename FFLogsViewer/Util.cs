@@ -205,7 +205,7 @@ public class Util
         }
 
         var bytes = new byte[offset];
-        Marshal.Copy(new IntPtr(ptr), bytes, 0, offset);
+        Marshal.Copy(new nint(ptr), bytes, 0, offset);
         return SeString.Parse(bytes);
     }
 

@@ -147,7 +147,7 @@ public class FFLogsClient
 
             if (!isCached)
             {
-                var content = new StringContent(query.ToString(), Encoding.UTF8, "application/json");
+                var content = new StringContent(query, Encoding.UTF8, "application/json");
                 var dataResponse = await this.httpClient.PostAsync(baseAddress, content);
                 var jsonContent = await dataResponse.Content.ReadAsStringAsync();
                 deserializeJson = JsonConvert.DeserializeObject(jsonContent);
