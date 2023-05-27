@@ -208,7 +208,7 @@ public unsafe class OpenWithManager
             if (Service.Configuration.OpenWith.IsExamineEnabled)
             {
                 // To get offsets: 6.21 process inspect network packet 48 89 5C 24 ?? 56 41 56 41 57 48 83 EC 20 8B DA
-                var fullNamePtr = packetData + 624;
+                var fullNamePtr = packetData + 640;
                 var worldId = *(ushort*)(packetData + 50);
 
                 this.Open(fullNamePtr, worldId);
