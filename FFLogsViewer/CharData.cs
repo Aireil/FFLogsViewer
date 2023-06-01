@@ -244,7 +244,11 @@ public class CharData
         var words = rawText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
         var index = -1;
-        for (var i = 0; index == -1 && i < Service.CharDataManager.ValidWorlds.Length; i++) index = Array.IndexOf(words, Service.CharDataManager.ValidWorlds[i]);
+        for (var i = 0; index == -1 && i < Service.CharDataManager.ValidWorlds.Length; i++)
+        {
+            // starts at 2 to skip first and last name, which could be the same as their world (doesn't completely fix every cases)
+            index = Array.IndexOf(words, Service.CharDataManager.ValidWorlds[i], 2);
+        }
 
         if (index - 2 >= 0)
         {
