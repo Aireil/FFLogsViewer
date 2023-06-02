@@ -41,6 +41,7 @@ public class MenuBar
                 if (Service.FFLogsClient.IsTokenValid)
                 {
                     Service.MainWindow.IsPartyView = !Service.MainWindow.IsPartyView;
+                    Service.MainWindow.ResetSize();
                 }
             }
 
