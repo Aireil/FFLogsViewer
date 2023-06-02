@@ -212,7 +212,7 @@ public class Table
 
     private static void DrawPartyViewWarning()
     {
-        if (Service.TeamManager.TeamList.Count == 0)
+        if (Service.CharDataManager.PartyMembers.Count == 0)
         {
             ImGui.Text("Use");
             ImGui.PushFont(UiBuilder.IconFont);
@@ -286,39 +286,7 @@ public class Table
         var currentParty = Service.CharDataManager.PartyMembers;
         var displayedEntries = this.GetDisplayedEntries();
 
-        ImGui.SameLine();
-        var metricAbbreviation = Util.GetMetricAbbreviation(currentParty.FirstOrDefault());
-        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.GetFinalAlias(metricAbbreviation)).X).Max()
-                                                                                                + (30 * ImGuiHelpers.GlobalScale)
-                                                                                                + ImGui.CalcTextSize(" (★)").X);
-
-        var comboPreview = this.CurrentStat.GetFinalAlias(metricAbbreviation);
-        if (Service.Configuration.DefaultStatTypePartyView == this.CurrentStat.Type)
-        {
-            comboPreview += " (★)";
-        }
-
-        if (ImGui.BeginCombo("##EncounterLayoutCombo", comboPreview, ImGuiComboFlags.HeightLargest))
-        {
-            foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
-            {
-                var statName = stat.Name;
-                if (Service.Configuration.DefaultStatTypePartyView == stat.Type)
-                {
-                    statName += " (★)";
-                }
-
-                if (ImGui.Selectable(statName))
-                {
-                    this.CurrentStat = stat;
-                }
-            }
-
-            ImGui.EndCombo();
-        }
-
-        this.DrawPartyViewArrows();
-        DrawPartyViewWarning();
+        this.DrawEncounterHeader();
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
@@ -424,6 +392,43 @@ public class Table
 
             ImGui.EndTable();
         }
+    }
+
+    private void DrawEncounterHeader()
+    {
+        ImGui.SameLine();
+        var metricAbbreviation = Util.GetMetricAbbreviation(Service.CharDataManager.PartyMembers.FirstOrDefault());
+        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.GetFinalAlias(metricAbbreviation)).X).Max()
+                               + (30 * ImGuiHelpers.GlobalScale)
+                               + ImGui.CalcTextSize(" (★)").X);
+
+        var comboPreview = this.CurrentStat.GetFinalAlias(metricAbbreviation);
+        if (Service.Configuration.DefaultStatTypePartyView == this.CurrentStat.Type)
+        {
+            comboPreview += " (★)";
+        }
+
+        if (ImGui.BeginCombo("##EncounterLayoutCombo", comboPreview, ImGuiComboFlags.HeightLargest))
+        {
+            foreach (var stat in Service.Configuration.Stats.Where(stat => stat.IsEnabled))
+            {
+                var statName = stat.Name;
+                if (Service.Configuration.DefaultStatTypePartyView == stat.Type)
+                {
+                    statName += " (★)";
+                }
+
+                if (ImGui.Selectable(statName))
+                {
+                    this.CurrentStat = stat;
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
+        this.DrawPartyViewArrows();
+        DrawPartyViewWarning();
     }
 
     private void DrawStatLayoutHeader()
