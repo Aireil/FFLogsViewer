@@ -210,6 +210,20 @@ public class Table
         return !Service.Configuration.Layout.Exists(entry => entry.SwapId == swapId && entry.SwapNumber > swapNumber);
     }
 
+    private static void DrawPartyViewWarning()
+    {
+        if (Service.TeamManager.TeamList.Count == 0)
+        {
+            ImGui.Text("Use");
+            ImGui.PushFont(UiBuilder.IconFont);
+            ImGui.SameLine();
+            ImGui.Text(FontAwesomeIcon.Redo.ToIconString());
+            ImGui.PopFont();
+            ImGui.SameLine();
+            ImGui.Text("to refresh the party state.");
+        }
+    }
+
     private void DrawPartyView()
     {
         var configErrorMessage = Service.Configuration.Layout.Count == 0 ? "You have no layout set up." : null;
@@ -304,6 +318,7 @@ public class Table
         }
 
         this.DrawPartyViewArrows();
+        DrawPartyViewWarning();
 
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
@@ -459,6 +474,7 @@ public class Table
         }
 
         this.DrawPartyViewArrows();
+        DrawPartyViewWarning();
     }
 
     private void DrawPartyViewArrows()
