@@ -47,7 +47,6 @@ public class Configuration : IPluginConfiguration
         if (this.IsDefaultLayout || this.Layout.Count == 0)
         {
             this.SetDefaultLayout();
-            this.IsDefaultLayout = true;
         }
 
         if (this.Stats.Count == 0)
@@ -80,6 +79,7 @@ public class Configuration : IPluginConfiguration
     public void SetDefaultLayout()
     {
         this.Layout = GetDefaultLayout();
+        this.IsDefaultLayout = true;
     }
 
     private static List<LayoutEntry> GetDefaultLayout()
