@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using FFLogsViewer.Manager;
@@ -15,15 +16,36 @@ public class MenuBar
 
         if (ImGui.BeginMenuBar())
         {
+            string clearHoverTooltip;
             ImGui.PushFont(UiBuilder.IconFont);
-            if (ImGui.MenuItem(FontAwesomeIcon.Eraser.ToIconString()))
+            if (Service.Configuration.IsCachingEnabled && Service.KeyState[VirtualKey.CONTROL])
             {
-                Service.CharDataManager.Reset();
-                Service.MainWindow.ResetSize();
+                if (ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
+                {
+                    Service.FFLogsClient.ClearCache();
+                    Service.CharDataManager.FetchLogs();
+                    Service.MainWindow.ResetSize();
+                }
+
+                clearHoverTooltip = "Clear cache and refresh current logs";
+            }
+            else
+            {
+                if (ImGui.MenuItem(FontAwesomeIcon.Eraser.ToIconString()))
+                {
+                    Service.CharDataManager.Reset();
+                    Service.MainWindow.ResetSize();
+                }
+
+                clearHoverTooltip = "Clear current view";
+                if (Service.Configuration.IsCachingEnabled)
+                {
+                    clearHoverTooltip += " (hold ctrl to clear cache)";
+                }
             }
 
             ImGui.PopFont();
-            Util.SetHoverTooltip("Clear");
+            Util.SetHoverTooltip(clearHoverTooltip);
 
             ImGui.PushFont(UiBuilder.IconFont);
             if (ImGui.MenuItem(FontAwesomeIcon.Cog.ToIconString()))
@@ -47,17 +69,6 @@ public class MenuBar
 
             ImGui.PopFont();
             Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to single view" : "Swap to party view");
-
-            ImGui.PushFont(UiBuilder.IconFont);
-            if (Service.Configuration.IsCachingEnabled && ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
-            {
-                Service.FFLogsClient.ClearCache();
-                Service.CharDataManager.FetchLogs();
-                Service.MainWindow.ResetSize();
-            }
-
-            ImGui.PopFont();
-            Util.SetHoverTooltip("Clear cache and refresh current logs");
 
             var hasTmpSettingChanged = false;
 
