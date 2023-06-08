@@ -243,18 +243,21 @@ public class CharData
 
         var words = rawText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-        var index = -1;
-        for (var i = 0; index == -1 && i < Service.CharDataManager.ValidWorlds.Length; i++)
+        var worldIndex = -1;
+        if (words.Length > 2)
         {
-            // starts at 2 to skip first and last name, which could be the same as their world (doesn't completely fix every cases)
-            index = Array.IndexOf(words, Service.CharDataManager.ValidWorlds[i], 2);
+            for (var i = 0; worldIndex == -1 && i < Service.CharDataManager.ValidWorlds.Length; i++)
+            {
+                // starts at 2 to skip first and last name, which could be the same as their world (doesn't completely fix every cases)
+                worldIndex = Array.IndexOf(words, Service.CharDataManager.ValidWorlds[i], 2);
+            }
         }
 
-        if (index - 2 >= 0)
+        if (worldIndex - 2 >= 0)
         {
-            character.FirstName = words[index - 2];
-            character.LastName = words[index - 1];
-            character.WorldName = words[index];
+            character.FirstName = words[worldIndex - 2];
+            character.LastName = words[worldIndex - 1];
+            character.WorldName = words[worldIndex];
         }
         else if (words.Length >= 2)
         {
@@ -289,13 +292,12 @@ public class CharData
         string clipboardRawText;
         try
         {
-            if (ImGui.GetClipboardText() == null)
+            clipboardRawText = ImGui.GetClipboardText();
+            if (clipboardRawText == null)
             {
                 this.CharError = CharacterError.ClipboardError;
                 return;
             }
-
-            clipboardRawText = ImGui.GetClipboardText();
         }
         catch
         {
