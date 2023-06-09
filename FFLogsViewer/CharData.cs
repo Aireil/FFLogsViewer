@@ -185,6 +185,7 @@ public class CharData
                 }
 
                 this.CharError = CharacterError.CharacterNotFoundFFLogs;
+                Service.FFLogsClient.InvalidateCache(this);
                 return;
             }
 
@@ -194,6 +195,7 @@ public class CharData
             {
                 this.IsDataLoading = false;
                 this.CharError = CharacterError.HiddenLogs;
+                Service.FFLogsClient.InvalidateCache(this);
                 return;
             }
 
