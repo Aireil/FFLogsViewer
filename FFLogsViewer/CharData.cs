@@ -218,6 +218,7 @@ public class CharData
             if (!t.IsFaulted) return;
             if (t.Exception == null) return;
             this.CharError = CharacterError.NetworkError;
+            Service.FFLogsClient.InvalidateCache(this);
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
                 PluginLog.Error(e, "Networking error");
