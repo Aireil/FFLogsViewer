@@ -27,10 +27,11 @@ public sealed class FFLogsViewer : IDalamudPlugin
         IPC.Initialize();
 
         Service.Commands = new Commands();
-        Service.GameDataManager = new GameDataManager();
         Service.CharDataManager = new CharDataManager();
-        Service.TeamManager = new TeamManager();
+        Service.GameDataManager = new GameDataManager();
         Service.OpenWithManager = new OpenWithManager();
+        Service.HistoryManager = new HistoryManager();
+        Service.TeamManager = new TeamManager();
         Service.FFLogsClient = new FFLogsClient();
 
         Service.MainWindow = new MainWindow();

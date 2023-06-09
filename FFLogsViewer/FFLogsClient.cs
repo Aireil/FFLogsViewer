@@ -130,6 +130,8 @@ public class FFLogsClient
             return null;
         }
 
+        Service.HistoryManager.AddHistoryEntry(charData);
+
         const string baseAddress = @"https://www.fflogs.com/api/v2/client";
 
         var query = BuildQuery(charData);

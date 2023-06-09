@@ -70,6 +70,17 @@ public class MenuBar
             ImGui.PopFont();
             Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to single view" : "Swap to party view");
 
+            ImGui.PushFont(UiBuilder.IconFont);
+            if (ImGui.MenuItem(FontAwesomeIcon.History.ToIconString()))
+            {
+                ImGui.OpenPopup("##History");
+            }
+
+            ImGui.PopFont();
+            Util.SetHoverTooltip("History");
+
+            DrawHistoryPopup();
+
             var hasTmpSettingChanged = false;
 
             ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
@@ -217,5 +228,66 @@ public class MenuBar
         }
 
         ImGui.PopStyleVar();
+    }
+
+    public static void DrawHistoryPopup()
+    {
+        if (!ImGui.BeginPopup("##History", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize))
+        {
+            return;
+        }
+
+        var history = Service.HistoryManager.History;
+        if (history.Count != 0)
+        {
+            var tableHeight = 12 * (25 * ImGuiHelpers.GlobalScale);
+            if (history.Count < 12)
+            {
+                tableHeight = -1;
+            }
+
+            if (ImGui.BeginTable("##HistoryTable", 3, ImGuiTableFlags.RowBg | ImGuiTableFlags.ScrollY, new Vector2(-1, tableHeight)))
+            {
+                for (var i = 0; i < history.Count; i++)
+                {
+                    if (i != 0)
+                    {
+                        ImGui.TableNextRow();
+                    }
+
+                    ImGui.TableNextColumn();
+
+                    var historyEntry = history[i];
+                    if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, 25 * ImGuiHelpers.GlobalScale)))
+                    {
+                        Service.CharDataManager.DisplayedChar.FetchCharacter($"{historyEntry.FirstName} {historyEntry.LastName}@{historyEntry.WorldName}");
+                        ImGui.CloseCurrentPopup();
+                    }
+
+                    ImGui.SameLine();
+                    ImGui.AlignTextToFramePadding();
+                    ImGui.Text($"{historyEntry.LastSeen.ToShortDateString()} {historyEntry.LastSeen.ToShortTimeString()}");
+
+                    ImGui.TableNextColumn();
+
+                    ImGui.Text($"{historyEntry.FirstName} {historyEntry.LastName}");
+
+                    ImGui.TableNextColumn();
+
+                    ImGui.Text(historyEntry.WorldName);
+
+                    ImGui.SameLine();
+                    ImGui.Dummy(new Vector2(ImGui.GetStyle().ScrollbarSize));
+                }
+
+                ImGui.EndTable();
+            }
+        }
+        else
+        {
+            ImGui.Text("No history");
+        }
+
+        ImGui.EndPopup();
     }
 }
