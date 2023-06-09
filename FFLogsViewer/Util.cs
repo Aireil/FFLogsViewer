@@ -105,20 +105,36 @@ public class Util
         ImGui.PopStyleColor();
     }
 
-    public static void CenterTextWithError(string text, CharData? charData)
+    public static void CenterError(CharData charData)
     {
-        CenterText(text, charData?.CharError != null ? ImGuiColors.DalamudRed : null);
+        CenterText(GetErrorMessage(charData), GetErrorColor(charData));
+    }
 
-        if (charData?.CharError != null)
+    public static void CenterTextWithError(string text, CharData charData)
+    {
+        CenterText(text, charData.CharError != null ? GetErrorColor(charData) : null);
+
+        if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));
         }
     }
 
-    public static bool CenterSelectableWithError(string text, CharData? charData)
+    public static bool CenterSelectableError(CharData charData, string hover)
     {
-        var ret = CenterSelectable(text, charData?.CharError != null ? ImGuiColors.DalamudRed : null);
-        if (charData?.CharError != null)
+        var ret = CenterSelectable(GetErrorMessage(charData), GetErrorColor(charData));
+        if (charData.CharError != null)
+        {
+            SetHoverTooltip(hover);
+        }
+
+        return ret;
+    }
+
+    public static bool CenterSelectableWithError(string text, CharData charData)
+    {
+        var ret = CenterSelectable(text, charData.CharError != null ? GetErrorColor(charData) : null);
+        if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));
         }
@@ -138,15 +154,15 @@ public class Util
         return ret;
     }
 
-    public static bool SelectableWithError(string text, CharData? charData)
+    public static bool SelectableWithError(string text, CharData charData)
     {
-        var color = charData?.CharError != null
-                        ? ImGuiColors.DalamudRed
+        var color = charData.CharError != null
+                        ? GetErrorColor(charData)
                         : ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
         ImGui.PushStyleColor(ImGuiCol.Text, color);
         var ret = ImGui.Selectable(text);
         ImGui.PopStyleColor();
-        if (charData?.CharError != null)
+        if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));
         }
@@ -237,13 +253,35 @@ public class Util
             CharacterError.InvalidWorld => "World not supported or invalid",
             CharacterError.MalformedQuery => "Malformed GraphQL query.",
             CharacterError.MissingInputs => "Please fill first name, last name, and world",
-            CharacterError.NetworkError => "Networking error, please try again",
+            CharacterError.NetworkError => "Network error",
             CharacterError.OutOfPoints => "Ran out of API points, see Layout tab in config for more info.",
             CharacterError.Unauthenticated => "API Client not valid, check config",
             CharacterError.Unreachable => "Could not reach FF Logs servers",
             CharacterError.WorldNotFound => "World not found",
             _ => "If you see this, something went wrong",
         };
+    }
+
+    public static bool ShouldErrorBeClickable(CharData charData)
+    {
+        return charData.CharError is
+                   CharacterError.CharacterNotFoundFFLogs
+                   or CharacterError.GenericError
+                   or CharacterError.HiddenLogs
+                   or CharacterError.MalformedQuery
+                   or CharacterError.NetworkError
+                   or CharacterError.OutOfPoints
+                   or CharacterError.Unreachable;
+    }
+
+    public static Vector4 GetErrorColor(CharData charData)
+    {
+        if (charData.CharError is CharacterError.HiddenLogs)
+        {
+            return ImGuiColors.DalamudYellow;
+        }
+
+        return ImGuiColors.DalamudRed;
     }
 
     public static string GetMetricAbbreviation(CharData? charData)

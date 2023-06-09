@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
-using Dalamud.Interface.Colors;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Main;
@@ -133,7 +132,17 @@ public class HeaderBar
         }
         else
         {
-            Util.CenterText(Util.GetErrorMessage(Service.CharDataManager.DisplayedChar), ImGuiColors.DalamudRed);
+            if (Util.ShouldErrorBeClickable(Service.CharDataManager.DisplayedChar))
+            {
+                if (Util.CenterSelectableError(Service.CharDataManager.DisplayedChar, "Click to open on FF Logs"))
+                {
+                    Util.OpenLink(Service.CharDataManager.DisplayedChar);
+                }
+            }
+            else
+            {
+                Util.CenterError(Service.CharDataManager.DisplayedChar);
+            }
         }
 
         if (Service.Configuration.Layout.Count == 0)

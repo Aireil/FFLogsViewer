@@ -84,7 +84,7 @@ public class GameDataManager : IDisposable
             if (t.Exception == null) return;
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
-                PluginLog.Error(e, "Networking error.");
+                PluginLog.Error(e, "Network error.");
             }
         });
     }

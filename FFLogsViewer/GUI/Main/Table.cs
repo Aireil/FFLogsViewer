@@ -369,6 +369,12 @@ public class Table
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
+                        if (charData == null)
+                        {
+                            Util.CenterText("-");
+                            continue;
+                        }
+
                         if (charData is { IsDataLoading: true })
                         {
                             Util.CenterText("...");
@@ -576,6 +582,12 @@ public class Table
                 {
                     ImGui.TableNextColumn();
                     ImGui.SetCursorPosY(middleCursorPosY);
+
+                    if (charData == null)
+                    {
+                        Util.CenterText("-");
+                        continue;
+                    }
 
                     if (charData is { IsDataLoading: true })
                     {

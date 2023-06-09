@@ -223,7 +223,7 @@ public class CharData
             Service.FFLogsClient.InvalidateCache(this);
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
-                PluginLog.Error(e, "Networking error");
+                PluginLog.Error(e, "Network error");
             }
         });
     }
