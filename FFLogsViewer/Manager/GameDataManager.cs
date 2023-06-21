@@ -15,6 +15,7 @@ public class GameDataManager : IDisposable
         new Metric { Name = "rDPS", InternalName = "rdps" },
         new Metric { Name = "aDPS", InternalName = "dps" },
         new Metric { Name = "nDPS", InternalName = "ndps" },
+        new Metric { Name = "cDPS", InternalName = "cdps" },
         new Metric { Name = "HPS", InternalName = "hps" },
         new Metric { Name = "Healer Combined rDPS", Abbreviation = "HC rDPS", InternalName = "healercombinedrdps" },
         new Metric { Name = "Healer Combined aDPS", Abbreviation = "HC aDPS", InternalName = "healercombineddps" },
