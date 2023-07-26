@@ -12,6 +12,27 @@ public class StyleTab
 
         ImGui.Indent();
 
+        if (ImGui.BeginCombo("Default view", Service.Configuration.IsDefaultViewParty ? "Party view" : "Single view"))
+        {
+            if (ImGui.Selectable("Single view"))
+            {
+                Service.Configuration.IsDefaultViewParty = false;
+                Service.MainWindow.IsPartyView = false;
+                hasStyleChanged = true;
+            }
+
+            if (ImGui.Selectable("Party view"))
+            {
+                Service.Configuration.IsDefaultViewParty = true;
+                Service.MainWindow.IsPartyView = true;
+                hasStyleChanged = true;
+            }
+
+            ImGui.EndCombo();
+        }
+
+        Util.SetHoverTooltip("Default view when opening the window with /fflogs if the view has not been changed yet since last plugin restart.");
+
         var hideInCombat = Service.Configuration.HideInCombat;
         if (ImGui.Checkbox(@"Hide in combat##HideInCombat", ref hideInCombat))
         {
@@ -82,8 +103,7 @@ public class StyleTab
         if (!isAutoResizeFlagSet && !style.IsSizeFixed)
         {
             ImGui.Indent();
-            hasStyleChanged |=
-                ImGui.SliderFloat("Min size", ref Service.Configuration.Style.MinMainWindowWidth, 1, 2000);
+            hasStyleChanged |= ImGui.SliderFloat("Min size", ref Service.Configuration.Style.MinMainWindowWidth, 1, 2000);
 
             ImGui.Unindent();
         }

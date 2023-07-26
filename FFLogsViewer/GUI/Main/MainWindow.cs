@@ -21,8 +21,9 @@ public class MainWindow : Window
         : base("FFLogsViewer##FFLogsViewerMainWindow")
     {
         this.RespectCloseHotkey = Service.Configuration.Style.IsCloseHotkeyRespected;
-
         this.Flags = Service.Configuration.Style.MainWindowFlags;
+
+        this.IsPartyView = Service.Configuration.IsDefaultViewParty;
 
         this.ResetSize();
     }

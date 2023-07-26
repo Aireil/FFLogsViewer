@@ -18,6 +18,7 @@ public class Configuration : IPluginConfiguration
     public bool ContextMenuStreamer { get; set; }
     public bool OpenInBrowser { get; set; }
     public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
+    public bool IsDefaultViewParty { get; set; }
     public bool HideInCombat { get; set; }
     public bool IsDefaultLayout { get; set; } = true;
     public bool IsHistoricalDefault { get; set; } = true;
