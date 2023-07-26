@@ -60,7 +60,7 @@ public class MainWindow : Window
 
     public override void Draw()
     {
-        if (this.IsPartyView && !Service.FFLogsClient.IsTokenValid)
+        if (!Service.FFLogsClient.IsTokenValid && this.IsPartyView)
         {
             this.IsPartyView = false;
         }
