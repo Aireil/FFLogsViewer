@@ -11,5 +11,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.4.0:\n   Adds cDPS metric, this new metric only works on new reports.\n- 2.1.3.0:\n   Adds the history feature, containing the last 50 searched characters.\n   Most errors are now clickable to bring you on FF Logs.\n   Hidden logs are now yellow, to distinguish them from other errors in the party view without hovering.\n   Fixes an issue where errors would get cached.\n   Combines clear current view and clear cache buttons."
+    "Changelog": "- 2.1.4.1:\n   Refresh party state when swapping to party view.\n   Add \"party\" or \"p\" argument to /fflogs to open the party view and refresh the party state.\n   Add default view setting.\n- 2.1.4.0:\n   Add cDPS metric, this new metric only works on new reports.\n"
 }
