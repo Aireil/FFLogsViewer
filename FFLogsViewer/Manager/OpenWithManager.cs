@@ -131,7 +131,7 @@ public unsafe class OpenWithManager
 
             try
             {
-                this.isJoiningPartyFinderOffset = *(short*)Service.SigScanner.ScanModule("?? ?? ?? ?? ?? ?? 8B D7 48 8D 44 24 ?? 33 C9 89");
+                this.isJoiningPartyFinderOffset = *(short*)(Service.SigScanner.ScanModule("48 8B F1 66 C7 81") + 6);
             }
             catch (Exception ex)
             {
