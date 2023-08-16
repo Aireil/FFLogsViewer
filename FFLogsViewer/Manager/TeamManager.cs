@@ -27,16 +27,16 @@ public class TeamManager
             if (cwProxy->IsInCrossRealmParty != 0)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
-                this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupSpan[localIndex], true);
+                this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupArraySpan[localIndex], true);
 
-                for (var i = 0; i < cwProxy->CrossRealmGroupSpan.Length; i++)
+                for (var i = 0; i < cwProxy->CrossRealmGroupArraySpan.Length; i++)
                 {
                     if (i == localIndex)
                     {
                         continue;
                     }
 
-                    this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupSpan[i]);
+                    this.AddMembersFromCRGroup(cwProxy->CrossRealmGroupArraySpan[i]);
                 }
             }
         }
@@ -53,7 +53,7 @@ public class TeamManager
 
     private unsafe void AddMembersFromCRGroup(CrossRealmGroup crossRealmGroup, bool isLocalPlayerGroup = false)
     {
-        foreach (var groupMember in crossRealmGroup.GroupMemberSpan)
+        foreach (var groupMember in crossRealmGroup.GroupMembersSpan)
         {
             this.AddTeamMember(Util.ReadSeString(groupMember.Name).TextValue, (ushort)groupMember.HomeWorld, groupMember.ClassJobId, isLocalPlayerGroup);
         }
