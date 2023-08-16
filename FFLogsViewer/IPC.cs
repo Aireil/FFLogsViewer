@@ -12,7 +12,7 @@ public class IPC
     private static ICallGateSubscriber<int> penumbraInitializedSubscriber = null!;
     private static ICallGateSubscriber<int> penumbraDisposedSubscriber = null!;
     private static ICallGateSubscriber<(int Breaking, int Features)> penumbraApiVersionsSubscriber = null!;
-    private static ICallGateSubscriber<string, string> penumbraResolveDefaultSubscriber = null!;
+    private static ICallGateSubscriber<string, string> penumbraResolveInterfaceSubscriber = null!;
     public static int PenumbraApiVersion
     {
         get
@@ -35,7 +35,7 @@ public class IPC
         penumbraDisposedSubscriber = Service.Interface.GetIpcSubscriber<int>("Penumbra.Disposed");
         penumbraDisposedSubscriber.Subscribe(UpdatePenumbraStatus);
         penumbraApiVersionsSubscriber = Service.Interface.GetIpcSubscriber<(int, int)>("Penumbra.ApiVersions");
-        penumbraResolveDefaultSubscriber = Service.Interface.GetIpcSubscriber<string, string>("Penumbra.ResolveDefaultPath");
+        penumbraResolveInterfaceSubscriber = Service.Interface.GetIpcSubscriber<string, string>("Penumbra.ResolveInterfacePath");
         UpdatePenumbraStatus();
     }
 
@@ -49,7 +49,7 @@ public class IPC
     {
         try
         {
-            return penumbraResolveDefaultSubscriber.InvokeFunc(path);
+            return penumbraResolveInterfaceSubscriber.InvokeFunc(path);
         }
         catch
         {
