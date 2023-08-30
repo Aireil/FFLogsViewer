@@ -43,6 +43,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.ContextMenu = new DalamudContextMenu();
         this.contextMenu = new ContextMenu();
 
+        Service.Interface.UiBuilder.OpenMainUi += OpenMainUi;
         Service.Interface.UiBuilder.OpenConfigUi += OpenConfigUi;
         Service.Interface.UiBuilder.Draw += this.windowSystem.Draw;
     }
@@ -56,8 +57,14 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.GameDataManager.Dispose();
         Service.OpenWithManager.Dispose();
 
+        Service.Interface.UiBuilder.OpenMainUi -= OpenMainUi;
         Service.Interface.UiBuilder.OpenConfigUi -= OpenConfigUi;
         Service.Interface.UiBuilder.Draw -= this.windowSystem.Draw;
+    }
+
+    private static void OpenMainUi()
+    {
+        Service.MainWindow.IsOpen = true;
     }
 
     private static void OpenConfigUi()
