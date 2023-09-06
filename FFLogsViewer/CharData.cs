@@ -358,6 +358,25 @@ public class CharData
             this.Encounters.Add(new Encounter { ZoneId = zone.zone, IsValid = false });
         }
 
+        float? bestAllStarsPointsZone = null;
+        int? bestAllStarsRankZone = null;
+        float? bestAllStarsRankPercentZone = null;
+        if (zone.allStars != null)
+        {
+            foreach (var allStar in zone.allStars)
+            {
+                // best all stars are based on highest ASP%, JTokenType check is to protect from new logs, may not happen
+                if (allStar.rank.Type != JTokenType.String
+                    && allStar.rankPercent.Type != JTokenType.String
+                    && (bestAllStarsRankPercentZone == null || bestAllStarsRankPercentZone < (int)allStar.rankPercent))
+                {
+                    bestAllStarsPointsZone = allStar.points;
+                    bestAllStarsRankZone = allStar.rank;
+                    bestAllStarsRankPercentZone = allStar.rankPercent;
+                }
+            }
+        }
+
         foreach (var ranking in zone.rankings)
         {
             if (ranking.encounter == null)
@@ -371,6 +390,9 @@ public class CharData
                 Id = ranking.encounter.id,
                 Difficulty = zone.difficulty,
                 Metric = zone.metric,
+                BestAllStarsPointsZone = bestAllStarsPointsZone,
+                BestAllStarsRankZone = bestAllStarsRankZone,
+                BestAllStarsRankPercentZone = bestAllStarsRankPercentZone,
             };
 
             if (ranking.spec != null)

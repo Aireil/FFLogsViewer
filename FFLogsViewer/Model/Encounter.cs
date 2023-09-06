@@ -18,4 +18,7 @@ public class Encounter
     public float? AllStarsPoints;
     public int? AllStarsRank;
     public float? AllStarsRankPercent;
+    public float? BestAllStarsPointsZone;
+    public int? BestAllStarsRankZone;
+    public float? BestAllStarsRankPercentZone;
 }

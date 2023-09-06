@@ -168,14 +168,17 @@ public class Table
             case StatType.AllStarsPoints:
                 // points have a lot of decimals if fresh log
                 text = encounter?.AllStarsPoints?.ToString("0.00");
+                hoverMessage = hoverMessage.Insert(0, $"Zone ASP: {(encounter?.BestAllStarsPointsZone == null ? "-" : $" {encounter.BestAllStarsPointsZone?.ToString("0.00")}")}\n");
                 break;
             case StatType.AllStarsRank:
                 text = encounter?.AllStarsRank?.ToString();
                 color = Util.GetLogColor(encounter?.AllStarsRankPercent);
+                hoverMessage = hoverMessage.Insert(0, $"Zone ASP R: {(encounter?.BestAllStarsRankZone == null ? "-" : $"{encounter.BestAllStarsRankZone}")}\n");
                 break;
             case StatType.AllStarsRankPercent:
                 text = Util.GetFormattedLog(encounter?.AllStarsRankPercent, Service.Configuration.NbOfDecimalDigits);
                 color = Util.GetLogColor(encounter?.AllStarsRankPercent);
+                hoverMessage = hoverMessage.Insert(0, $"Zone ASP R%: {(encounter?.BestAllStarsRankPercentZone == null ? "-" : $"{Util.GetFormattedLog(encounter.BestAllStarsRankPercentZone, Service.Configuration.NbOfDecimalDigits)}")}\n");
                 break;
             default:
                 text = "?";
