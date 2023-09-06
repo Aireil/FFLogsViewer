@@ -62,17 +62,16 @@ public class TeamManager
 
     private unsafe void AddMembersFromGroupManager(GroupManager* groupManager)
     {
-        // Use CS struct when updated in Dalamud
-        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMemberList;
+        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMemberListSpan;
         var groupManagerIndexLeft = Enumerable.Range(0, groupManager->MemberCount).ToList();
-        for (var i = 0; i < 8; i++)
+
+        for (var i = 0; i < groupManager->MemberCount; i++)
         {
-            var targetOffset = i * sizeof(HudPartyMember);
-            var hudPartyMember = (HudPartyMember*)(partyMemberList + targetOffset);
-            var hudPartyMemberName = hudPartyMember->Name;
-            if (hudPartyMemberName != null)
+            var hudPartyMember = partyMemberList[i];
+            var hudPartyMemberNameRaw = hudPartyMember.Name;
+            if (hudPartyMemberNameRaw != null)
             {
-                var hudName = Util.ReadSeString(hudPartyMemberName).TextValue;
+                var hudPartyMemberName = Util.ReadSeString(hudPartyMemberNameRaw).TextValue;
                 for (var j = 0; j < groupManager->MemberCount; j++)
                 {
                     // handle duplicate names from different worlds
@@ -85,7 +84,7 @@ public class TeamManager
                     if (partyMember != null)
                     {
                         var partyMemberName = Util.ReadSeString(partyMember->Name).TextValue;
-                        if (hudName.Equals(partyMemberName))
+                        if (hudPartyMemberName.Equals(partyMemberName))
                         {
                             this.AddTeamMember(partyMemberName, partyMember->HomeWorld, partyMember->ClassJob, true);
                             groupManagerIndexLeft.Remove(j);
