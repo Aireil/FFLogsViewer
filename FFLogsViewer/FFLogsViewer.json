@@ -11,5 +11,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.4.2:\n   [Penumbra integration] Use interface collection instead of default.\n- 2.1.4.1:\n   Refresh party state when swapping to party view.\n   Add \"party\" or \"p\" argument to /fflogs to open the party view and refresh the party state.\n   Add default view setting.\n- 2.1.4.0:\n   Add cDPS metric, this new metric only works on new reports.\n"
+    "Changelog": "- 2.1.4.3:\n   Add zone ASP when hovering over an ASP stat.\n   Fix an issue where old members would stay in group view even after a refresh.\n   Add a button to open the main window in the installer.\n- 2.1.4.2:\n   [Penumbra integration] Use interface collection instead of default.\n- 2.1.4.1:\n   Refresh party state when swapping to party view.\n   Add \"party\" or \"p\" argument to /fflogs to open the party view and refresh the party state.\n   Add default view setting.\n- 2.1.4.0:\n   Add cDPS metric, this new metric only works on new reports.\n"
 }
