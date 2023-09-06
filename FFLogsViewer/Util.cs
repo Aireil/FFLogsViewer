@@ -174,7 +174,9 @@ public class Util
     {
         if (ImGui.IsItemHovered())
         {
-            ImGui.SetTooltip(tooltip);
+            ImGui.BeginTooltip();
+            ImGui.TextUnformatted(tooltip);
+            ImGui.EndTooltip();
         }
     }
 
