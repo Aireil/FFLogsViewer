@@ -53,8 +53,9 @@ public class TeamManager
 
     private unsafe void AddMembersFromCRGroup(CrossRealmGroup crossRealmGroup, bool isLocalPlayerGroup = false)
     {
-        foreach (var groupMember in crossRealmGroup.GroupMembersSpan)
+        for (var index = 0; index < crossRealmGroup.GroupMemberCount; index++)
         {
+            var groupMember = crossRealmGroup.GroupMembersSpan[index];
             this.AddTeamMember(Util.ReadSeString(groupMember.Name).TextValue, (ushort)groupMember.HomeWorld, groupMember.ClassJobId, isLocalPlayerGroup);
         }
     }
