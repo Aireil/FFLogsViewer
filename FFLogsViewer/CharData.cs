@@ -216,6 +216,7 @@ public class CharData
             this.LoadedWorldName = this.WorldName;
         }).ContinueWith(t =>
         {
+            Service.MainWindow.ResetSize();
             this.IsDataLoading = false;
             if (!t.IsFaulted) return;
             if (t.Exception == null) return;
