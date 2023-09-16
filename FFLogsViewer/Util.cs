@@ -189,7 +189,7 @@ public class Util
             return null;
         }
 
-        if (value >= 100.0f)
+        if (value > 100.0f)
         {
             return "100";
         }
