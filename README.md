@@ -1,30 +1,29 @@
 # FFLogsViewer
-
 Small plugin to view FFLogs ranking percentiles in-game using Dalamud provided by [XIVLauncher](https://github.com/goatcorp/FFXIVQuickLauncher).
-Layout, style, stats, default metric, and more are all customizable in the settings.
 
-To install, add `https://raw.githubusercontent.com/Aireil/MyDalamudPlugins/master/pluginmaster.json` under "Custom Plugin Repositories" in the "Experimental" tab of Dalamud's in game settings, and then install it through the plugin installer.
+To install, see instructions on [my repo](https://github.com/Aireil/MyDalamudPlugins) (global client).\
+[兼容国服](https://github.com/Nukoooo/FFLogsViewer)的版本在这里 (Chinese client).
 
-/fflogs to open the plugin window.  
-/fflogsconfig to open the plugin config.
+For commands, look in the installer.
 
-The /fflogs command supports most placeholders, see the [Lodestone database](https://eu.finalfantasyxiv.com/lodestone/playguide/db/text_command/placeholder/) for a list of them.
-
-To get percentiles in the plugin window, you will need to add an API client, step-by-step guide in /fflogsconfig.  
+To get percentiles in the plugin window, you will need to add an API client, step-by-step guide in settings.  
 No API client needed to use the context menu item when opening in a browser.
 
-![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/ui.png)
-
-## Context menu
-
+## Context Menu
 Adds a context menu item nearly everywhere you have a name.  
 Setting in config to open the character page in your default browser instead of the plugin window.
 
-![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu1.png)
-![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/contextMenu2.png)
+![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/image1.png)
 
-## Chinese version (CN)
-The Chinese compatible version is being developed and maintained here: https://github.com/NukoOoOoOoO/FFLogsViewer.
+## Party View
+Party view has two layouts, encounter layout (left) and stat layout (right). Default layout, stat, and encounter are all customizable.
 
-## Note
-Code is a fiesta, feel free to bully me.
+![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/image2.png)
+
+## Customization
+Main window layout, style, stats, default metric, and more are all customizable in the settings.
+
+![image](https://github.com/Aireil/FFLogsViewer/raw/master/res/custom.png)
+
+## Open With
+Automatically fetch the character when opening different windows. See the settings for more info.

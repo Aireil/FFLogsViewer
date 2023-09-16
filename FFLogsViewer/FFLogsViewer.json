@@ -6,7 +6,8 @@
   "RepoUrl": "https://github.com/Aireil/FFLogsViewer",
   "IconUrl": "https://github.com/Aireil/FFLogsViewer/raw/master/res/icon.png",
    "ImageUrls": [
-    "https://github.com/Aireil/FFLogsViewer/raw/master/res/banner.png"
+    "https://github.com/Aireil/FFLogsViewer/raw/master/res/image1.png",
+    "https://github.com/Aireil/FFLogsViewer/raw/master/res/image2.png",
   ],
   "Tags": [
     "FFLogs"
