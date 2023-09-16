@@ -106,5 +106,6 @@ public class MainWindow : Window
     public void ResetSwapGroups()
     {
         this.table.ResetSwapGroups();
+        this.ResetSize();
     }
 }
