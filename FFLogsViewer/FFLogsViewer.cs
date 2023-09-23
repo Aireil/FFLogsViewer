@@ -40,7 +40,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
         this.windowSystem.AddWindow(Service.ConfigWindow);
         this.windowSystem.AddWindow(Service.MainWindow);
 
-        Service.ContextMenu = new DalamudContextMenu();
+        Service.ContextMenu = new DalamudContextMenu(pluginInterface);
         this.contextMenu = new ContextMenu();
 
         this.viewerProvider = new FFLogsViewerProvider(pluginInterface, new FFLogsViewerAPI());
