@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;

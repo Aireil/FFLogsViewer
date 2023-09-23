@@ -85,7 +85,7 @@ public class GameDataManager : IDisposable
             if (t.Exception == null) return;
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
-                PluginLog.Error(e, "Network error.");
+                Service.PluginLog.Error(e, "Network error.");
             }
         });
     }
@@ -95,7 +95,7 @@ public class GameDataManager : IDisposable
         var gameData = GameData.FromJson(jsonContent);
         if (gameData == null)
         {
-            PluginLog.Error("gameData was null while fetching game data");
+            Service.PluginLog.Error("gameData was null while fetching game data");
         }
         else if (gameData.Errors == null)
         {
@@ -107,7 +107,7 @@ public class GameDataManager : IDisposable
         }
         else
         {
-            PluginLog.Error("Errors while fetching game data: " + gameData.Errors.Message);
+            Service.PluginLog.Error("Errors while fetching game data: " + gameData.Errors.Message);
         }
     }
 

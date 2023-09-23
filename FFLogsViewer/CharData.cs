@@ -79,7 +79,7 @@ public class CharData
         if (playerCharacter.HomeWorld.GameData?.Name == null)
         {
             this.CharError = CharacterError.GenericError;
-            PluginLog.Error("SetInfo character world was null");
+            Service.PluginLog.Error("SetInfo character world was null");
             return false;
         }
 
@@ -144,7 +144,7 @@ public class CharData
                 this.IsDataLoading = false;
                 Service.FFLogsClient.InvalidateCache(this);
                 this.CharError = CharacterError.Unreachable;
-                PluginLog.Error("rawData is null");
+                Service.PluginLog.Error("rawData is null");
                 return;
             }
 
@@ -158,7 +158,7 @@ public class CharData
                     {
                         this.CharError = CharacterError.Unauthenticated;
                         Service.FFLogsClient.InvalidateCache(this);
-                        PluginLog.Information($"Unauthenticated: {rawData}");
+                        Service.PluginLog.Information($"Unauthenticated: {rawData}");
                         return;
                     }
 
@@ -166,13 +166,13 @@ public class CharData
                     {
                         this.CharError = CharacterError.OutOfPoints;
                         Service.FFLogsClient.InvalidateCache(this);
-                        PluginLog.Information($"Ran out of points: {rawData}");
+                        Service.PluginLog.Information($"Ran out of points: {rawData}");
                         return;
                     }
 
                     this.CharError = CharacterError.GenericError;
                     Service.FFLogsClient.InvalidateCache(this);
-                    PluginLog.Information($"Generic error: {rawData}");
+                    Service.PluginLog.Information($"Generic error: {rawData}");
                     return;
                 }
 
@@ -180,7 +180,7 @@ public class CharData
                 {
                     this.CharError = CharacterError.MalformedQuery;
                     Service.FFLogsClient.InvalidateCache(this);
-                    PluginLog.Information($"Malformed GraphQL query: {rawData}");
+                    Service.PluginLog.Information($"Malformed GraphQL query: {rawData}");
                     return;
                 }
 
@@ -224,7 +224,7 @@ public class CharData
             Service.FFLogsClient.InvalidateCache(this);
             foreach (var e in t.Exception.Flatten().InnerExceptions)
             {
-                PluginLog.Error(e, "Network error");
+                Service.PluginLog.Error(e, "Network error");
             }
         });
     }
@@ -330,7 +330,7 @@ public class CharData
         var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
         if (world is not { IsPublic: true })
         {
-            PluginLog.Error($"{worldId}");
+            Service.PluginLog.Error($"{worldId}");
             this.CharError = CharacterError.InvalidWorld;
             return;
         }

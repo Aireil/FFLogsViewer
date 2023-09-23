@@ -185,7 +185,7 @@ public class MiscTab
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Could not set clipboard text.");
+            Service.PluginLog.Error(ex, "Could not set clipboard text.");
             Service.Interface.UiBuilder.AddNotification(text, "Could not copy to clipboard", NotificationType.Error);
         }
     }

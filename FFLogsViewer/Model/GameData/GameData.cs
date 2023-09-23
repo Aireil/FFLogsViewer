@@ -52,7 +52,7 @@ public class GameData
 
         if (isDataValid == false)
         {
-            PluginLog.Error("Data invalid: " + this.ToJson());
+            Service.PluginLog.Error("Data invalid: " + this.ToJson());
         }
 
         return isDataValid;

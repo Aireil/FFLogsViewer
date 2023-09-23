@@ -135,13 +135,13 @@ public unsafe class OpenWithManager
             }
             catch (Exception ex)
             {
-                PluginLog.Error(ex, "isJoiningPartyFinderOffset sig scan failed.");
+                Service.PluginLog.Error(ex, "isJoiningPartyFinderOffset sig scan failed.");
             }
         }
         catch (Exception ex)
         {
             this.HasLoadingFailed = true;
-            PluginLog.Error(ex, "OpenWith sig scan failed.");
+            Service.PluginLog.Error(ex, "OpenWith sig scan failed.");
         }
     }
 
@@ -154,25 +154,25 @@ public unsafe class OpenWithManager
 
         try
         {
-            this.charaCardAtkCreationHook = Hook<CharaCardAtkCreationDelegate>.FromAddress(this.charaCardAtkCreationAddress, this.CharaCardAtkCreationDetour);
+            this.charaCardAtkCreationHook = Service.GameInteropProvider.HookFromAddress<CharaCardAtkCreationDelegate>(this.charaCardAtkCreationAddress, this.CharaCardAtkCreationDetour);
             this.charaCardAtkCreationHook.Enable();
 
-            this.processInspectPacketHook = Hook<ProcessInspectPacketDelegate>.FromAddress(this.processInspectPacketAddress, this.ProcessInspectPacketDetour);
+            this.processInspectPacketHook = Service.GameInteropProvider.HookFromAddress<ProcessInspectPacketDelegate>(this.processInspectPacketAddress, this.ProcessInspectPacketDetour);
             this.processInspectPacketHook.Enable();
 
-            this.socialDetailAtkCreationHook = Hook<SocialDetailAtkCreationDelegate>.FromAddress(this.socialDetailAtkCreationAddress, this.SocialDetailAtkCreationDetour);
+            this.socialDetailAtkCreationHook = Service.GameInteropProvider.HookFromAddress<SocialDetailAtkCreationDelegate>(this.socialDetailAtkCreationAddress, this.SocialDetailAtkCreationDetour);
             this.socialDetailAtkCreationHook.Enable();
 
-            this.processPartyFinderDetailPacketHook = Hook<ProcessPartyFinderDetailPacketDelegate>.FromAddress(this.processPartyFinderDetailPacketAddress, this.ProcessPartyFinderDetailPacketDetour);
+            this.processPartyFinderDetailPacketHook = Service.GameInteropProvider.HookFromAddress<ProcessPartyFinderDetailPacketDelegate>(this.processPartyFinderDetailPacketAddress, this.ProcessPartyFinderDetailPacketDetour);
             this.processPartyFinderDetailPacketHook.Enable();
 
-            this.atkUnitBaseFinalizeHook = Hook<AtkUnitBaseFinalizeDelegate>.FromAddress(this.atkUnitBaseFinalizeAddress, this.AktUnitBaseFinalizeDetour);
+            this.atkUnitBaseFinalizeHook = Service.GameInteropProvider.HookFromAddress<AtkUnitBaseFinalizeDelegate>(this.atkUnitBaseFinalizeAddress, this.AktUnitBaseFinalizeDetour);
             this.atkUnitBaseFinalizeHook.Enable();
         }
         catch (Exception ex)
         {
             this.HasLoadingFailed = true;
-            PluginLog.Error(ex, "OpenWith hooks enabling failed.");
+            Service.PluginLog.Error(ex, "OpenWith hooks enabling failed.");
         }
 
         this.HasBeenEnabled = true;
@@ -195,7 +195,7 @@ public unsafe class OpenWithManager
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Exception in CharaCardAtkCreationDetour.");
+            Service.PluginLog.Error(ex, "Exception in CharaCardAtkCreationDetour.");
         }
 
         return this.charaCardAtkCreationHook!.Original(agentCharaCard);
@@ -216,7 +216,7 @@ public unsafe class OpenWithManager
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Exception in ProcessInspectPacketDetour.");
+            Service.PluginLog.Error(ex, "Exception in ProcessInspectPacketDetour.");
         }
 
         return this.processInspectPacketHook!.Original(someAgent, a2, packetData);
@@ -238,7 +238,7 @@ public unsafe class OpenWithManager
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Exception in SocialDetailAtkCreationDetour.");
+            Service.PluginLog.Error(ex, "Exception in SocialDetailAtkCreationDetour.");
         }
 
         return this.socialDetailAtkCreationHook!.Original(someAgent, data, a3, a4);
@@ -265,7 +265,7 @@ public unsafe class OpenWithManager
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Exception in ProcessPartyFinderDetailPacketDetour.");
+            Service.PluginLog.Error(ex, "Exception in ProcessPartyFinderDetailPacketDetour.");
         }
 
         return this.processPartyFinderDetailPacketHook!.Original(something, packetData);
@@ -292,7 +292,7 @@ public unsafe class OpenWithManager
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Exception in AktUnitBaseFinalizeDetour.");
+            Service.PluginLog.Error(ex, "Exception in AktUnitBaseFinalizeDetour.");
         }
 
         this.atkUnitBaseFinalizeHook!.Original(addon);

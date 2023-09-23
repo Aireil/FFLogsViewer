@@ -92,7 +92,7 @@ public class FFLogsClient
             }
             else
             {
-                PluginLog.Error($"FF Logs token couldn't be set: {(token == null ? "return was null" : token.Error)}");
+                Service.PluginLog.Error($"FF Logs token couldn't be set: {(token == null ? "return was null" : token.Error)}");
             }
         });
     }
@@ -101,7 +101,7 @@ public class FFLogsClient
     {
         if (!this.IsTokenValid)
         {
-            PluginLog.Error("FFLogs token not set.");
+            Service.PluginLog.Error("FFLogs token not set.");
             return;
         }
 
@@ -118,7 +118,7 @@ public class FFLogsClient
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Error while fetching game data.");
+            Service.PluginLog.Error(ex, "Error while fetching game data.");
         }
     }
 
@@ -126,7 +126,7 @@ public class FFLogsClient
     {
         if (!this.IsTokenValid)
         {
-            PluginLog.Error("FFLogs token not valid.");
+            Service.PluginLog.Error("FFLogs token not valid.");
             return null;
         }
 
@@ -164,7 +164,7 @@ public class FFLogsClient
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Error while fetching data.");
+            Service.PluginLog.Error(ex, "Error while fetching data.");
             return null;
         }
     }
@@ -195,7 +195,7 @@ public class FFLogsClient
                 var limitPerHour = rateLimitData["data"]?["rateLimitData"]?["limitPerHour"]?.ToObject<int>();
                 if (limitPerHour is null or <= 0)
                 {
-                    PluginLog.Error($"Couldn't find proper limit per hour: {rateLimitData}");
+                    Service.PluginLog.Error($"Couldn't find proper limit per hour: {rateLimitData}");
                 }
                 else
                 {
@@ -204,7 +204,7 @@ public class FFLogsClient
             }
             else
             {
-                PluginLog.Error($"FF Logs rate limit data couldn't be fetched: {(rateLimitData == null ? "return was null" : rateLimitData["error"])}");
+                Service.PluginLog.Error($"FF Logs rate limit data couldn't be fetched: {(rateLimitData == null ? "return was null" : rateLimitData["error"])}");
             }
 
             this.isRateLimitDataLoading = false;
@@ -276,7 +276,7 @@ public class FFLogsClient
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Error while fetching token.");
+            Service.PluginLog.Error(ex, "Error while fetching token.");
         }
 
         return null;
@@ -332,7 +332,7 @@ public class FFLogsClient
     {
         if (!this.IsTokenValid)
         {
-            PluginLog.Error("FFLogs token not valid.");
+            Service.PluginLog.Error("FFLogs token not valid.");
             return null;
         }
 
@@ -349,7 +349,7 @@ public class FFLogsClient
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Error while fetching rate limit data.");
+            Service.PluginLog.Error(ex, "Error while fetching rate limit data.");
         }
 
         return null;

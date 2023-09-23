@@ -72,7 +72,7 @@ public class JobIconsManager : IDisposable
         }
         catch (Exception ex)
         {
-            PluginLog.Error(ex, "Icon loading failed.");
+            Service.PluginLog.Error(ex, "Icon loading failed.");
         }
 
         return null;
@@ -120,7 +120,7 @@ public class JobIconsManager : IDisposable
 
                 this.jobIcons = null;
 
-                PluginLog.Error($"Job icons loading failed, {--this.iconLoadAttemptsLeft} attempt(s) left.");
+                Service.PluginLog.Error($"Job icons loading failed, {--this.iconLoadAttemptsLeft} attempt(s) left.");
             }
 
             this.isLoading = false;
