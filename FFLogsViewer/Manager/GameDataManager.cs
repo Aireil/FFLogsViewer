@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
-using Dalamud.Logging;
 using FFLogsViewer.Model;
 using FFLogsViewer.Model.GameData;
 
 namespace FFLogsViewer.Manager;
 
-public class GameDataManager : IDisposable
+public class GameDataManager
 {
     public static readonly List<Metric> AvailableMetrics = new()
     {
@@ -52,13 +50,6 @@ public class GameDataManager : IDisposable
     public static Partition GetDefaultPartition()
     {
         return AvailablePartitions[0];
-    }
-
-    public void Dispose()
-    {
-        this.JobIconsManager.Dispose();
-
-        GC.SuppressFinalize(this);
     }
 
     public void FetchData()

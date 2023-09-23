@@ -1,19 +1,14 @@
 ﻿using Dalamud.ContextMenu;
-using Dalamud.Data;
 using Dalamud.Game;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
-using Dalamud.Game.Gui.FlyText;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using FFLogsViewer.GUI.Config;
 using FFLogsViewer.GUI.Main;
 using FFLogsViewer.Manager;
+
+#pragma warning disable SA1134 // AttributesMustNotShareLine
 
 namespace FFLogsViewer;
 
@@ -44,4 +39,5 @@ internal class Service
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
     [PluginService] internal static IPluginLog PluginLog { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
+    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
 }

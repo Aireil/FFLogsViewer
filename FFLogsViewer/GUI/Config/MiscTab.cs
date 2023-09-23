@@ -1,7 +1,6 @@
 ﻿using System;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Internal.Notifications;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Config;

@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dalamud.Logging;
-using Dalamud.Utility;
-using ImGuiScene;
-using Lumina.Data.Files;
+using Dalamud.Interface.Internal;
 
 namespace FFLogsViewer.Manager;
 
-public class JobIconsManager : IDisposable
+public class JobIconsManager
 {
-    private List<TextureWrap>? jobIcons;
+    private List<IDalamudTextureWrap>? jobIcons;
     private volatile bool isLoading;
     private int iconLoadAttemptsLeft = 4;
 
-    public TextureWrap? GetJobIcon(uint jobId)
+    public IDalamudTextureWrap? GetJobIcon(uint jobId)
     {
         if (this.isLoading)
         {
@@ -34,50 +30,6 @@ public class JobIconsManager : IDisposable
         return null;
     }
 
-    public void Dispose()
-    {
-        this.DisposeIcons();
-
-        GC.SuppressFinalize(this);
-    }
-
-    private static TextureWrap? GetIconTextureWrap(int id)
-    {
-        try
-        {
-            TexFile? iconTex = null;
-            var iconPath = $"ui/icon/062000/0{id}_hr1.tex";
-            try
-            {
-                if (IPC.IsPenumbraIpcEnabled)
-                {
-                    iconTex = Service.DataManager.GameData.GetFileFromDisk<TexFile>(IPC.ResolvePenumbraPath(iconPath));
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            iconTex ??= Service.DataManager.GetFile<TexFile>(iconPath);
-
-            if (iconTex != null)
-            {
-                var tex = Service.Interface.UiBuilder.LoadImageRaw(iconTex.GetRgbaImageData(), iconTex.Header.Width, iconTex.Header.Height, 4);
-                if (tex.ImGuiHandle != nint.Zero)
-                {
-                    return tex;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Service.PluginLog.Error(ex, "Icon loading failed.");
-        }
-
-        return null;
-    }
-
     private void LoadJobIcons()
     {
         if (this.iconLoadAttemptsLeft <= 0)
@@ -85,13 +37,13 @@ public class JobIconsManager : IDisposable
             return;
         }
 
-        this.jobIcons = new List<TextureWrap>();
+        this.jobIcons = new List<IDalamudTextureWrap>();
         this.isLoading = true;
         var hasFailed = false;
 
         Task.Run(() =>
         {
-            var defaultIcon = GetIconTextureWrap(62143);
+            var defaultIcon = Service.TextureProvider.GetIcon(62143);
             if (defaultIcon != null)
             {
                 this.jobIcons.Add(defaultIcon);
@@ -101,9 +53,9 @@ public class JobIconsManager : IDisposable
                 hasFailed = true;
             }
 
-            for (var i = 62101; i <= 62140 && !hasFailed; i++)
+            for (uint i = 62101; i <= 62140 && !hasFailed; i++)
             {
-                var icon = GetIconTextureWrap(i);
+                var icon = Service.TextureProvider.GetIcon(i);
                 if (icon != null)
                 {
                     this.jobIcons.Add(icon);
@@ -116,8 +68,6 @@ public class JobIconsManager : IDisposable
 
             if (hasFailed)
             {
-                this.DisposeIcons();
-
                 this.jobIcons = null;
 
                 Service.PluginLog.Error($"Job icons loading failed, {--this.iconLoadAttemptsLeft} attempt(s) left.");
@@ -125,16 +75,5 @@ public class JobIconsManager : IDisposable
 
             this.isLoading = false;
         });
-    }
-
-    private void DisposeIcons()
-    {
-        if (this.jobIcons != null)
-        {
-            foreach (var icon in this.jobIcons)
-            {
-                icon.Dispose();
-            }
-        }
     }
 }

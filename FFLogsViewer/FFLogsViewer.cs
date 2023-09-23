@@ -12,8 +12,6 @@ namespace FFLogsViewer;
 // ReSharper disable once UnusedType.Global
 public sealed class FFLogsViewer : IDalamudPlugin
 {
-    public string Name => "FFLogsViewer";
-
     private readonly WindowSystem windowSystem;
     private readonly ContextMenu contextMenu;
     private readonly FFLogsViewerProvider viewerProvider;
@@ -59,7 +57,6 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Commands.Dispose();
         Service.ContextMenu.Dispose();
         this.contextMenu.Dispose();
-        Service.GameDataManager.Dispose();
         Service.OpenWithManager.Dispose();
 
         Service.Interface.UiBuilder.OpenMainUi -= OpenMainUi;

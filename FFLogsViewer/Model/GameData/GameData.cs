@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Dalamud.Logging;
 using Newtonsoft.Json;
 
 namespace FFLogsViewer.Model.GameData;

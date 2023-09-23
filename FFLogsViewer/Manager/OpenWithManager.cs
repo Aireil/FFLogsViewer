@@ -2,7 +2,6 @@
 using System.Linq;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.GeneratedSheets;
