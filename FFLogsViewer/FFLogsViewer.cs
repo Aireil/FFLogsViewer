@@ -2,6 +2,7 @@
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using FFLogsViewer.API;
 using FFLogsViewer.GUI.Config;
 using FFLogsViewer.GUI.Main;
 using FFLogsViewer.Manager;
@@ -15,6 +16,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
 
     private readonly WindowSystem windowSystem;
     private readonly ContextMenu contextMenu;
+    private readonly FFLogsViewerProvider viewerProvider;
 
     public FFLogsViewer(
         [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
@@ -43,6 +45,8 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.ContextMenu = new DalamudContextMenu();
         this.contextMenu = new ContextMenu();
 
+        this.viewerProvider = new FFLogsViewerProvider(pluginInterface, new FFLogsViewerAPI());
+
         Service.Interface.UiBuilder.OpenMainUi += OpenMainUi;
         Service.Interface.UiBuilder.OpenConfigUi += OpenConfigUi;
         Service.Interface.UiBuilder.Draw += this.windowSystem.Draw;
@@ -50,6 +54,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
 
     public void Dispose()
     {
+        this.viewerProvider.Dispose();
         IPC.Dispose();
         Commands.Dispose();
         Service.ContextMenu.Dispose();
