@@ -1,5 +1,4 @@
 using System;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Ipc;
 
@@ -61,7 +60,7 @@ public class FFLogsViewerProvider
         }
         catch (Exception ex)
         {
-            PluginLog.LogError($"Error registering IPC provider for {LabelProviderApiVersion}:\n{ex}");
+            Service.PluginLog.Error($"Error registering IPC provider for {LabelProviderApiVersion}:\n{ex}");
         }
 
         try
@@ -71,7 +70,7 @@ public class FFLogsViewerProvider
         }
         catch (Exception ex)
         {
-            PluginLog.LogError($"Error registering IPC provider for {LabelProviderIsInitialized}:\n{ex}");
+            Service.PluginLog.Error($"Error registering IPC provider for {LabelProviderIsInitialized}:\n{ex}");
         }
 
         try
@@ -81,7 +80,7 @@ public class FFLogsViewerProvider
         }
         catch (Exception e)
         {
-            PluginLog.LogError($"Error registering IPC provider for {LabelProviderFetchCharacter}:\n{e}");
+            Service.PluginLog.Error($"Error registering IPC provider for {LabelProviderFetchCharacter}:\n{e}");
         }
 
         this.API.IsInitialized = true;

@@ -1,5 +1,4 @@
 using System;
-using Dalamud.Logging;
 
 namespace FFLogsViewer.API;
 
@@ -32,7 +31,7 @@ public class FFLogsViewerAPI : IFFLogsViewerAPI
         }
         catch (Exception ex)
         {
-            PluginLog.LogError(ex, "Failed to fetch character.");
+            Service.PluginLog.Error(ex, "Failed to fetch character.");
             return false;
         }
     }
@@ -41,7 +40,7 @@ public class FFLogsViewerAPI : IFFLogsViewerAPI
     {
         if (!this.IsInitialized)
         {
-            PluginLog.Log("FFLogsViewer API is not initialized.");
+            Service.PluginLog.Information("FFLogsViewer API is not initialized.");
             return false;
         }
 
