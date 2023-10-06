@@ -24,8 +24,6 @@ public sealed class FFLogsViewer : IDalamudPlugin
         Service.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Configuration.Initialize();
 
-        IPC.Initialize();
-
         Service.Commands = new Commands();
         Service.CharDataManager = new CharDataManager();
         Service.GameDataManager = new GameDataManager();
@@ -53,7 +51,6 @@ public sealed class FFLogsViewer : IDalamudPlugin
     public void Dispose()
     {
         this.ffLogsViewerProvider.Dispose();
-        IPC.Dispose();
         Commands.Dispose();
         Service.ContextMenu.Dispose();
         this.contextMenu.Dispose();
