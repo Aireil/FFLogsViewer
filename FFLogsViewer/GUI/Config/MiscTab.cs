@@ -46,7 +46,7 @@ public class MiscTab
                 }
 
                 var openInBrowser = Service.Configuration.OpenInBrowser;
-                if (ImGui.Checkbox(@"Open in browser##OpenInBrowser", ref openInBrowser))
+                if (ImGui.Checkbox("Open in browser##OpenInBrowser", ref openInBrowser))
                 {
                     Service.Configuration.OpenInBrowser = openInBrowser;
                     hasChanged = true;
@@ -60,7 +60,7 @@ public class MiscTab
             if (!Service.Configuration.OpenInBrowser)
             {
                 var contextMenuStreamer = Service.Configuration.ContextMenuStreamer;
-                if (ImGui.Checkbox(@"Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
+                if (ImGui.Checkbox("Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
                 {
                     Service.Configuration.ContextMenuStreamer = contextMenuStreamer;
                     hasChanged = true;

@@ -34,7 +34,7 @@ public class StyleTab
         Util.SetHoverTooltip("Default view when opening the window with /fflogs if the view has not been changed yet since last plugin restart.");
 
         var hideInCombat = Service.Configuration.HideInCombat;
-        if (ImGui.Checkbox(@"Hide in combat##HideInCombat", ref hideInCombat))
+        if (ImGui.Checkbox("Hide in combat##HideInCombat", ref hideInCombat))
         {
             Service.Configuration.HideInCombat = hideInCombat;
             hasStyleChanged = true;

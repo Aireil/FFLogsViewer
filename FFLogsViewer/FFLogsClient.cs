@@ -104,8 +104,8 @@ public class FFLogsClient
             return;
         }
 
-        const string baseAddress = @"https://www.fflogs.com/api/v2/client";
-        const string query = @"{""query"":""{worldData {expansions {name id zones {name id difficulties {name id} encounters {name id}}}}}""}";
+        const string baseAddress = "https://www.fflogs.com/api/v2/client";
+        const string query = """{"query":"{worldData {expansions {name id zones {name id difficulties {name id} encounters {name id}}}}}"}""";
 
         var content = new StringContent(query, Encoding.UTF8, "application/json");
 
@@ -131,7 +131,7 @@ public class FFLogsClient
 
         Service.HistoryManager.AddHistoryEntry(charData);
 
-        const string baseAddress = @"https://www.fflogs.com/api/v2/client";
+        const string baseAddress = "https://www.fflogs.com/api/v2/client";
 
         var query = BuildQuery(charData);
 
@@ -257,7 +257,7 @@ public class FFLogsClient
     {
         var client = new HttpClient();
 
-        const string baseAddress = @"https://www.fflogs.com/oauth/token";
+        const string baseAddress = "https://www.fflogs.com/oauth/token";
         const string grantType = "client_credentials";
 
         var form = new Dictionary<string, string>
@@ -335,8 +335,8 @@ public class FFLogsClient
             return null;
         }
 
-        const string baseAddress = @"https://www.fflogs.com/api/v2/client";
-        const string query = @"{""query"":""{rateLimitData {limitPerHour}}""}";
+        const string baseAddress = "https://www.fflogs.com/api/v2/client";
+        const string query = """{"query":"{rateLimitData {limitPerHour}}"}""";
 
         var content = new StringContent(query, Encoding.UTF8, "application/json");
 

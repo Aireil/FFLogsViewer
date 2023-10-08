@@ -22,7 +22,7 @@ public class JobIconsManager
             this.LoadJobIcons();
         }
 
-        if (this.jobIcons is { Count: 41 } && jobId is >= 0 and <= 40)
+        if (this.jobIcons is { Count: 41 } && jobId <= 40)
         {
             return this.jobIcons[(int)jobId];
         }

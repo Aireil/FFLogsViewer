@@ -239,7 +239,7 @@ public class CharData
 
         rawText = rawText.Replace("'s party for", " ");
         rawText = rawText.Replace("You join", " ");
-        rawText = Regex.Replace(rawText, "\\[.*?\\]", " ");
+        rawText = Regex.Replace(rawText, @"\[.*?\]", " ");
         rawText = Regex.Replace(rawText, "[^A-Za-z '-]", " ");
         rawText = string.Concat(rawText.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
         rawText = Regex.Replace(rawText, @"\s+", " ");
