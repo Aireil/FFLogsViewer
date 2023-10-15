@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.5.0:\n   API 9 update.\n   Update default layout to add new trial and remove the swapping from Abyssos.\n   If you wish to keep the swapping, you can edit your layout in the config, if the way to setup swapping is not clear, feel free to open an issue on GitHub."
+    "Changelog": "- 2.1.5.1:\n   Attempt to fix party view shaking under certain circumstances.\n   Remove Penumbra IPC (no longer needed).\n- 2.1.5.0:\n   API 9 update.\n   Update default layout to add new trial and remove the swapping from Abyssos.\n   If you wish to keep the swapping, you can edit your layout in the config, if the way to setup swapping is not clear, feel free to open an issue on GitHub."
 }
