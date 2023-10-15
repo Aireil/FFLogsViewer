@@ -311,7 +311,7 @@ public class Table
 
                 ImGui.TableNextColumn();
 
-                var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
                 Util.CenterCursor(iconSize);
                 var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
                 if (icon != null)
@@ -550,7 +550,7 @@ public class Table
                 }
 
                 ImGui.TableNextColumn();
-                var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
                 var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
                 var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
                 if (icon != null)

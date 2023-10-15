@@ -211,7 +211,7 @@ public class HeaderBar
                     ImGui.TableNextColumn();
 
                     var partyMember = partyList[i];
-                    var iconSize = 25 * ImGuiHelpers.GlobalScale;
+                    var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
                     var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
 
                     if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))
