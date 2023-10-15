@@ -9,13 +9,8 @@ namespace FFLogsViewer.GUI.Config;
 
 public class LayoutTab
 {
-    private readonly PopupEntry popupEntry;
+    private readonly PopupEntry popupEntry = new();
     private bool shouldPopupOpen;
-
-    public LayoutTab()
-    {
-        this.popupEntry = new PopupEntry();
-    }
 
     public void Draw()
     {
