@@ -242,16 +242,9 @@ public class FFLogsClient
 
             if (Service.MainWindow.Job.Name != "All jobs")
             {
-                string? specName;
-                if (Service.MainWindow.Job.Name == "Current job")
-                {
-                    specName = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.JobId)?.GetSpecName();
-                }
-                else
-                {
-                    specName = Service.MainWindow.Job.GetSpecName();
-                    charData.LoadedJobId = Service.MainWindow.Job.Id;
-                }
+                var specName = Service.MainWindow.Job.Name == "Current job"
+                                       ? GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.JobId)?.GetSpecName()
+                                       : Service.MainWindow.Job.GetSpecName();
 
                 if (specName != null)
                 {

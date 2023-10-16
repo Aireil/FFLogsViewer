@@ -215,9 +215,15 @@ public class CharData
             this.LoadedFirstName = this.FirstName;
             this.LoadedLastName = this.LastName;
             this.LoadedWorldName = this.WorldName;
-            if (Service.MainWindow.Job.Name == "Current job")
+            if (Service.MainWindow.Job.Name != "All jobs")
             {
-                this.LoadedJobId = this.JobId; // if any other, has been set from FFLogsClient
+                this.LoadedJobId = Service.MainWindow.Job.Name == "Current job"
+                                       ? this.JobId
+                                       : Service.MainWindow.Job.Id;
+            }
+            else
+            {
+                this.LoadedJobId = 0;
             }
         }).ContinueWith(t =>
         {
