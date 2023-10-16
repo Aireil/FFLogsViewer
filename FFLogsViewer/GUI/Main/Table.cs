@@ -6,6 +6,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
+using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
 
@@ -325,10 +326,19 @@ public class Table
 
                 if (charData != null)
                 {
+                    var jobColor = Service.MainWindow.Job.Color;
+                    if (Service.MainWindow.Job.Name != "All jobs")
+                    {
+                        jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.LoadedJobId)?.Color ?? jobColor;
+                    }
+
+                    ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
                     if (Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData))
                     {
                         Util.OpenLink(charData);
                     }
+
+                    ImGui.PopStyleColor();
 
                     if (charData.CharError == null)
                     {
@@ -567,10 +577,19 @@ public class Table
                 ImGui.SetCursorPosY(middleCursorPosY);
                 if (charData != null)
                 {
+                    var jobColor = Service.MainWindow.Job.Color;
+                    if (Service.MainWindow.Job.Name != "All jobs")
+                    {
+                        jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.LoadedJobId)?.Color ?? jobColor;
+                    }
+
+                    ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
                     if (Util.SelectableWithError($"{charData.FirstName} {charData.LastName}##Selectable{i}", charData))
                     {
                         Util.OpenLink(charData);
                     }
+
+                    ImGui.PopStyleColor();
 
                     if (charData.CharError == null)
                     {

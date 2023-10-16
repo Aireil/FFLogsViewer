@@ -13,7 +13,25 @@ public class StatsTab
     public static void Draw()
     {
         var hasChanged = false;
-        ImGui.SetNextItemWidth(GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        var comboSize = GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale);
+        ImGui.SetNextItemWidth(comboSize);
+        if (ImGui.BeginCombo("Default Job", GameDataManager.GetDefaultJob().Name))
+        {
+            for (var i = 0; i < 2; i++)
+            {
+                if (ImGui.Selectable(GameDataManager.Jobs[i].Name))
+                {
+                    Service.Configuration.IsAllJobsDefault = i == 0;
+                    hasChanged = true;
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
+        Util.SetHoverTooltip("Can be temporarily overridden in the main window");
+
+        ImGui.SetNextItemWidth(comboSize);
         if (ImGui.BeginCombo("Default Metric", Service.Configuration.Metric.Name))
         {
             foreach (var metric in GameDataManager.AvailableMetrics)
@@ -30,7 +48,7 @@ public class StatsTab
 
         Util.SetHoverTooltip("Can be temporarily overridden in the main window");
 
-        ImGui.SetNextItemWidth(GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale));
+        ImGui.SetNextItemWidth(comboSize);
         if (ImGui.BeginCombo("Default Timeframe", Service.Configuration.IsHistoricalDefault ? "Historical %" : "Today %"))
         {
             if (ImGui.Selectable("Historical %"))

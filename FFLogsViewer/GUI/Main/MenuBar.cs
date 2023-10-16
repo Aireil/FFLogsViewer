@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
@@ -89,10 +90,16 @@ public class MenuBar
 
             var hasTmpSettingChanged = false;
 
-            ImGui.PushStyleColor(ImGuiCol.Text, Service.MainWindow.Job.Color);
+            var jobColor = Service.MainWindow.Job.Color;
+            if (!Service.MainWindow.IsPartyView && Service.MainWindow.Job.Name == "Current job")
+            {
+                jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == Service.CharDataManager.DisplayedChar.LoadedJobId)?.Color ?? jobColor;
+            }
+
+            ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
             if (ImGui.BeginMenu(Service.MainWindow.Job.Abbreviation))
             {
-                foreach (var job in Service.GameDataManager.Jobs)
+                foreach (var job in GameDataManager.Jobs)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, job.Color);
                     if (ImGui.MenuItem(job.Name))

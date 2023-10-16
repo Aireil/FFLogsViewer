@@ -24,6 +24,7 @@ public class Configuration : IPluginConfiguration
     public bool IsHistoricalDefault { get; set; } = true;
     public bool IsEncounterLayout { get; set; } = true;
     public bool IsCachingEnabled { get; set; } = true;
+    public bool IsAllJobsDefault { get; set; } = true;
     public int NbOfDecimalDigits { get; set; }
     public StatType? DefaultStatTypePartyView { get; set; }
     public LayoutEntry? DefaultEncounterPartyView { get; set; }

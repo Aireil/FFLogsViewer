@@ -24,7 +24,8 @@ public class CharData
     public string LoadedFirstName = string.Empty;
     public string LoadedLastName = string.Empty;
     public string LoadedWorldName = string.Empty;
-    public uint JobId; // only used in party view
+    public uint JobId;
+    public uint LoadedJobId;
     public volatile bool IsDataLoading;
     public volatile bool IsDataReady;
 
@@ -134,6 +135,7 @@ public class CharData
         this.RegionName = regionName;
 
         this.IsDataLoading = true;
+        this.SetJobId();
         this.ResetData();
         Task.Run(async () =>
         {
@@ -213,6 +215,10 @@ public class CharData
             this.LoadedFirstName = this.FirstName;
             this.LoadedLastName = this.LastName;
             this.LoadedWorldName = this.WorldName;
+            if (Service.MainWindow.Job.Name == "Current job")
+            {
+                this.LoadedJobId = this.JobId; // if any other, has been set from FFLogsClient
+            }
         }).ContinueWith(t =>
         {
             Service.MainWindow.ResetSize();
@@ -345,6 +351,30 @@ public class CharData
         this.LoadedMetric = null;
     }
 
+    private void SetJobId()
+    {
+        if (Service.MainWindow.IsPartyView)
+        {
+            return; // job id was just set from the team list
+        }
+
+        var fullName = $"{this.FirstName} {this.LastName}";
+        for (var i = 0; i < 200; i += 2)
+        {
+            var obj = Service.ObjectTable[i];
+            if (obj != null)
+            {
+                if (obj is PlayerCharacter playerCharacter
+                    && playerCharacter.Name.TextValue == fullName
+                    && playerCharacter.HomeWorld.GameData?.Name.RawString == this.WorldName)
+                {
+                    this.JobId = playerCharacter.ClassJob.Id;
+                    return;
+                }
+            }
+        }
+    }
+
     private void ParseZone(dynamic zone)
     {
         if (zone.rankings == null)
@@ -404,9 +434,9 @@ public class CharData
                 encounter.Fastest = ranking.fastestKill;
                 encounter.BestAmount = ranking.bestAmount;
                 var jobName = Regex.Replace(ranking.spec.ToString(), "([a-z])([A-Z])", "$1 $2");
-                encounter.Job = Service.GameDataManager.Jobs.FirstOrDefault(job => job.Name == jobName);
+                encounter.Job = GameDataManager.Jobs.FirstOrDefault(job => job.Name == jobName);
                 var bestJobName = Regex.Replace(ranking.bestSpec.ToString(), "([a-z])([A-Z])", "$1 $2");
-                encounter.BestJob = Service.GameDataManager.Jobs.FirstOrDefault(job => job.Name == bestJobName);
+                encounter.BestJob = GameDataManager.Jobs.FirstOrDefault(job => job.Name == bestJobName);
                 var allStars = ranking.allStars;
                 if (allStars != null)
                 {

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -240,7 +242,21 @@ public class FFLogsClient
 
             if (Service.MainWindow.Job.Name != "All jobs")
             {
-                query.Append($", specName: \\\"{Service.MainWindow.Job.Name.Replace(" ", string.Empty)}\\\"");
+                string? specName;
+                if (Service.MainWindow.Job.Name == "Current job")
+                {
+                    specName = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.JobId)?.GetSpecName();
+                }
+                else
+                {
+                    specName = Service.MainWindow.Job.GetSpecName();
+                    charData.LoadedJobId = Service.MainWindow.Job.Id;
+                }
+
+                if (specName != null)
+                {
+                    query.Append($", specName: \\\"{specName}\\\"");
+                }
             }
 
             query.Append($", timeframe: {(Service.MainWindow.IsTimeframeHistorical() ? "Historical" : "Today")}");
