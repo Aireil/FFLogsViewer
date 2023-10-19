@@ -364,6 +364,7 @@ public class CharData
             return; // job id was just set from the team list
         }
 
+        // search in the object table first as it updates faster and is always accurate
         var fullName = $"{this.FirstName} {this.LastName}";
         for (var i = 0; i < 200; i += 2)
         {
@@ -379,6 +380,19 @@ public class CharData
                 }
             }
         }
+
+        // if not in object table, search in the team list (can give 0 if normal party member in another zone)
+        Service.TeamManager.UpdateTeamList();
+        var member = Service.TeamManager.TeamList.FirstOrDefault(member => member.FirstName == this.FirstName
+                                                              && member.LastName == this.LastName
+                                                              && member.World == this.WorldName);
+        if (member != null)
+        {
+            this.JobId = member.JobId;
+            return;
+        }
+
+        this.JobId = 0; // avoid stale job id if the current one is not retrievable
     }
 
     private void ParseZone(dynamic zone)
