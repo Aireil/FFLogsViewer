@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.5.2:\n   Add current job feature to the job selection (default for all or current can be set in Configuration -> Stats).\n- 2.1.5.1:\n   Attempt to fix party view shaking under certain circumstances.\n   Remove Penumbra IPC (no longer needed)."
+    "Changelog": "- 2.1.5.3:\n   Fix an issue with job detection for current job in single view.\n- 2.1.5.2:\n   Add current job feature to the job selection (default for all or current can be set in Configuration -> Stats).\n- 2.1.5.1:\n   Attempt to fix party view shaking under certain circumstances.\n   Remove Penumbra IPC (no longer needed)."
 }
