@@ -53,7 +53,7 @@ public class Util
 
     public static void IncList<T>(List<T> list, int index)
     {
-        if (list == null) throw new ArgumentNullException(nameof(list));
+        ArgumentNullException.ThrowIfNull(list);
         var indexA = Mod(index, list.Count);
         var indexB = Mod(index - 1, list.Count);
         (list[indexA], list[indexB]) = (list[indexB], list[indexA]);

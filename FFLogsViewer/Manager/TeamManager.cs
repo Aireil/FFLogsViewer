@@ -10,11 +10,11 @@ namespace FFLogsViewer.Manager;
 
 public class TeamManager
 {
-    public List<TeamMember> TeamList = new();
+    public List<TeamMember> TeamList = [];
 
     public unsafe void UpdateTeamList()
     {
-        this.TeamList = new List<TeamMember>();
+        this.TeamList = [];
 
         var groupManager = GroupManager.Instance();
         if (groupManager->MemberCount > 0)

@@ -11,7 +11,7 @@ namespace FFLogsViewer.Manager;
 public class CharDataManager
 {
     public CharData DisplayedChar = new();
-    public List<CharData> PartyMembers = new();
+    public List<CharData> PartyMembers = [];
     public string[] ValidWorlds;
 
     public void UpdatePartyMembers(bool onlyFetchNewMembers = false)

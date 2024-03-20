@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
@@ -217,7 +216,7 @@ public class LayoutTab
             ImGui.Separator();
             if (ImGui.Button("Yes##DeleteLayout"))
             {
-                Service.Configuration.Layout = new List<LayoutEntry>();
+                Service.Configuration.Layout = [];
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSize();

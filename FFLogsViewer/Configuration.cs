@@ -29,8 +29,8 @@ public class Configuration : IPluginConfiguration
     public int NbOfDecimalDigits { get; set; }
     public StatType? DefaultStatTypePartyView { get; set; }
     public LayoutEntry? DefaultEncounterPartyView { get; set; }
-    public List<LayoutEntry> Layout { get; set; } = new();
-    public List<Stat> Stats { get; set; } = new();
+    public List<LayoutEntry> Layout { get; set; } = [];
+    public List<Stat> Stats { get; set; } = [];
     public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
     public Style Style { get; set; } = new();
     public OpenWith OpenWith { get; set; } = new();
@@ -87,41 +87,41 @@ public class Configuration : IPluginConfiguration
 
     private static List<LayoutEntry> GetDefaultLayout()
     {
-        return new List<LayoutEntry>
-        {
-            new() { Type = LayoutEntryType.Header, Alias = "Anabaseios", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pallas Athena", EncounterId = 92, Difficulty = "Savage", DifficultyId = 101 },
-            new() { Type = LayoutEntryType.Header, Alias = "Ultimates (EW)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Unending Coil of Bahamut", EncounterId = 1060, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Weapon's Refrain", EncounterId = 1061, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Epic of Alexander", EncounterId = 1062, Difficulty = "Normal", DifficultyId = 100, Alias = "TEA" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Dragonsong's Reprise", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "The Omega Protocol", ZoneId = 53, Encounter = "The Omega Protocol", EncounterId = 1068, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP" },
-            new() { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials II (Extreme)", ZoneId = 50, Encounter = "Rubicante", EncounterId = 1067, Difficulty = "Normal", DifficultyId = 100 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials III (Extreme)", ZoneId = 55, Encounter = "Golbez", EncounterId = 1069, Difficulty = "Normal", DifficultyId = 100 },
-            new() { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials III (Extreme)", ZoneId = 55, Encounter = "Zeromus", EncounterId = 1070, Difficulty = "Normal", DifficultyId = 100 },
-        };
+        return
+        [
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Anabaseios", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pallas Athena", EncounterId = 92, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Ultimates (EW)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Unending Coil of Bahamut", EncounterId = 1060, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Weapon's Refrain", EncounterId = 1061, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Epic of Alexander", EncounterId = 1062, Difficulty = "Normal", DifficultyId = 100, Alias = "TEA" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Dragonsong's Reprise", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "The Omega Protocol", ZoneId = 53, Encounter = "The Omega Protocol", EncounterId = 1068, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP" },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials II (Extreme)", ZoneId = 50, Encounter = "Rubicante", EncounterId = 1067, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials III (Extreme)", ZoneId = 55, Encounter = "Golbez", EncounterId = 1069, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Trials III (Extreme)", ZoneId = 55, Encounter = "Zeromus", EncounterId = 1070, Difficulty = "Normal", DifficultyId = 100 },
+        ];
     }
 
     private static List<Stat> GetDefaultStats()
     {
-        return new List<Stat>
-        {
-            new() { Name = "Best", Type = StatType.Best, IsEnabled = true },
-            new() { Alias = "Med.", Name = "Median", Type = StatType.Median, IsEnabled = true },
-            new() { Name = "Kills", Type = StatType.Kills, IsEnabled = true },
-            new() { Name = "Fastest", Type = StatType.Fastest, IsEnabled = false },
-            new() { Alias = "/metric/", Name = "Best Metric", Type = StatType.BestAmount, IsEnabled = false },
-            new() { Name = "Job", Type = StatType.Job, IsEnabled = true },
-            new() { Name = "Best Job", Type = StatType.BestJob, IsEnabled = false },
-            new() { Alias = "ASP", Name = "All Stars Points", Type = StatType.AllStarsPoints, IsEnabled = false },
-            new() { Alias = "ASP R", Name = "All Stars Rank", Type = StatType.AllStarsRank, IsEnabled = false },
-            new() { Alias = "ASP R%", Name = "All Stars Rank %", Type = StatType.AllStarsRankPercent, IsEnabled = false },
-        };
+        return
+        [
+            new Stat { Name = "Best", Type = StatType.Best, IsEnabled = true },
+            new Stat { Alias = "Med.", Name = "Median", Type = StatType.Median, IsEnabled = true },
+            new Stat { Name = "Kills", Type = StatType.Kills, IsEnabled = true },
+            new Stat { Name = "Fastest", Type = StatType.Fastest, IsEnabled = false },
+            new Stat { Alias = "/metric/", Name = "Best Metric", Type = StatType.BestAmount, IsEnabled = false },
+            new Stat { Name = "Job", Type = StatType.Job, IsEnabled = true },
+            new Stat { Name = "Best Job", Type = StatType.BestJob, IsEnabled = false },
+            new Stat { Alias = "ASP", Name = "All Stars Points", Type = StatType.AllStarsPoints, IsEnabled = false },
+            new Stat { Alias = "ASP R", Name = "All Stars Rank", Type = StatType.AllStarsRank, IsEnabled = false },
+            new Stat { Alias = "ASP R%", Name = "All Stars Rank %", Type = StatType.AllStarsRankPercent, IsEnabled = false },
+        ];
     }
 }

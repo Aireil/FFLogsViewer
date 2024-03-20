@@ -9,7 +9,7 @@ namespace FFLogsViewer.Manager;
 
 public class HistoryManager
 {
-    public List<HistoryEntry> History { get; set; } = new();
+    public List<HistoryEntry> History { get; set; } = [];
     private readonly object historyLock = new();
 
     public HistoryManager()
@@ -57,7 +57,7 @@ public class HistoryManager
     {
         if (File.Exists(GetHistoryPath()))
         {
-            this.History = JsonConvert.DeserializeObject<List<HistoryEntry>>(File.ReadAllText(GetHistoryPath())) ?? new List<HistoryEntry>();
+            this.History = JsonConvert.DeserializeObject<List<HistoryEntry>>(File.ReadAllText(GetHistoryPath())) ?? [];
         }
     }
 

@@ -42,7 +42,7 @@ public class CharData
         }
     }
 
-    public List<Encounter> Encounters = new();
+    public List<Encounter> Encounters = [];
 
     public CharData(string? firstName = null, string? lastName = null, string? worldName = null, uint? jobId = null)
     {
@@ -200,7 +200,7 @@ public class CharData
                 return;
             }
 
-            this.Encounters = new List<Encounter>();
+            this.Encounters = [];
 
             var properties = character.Properties();
             foreach (var prop in properties)
@@ -256,7 +256,7 @@ public class CharData
         rawText = string.Concat(rawText.Select(x => char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
         rawText = Regex.Replace(rawText, @"\s+", " ");
 
-        var words = rawText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+        var words = rawText.Split([" "], StringSplitOptions.RemoveEmptyEntries);
 
         var worldIndex = -1;
         if (words.Length > 2)
@@ -352,7 +352,7 @@ public class CharData
 
     public void ResetData()
     {
-        this.Encounters = new List<Encounter>();
+        this.Encounters = [];
         this.IsDataReady = false;
         this.LoadedMetric = null;
     }
