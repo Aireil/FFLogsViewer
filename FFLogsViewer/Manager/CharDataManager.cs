@@ -118,7 +118,7 @@ public class CharDataManager
         var charData = new CharData();
         if (charData.ParseTextForChar(name))
         {
-            Util.OpenLink(charData);
+            Util.OpenFFLogsLink(charData);
         }
     }
 

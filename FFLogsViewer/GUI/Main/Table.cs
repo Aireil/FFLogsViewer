@@ -333,10 +333,8 @@ public class Table
                     }
 
                     ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
-                    if (Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData))
-                    {
-                        Util.OpenLink(charData);
-                    }
+                    Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData);
+                    Util.LinkOpenOrPopup(charData);
 
                     ImGui.PopStyleColor();
 
@@ -584,10 +582,8 @@ public class Table
                     }
 
                     ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
-                    if (Util.SelectableWithError($"{charData.FirstName} {charData.LastName}##Selectable{i}", charData))
-                    {
-                        Util.OpenLink(charData);
-                    }
+                    Util.SelectableWithError($"{charData.FirstName} {charData.LastName}##Selectable{i}", charData);
+                    Util.LinkOpenOrPopup(charData);
 
                     ImGui.PopStyleColor();
 

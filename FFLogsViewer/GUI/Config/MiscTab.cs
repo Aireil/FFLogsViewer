@@ -74,6 +74,13 @@ public class MiscTab
             ImGui.Unindent();
         }
 
+        var showTomestoneOption = Service.Configuration.ShowTomestoneOption;
+        if (ImGui.Checkbox("Show Tomestone option when opening a link", ref showTomestoneOption))
+        {
+            Service.Configuration.ShowTomestoneOption = showTomestoneOption;
+            hasChanged = true;
+        }
+
         var isCachingEnabled = Service.Configuration.IsCachingEnabled;
         if (ImGui.Checkbox("Enable caching", ref isCachingEnabled))
         {

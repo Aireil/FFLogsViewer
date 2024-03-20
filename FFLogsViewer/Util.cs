@@ -120,26 +120,22 @@ public class Util
         }
     }
 
-    public static bool CenterSelectableError(CharData charData, string hover)
+    public static void CenterSelectableError(CharData charData, string hover)
     {
-        var ret = CenterSelectable(GetErrorMessage(charData), GetErrorColor(charData));
+        CenterSelectable(GetErrorMessage(charData), GetErrorColor(charData));
         if (charData.CharError != null)
         {
             SetHoverTooltip(hover);
         }
-
-        return ret;
     }
 
-    public static bool CenterSelectableWithError(string text, CharData charData)
+    public static void CenterSelectableWithError(string text, CharData charData)
     {
-        var ret = CenterSelectable(text, charData.CharError != null ? GetErrorColor(charData) : null);
+        CenterSelectable(text, charData.CharError != null ? GetErrorColor(charData) : null);
         if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));
         }
-
-        return ret;
     }
 
     public static bool CenterSelectable(string text, Vector4? color = null)
@@ -154,20 +150,18 @@ public class Util
         return ret;
     }
 
-    public static bool SelectableWithError(string text, CharData charData)
+    public static void SelectableWithError(string text, CharData charData)
     {
         var color = charData.CharError != null
                         ? GetErrorColor(charData)
                         : ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
         ImGui.PushStyleColor(ImGuiCol.Text, color);
-        var ret = ImGui.Selectable(text);
+        ImGui.Selectable(text);
         ImGui.PopStyleColor();
         if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));
         }
-
-        return ret;
     }
 
     public static void SetHoverTooltip(string tooltip)
@@ -198,14 +192,49 @@ public class Util
         return (Math.Truncate(magnitude * value.Value) / magnitude).ToString("F" + nbOfDecimalDigits);
     }
 
-    public static void OpenLink(CharData charData)
+    public static void OpenFFLogsLink(CharData charData)
     {
         OpenLink($"https://fflogs.com/character/{CharDataManager.GetRegionName(charData.WorldName)}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
+    }
+
+    public static void OpenTomestoneLink(CharData charData)
+    {
+        OpenLink($"https://tomestone.gg/character-name/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
     }
 
     public static void OpenLink(string link)
     {
         Dalamud.Utility.Util.OpenLink(link);
+    }
+
+    public static void LinkOpenOrPopup(CharData charData)
+    {
+        if (!ImGui.BeginPopupContextItem($"##LinkPopup{charData.FirstName}{charData.LastName}{charData.WorldName}{charData.GetHashCode()}", ImGuiPopupFlags.MouseButtonLeft))
+        {
+            return;
+        }
+
+        if (!Service.Configuration.ShowTomestoneOption)
+        {
+            OpenFFLogsLink(charData);
+            ImGui.CloseCurrentPopup();
+        }
+
+        if (ImGui.Selectable("Open FF Logs"))
+        {
+            OpenFFLogsLink(charData);
+        }
+
+        if (ImGui.Selectable("Open Tomestone"))
+        {
+            OpenTomestoneLink(charData);
+        }
+
+        DrawHelp("Tomestone is a website developed by the creator of FF Logs.\n" +
+                 "In the context of this plugin, it can be used to see the current prog point/activity of a player based on logs.\n" +
+                 "If you only want to open to FF Logs, you can revert to the old behavior in the Misc settings tab");
+
+        ImGui.EndPopup();
     }
 
     public static unsafe SeString ReadSeString(byte* ptr)
