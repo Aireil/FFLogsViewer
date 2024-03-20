@@ -18,7 +18,7 @@ env:
 
 jobs:
   build:
-    if: "contains(toJSON(github.event.commits.*.message), 'build:')"
+    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(stg):')}}
     runs-on: windows-2022
     steps:
     - name: Checkout
@@ -28,9 +28,15 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
     - name: Download Dalamud
+      if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') }}
       run: |
         Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
-        Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"   
+        Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
+    - name: Download Dalamud Staging
+      if: ${{ contains(toJSON(github.event.commits.*.message), 'build(stg):') }}
+      run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
     - name: Build
       run: |
         dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
@@ -46,7 +52,7 @@ jobs:
 
   deploy:
     needs: build
-    if: "contains(toJSON(github.event.commits.*.message), 'build:')"
+    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(stg):')}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
