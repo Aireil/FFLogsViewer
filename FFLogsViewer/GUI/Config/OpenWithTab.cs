@@ -47,10 +47,7 @@ public class OpenWithTab
             ImGui.EndCombo();
         }
 
-        if (Service.Configuration.OpenWith.Key == VirtualKey.NO_KEY)
-        {
-            ImGui.BeginDisabled();
-        }
+        ImGui.BeginDisabled(Service.Configuration.OpenWith.Key == VirtualKey.NO_KEY);
 
         if (ImGui.RadioButton("Disable when the key is held", Service.Configuration.OpenWith.IsDisabledWhenKeyHeld))
         {
@@ -64,10 +61,7 @@ public class OpenWithTab
             hasChanged = true;
         }
 
-        if (Service.Configuration.OpenWith.Key == VirtualKey.NO_KEY)
-        {
-            ImGui.EndDisabled();
-        }
+        ImGui.EndDisabled();
 
         ImGui.Separator();
 

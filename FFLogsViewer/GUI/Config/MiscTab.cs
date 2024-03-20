@@ -34,58 +34,72 @@ public class MiscTab
 
         Util.DrawHelp("Add a button to search characters in most context menus.");
 
-        if (Service.Configuration.ContextMenu)
+        ImGui.BeginDisabled(!Service.Configuration.ContextMenu);
+
+        ImGui.Indent();
+
+        ImGui.BeginDisabled(Service.Configuration.ContextMenuStreamer);
+
+        var contextMenuButtonName = Service.Configuration.ContextMenuButtonName;
+        if (ImGui.InputText("Button name##ContextMenuButtonName", ref contextMenuButtonName, 50))
         {
-            ImGui.Indent();
-
-            if (!Service.Configuration.ContextMenuStreamer)
-            {
-                var contextMenuButtonName = Service.Configuration.ContextMenuButtonName;
-                if (ImGui.InputText("Button name##ContextMenuButtonName", ref contextMenuButtonName, 50))
-                {
-                    Service.Configuration.ContextMenuButtonName = contextMenuButtonName;
-                    hasChanged = true;
-                }
-
-                var openInBrowser = Service.Configuration.OpenInBrowser;
-                if (ImGui.Checkbox("Open in browser##OpenInBrowser", ref openInBrowser))
-                {
-                    Service.Configuration.OpenInBrowser = openInBrowser;
-                    hasChanged = true;
-                }
-
-                Util.DrawHelp("The button in context menus opens" +
-                                     "\nFF Logs in your default browser instead" +
-                                     "\nof opening the plugin window.");
-            }
-
-            if (!Service.Configuration.OpenInBrowser)
-            {
-                var contextMenuStreamer = Service.Configuration.ContextMenuStreamer;
-                if (ImGui.Checkbox("Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
-                {
-                    Service.Configuration.ContextMenuStreamer = contextMenuStreamer;
-                    hasChanged = true;
-                }
-
-                Util.DrawHelp("When the main window is open, opening a context menu" +
-                                     "\nwill automatically search for the selected player." +
-                                     "\nThis mode does not add a button to the context menu.");
-
-                var contextMenuPartyView = Service.Configuration.ContextMenuPartyView;
-                if (ImGui.Checkbox("Open the party view when appropriate##ContextMenuPartyView", ref contextMenuPartyView))
-                {
-                    Service.Configuration.ContextMenuPartyView = contextMenuPartyView;
-                    hasChanged = true;
-                }
-
-                Util.DrawHelp("If the context menu button is used from a party list-related window," +
-                              "\nopen the party view instead of the single view." +
-                              "\nThis will still load the selected player's data in the single view.");
-            }
-
-            ImGui.Unindent();
+            Service.Configuration.ContextMenuButtonName = contextMenuButtonName;
+            hasChanged = true;
         }
+
+        var openInBrowser = Service.Configuration.OpenInBrowser;
+        if (ImGui.Checkbox("Open in browser##OpenInBrowser", ref openInBrowser))
+        {
+            Service.Configuration.OpenInBrowser = openInBrowser;
+            hasChanged = true;
+        }
+
+        Util.DrawHelp("The button in context menus opens" +
+                             "\nFF Logs in your default browser instead" +
+                             "\nof opening the plugin window.");
+
+        ImGui.EndDisabled();
+
+        ImGui.BeginDisabled(Service.Configuration.OpenInBrowser);
+
+        var contextMenuStreamer = Service.Configuration.ContextMenuStreamer;
+        if (ImGui.Checkbox("Streamer mode##ContextMenuStreamer", ref contextMenuStreamer))
+        {
+            Service.Configuration.ContextMenuStreamer = contextMenuStreamer;
+            hasChanged = true;
+        }
+
+        Util.DrawHelp("When the main window is open, opening a context menu" +
+                             "\nwill automatically search for the selected player." +
+                             "\nThis mode does not add a button to the context menu.");
+
+        ImGui.BeginDisabled(Service.Configuration.ContextMenuAlwaysPartyView);
+
+        var contextMenuPartyView = Service.Configuration.ContextMenuPartyView;
+        if (ImGui.Checkbox("Open the party view when appropriate##ContextMenuPartyView", ref contextMenuPartyView))
+        {
+            Service.Configuration.ContextMenuPartyView = contextMenuPartyView;
+            hasChanged = true;
+        }
+
+        Util.DrawHelp("If the context menu button is used from a party list-related window," +
+                      "\nopen the party view instead of the single view." +
+                      "\nThis will still load the selected player's data in the single view.");
+
+        ImGui.EndDisabled();
+
+        var contextMenuAlwaysPartyView = Service.Configuration.ContextMenuAlwaysPartyView;
+        if (ImGui.Checkbox("Always open the party view##ContextMenuAlwaysPartyView", ref contextMenuAlwaysPartyView))
+        {
+            Service.Configuration.ContextMenuAlwaysPartyView = contextMenuAlwaysPartyView;
+            hasChanged = true;
+        }
+
+        ImGui.EndDisabled();
+
+        ImGui.Unindent();
+
+        ImGui.EndDisabled();
 
         var showTomestoneOption = Service.Configuration.ShowTomestoneOption;
         if (ImGui.Checkbox("Show Tomestone option when opening a link", ref showTomestoneOption))

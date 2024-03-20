@@ -17,6 +17,7 @@ public class Configuration : IPluginConfiguration
     public bool ContextMenu { get; set; } = true;
     public bool ContextMenuStreamer { get; set; }
     public bool ContextMenuPartyView { get; set; } = true;
+    public bool ContextMenuAlwaysPartyView { get; set; }
     public bool OpenInBrowser { get; set; }
     public bool ShowTomestoneOption { get; set; } = true;
     public string ContextMenuButtonName { get; set; } = "Search FF Logs";

@@ -82,7 +82,8 @@ public class ContextMenu
         else
         {
             Service.MainWindow.Open();
-            if (Service.Configuration.ContextMenuPartyView && IsPartyAddon(menuArgs.AddonName))
+            if (Service.Configuration.ContextMenuAlwaysPartyView
+                || (Service.Configuration.ContextMenuPartyView && IsPartyAddon(menuArgs.AddonName)))
             {
                 Service.MainWindow.IsPartyView = true;
                 Service.CharDataManager.UpdatePartyMembers();
