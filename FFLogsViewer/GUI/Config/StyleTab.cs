@@ -31,7 +31,7 @@ public class StyleTab
             ImGui.EndCombo();
         }
 
-        Util.SetHoverTooltip("Default view when opening the window with /fflogs if the view has not been changed yet since last plugin restart.");
+        Util.DrawHelp("Default view when opening the window with /fflogs if the view has not been changed yet since last plugin restart.");
 
         var hideInCombat = Service.Configuration.HideInCombat;
         if (ImGui.Checkbox("Hide in combat##HideInCombat", ref hideInCombat))

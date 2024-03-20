@@ -32,11 +32,12 @@ public class MiscTab
             hasChanged = true;
         }
 
-        Util.SetHoverTooltip("Add a button to search characters in most context menus.");
+        Util.DrawHelp("Add a button to search characters in most context menus.");
 
         if (Service.Configuration.ContextMenu)
         {
             ImGui.Indent();
+
             if (!Service.Configuration.ContextMenuStreamer)
             {
                 var contextMenuButtonName = Service.Configuration.ContextMenuButtonName;
@@ -53,7 +54,7 @@ public class MiscTab
                     hasChanged = true;
                 }
 
-                Util.SetHoverTooltip("The button in context menus opens" +
+                Util.DrawHelp("The button in context menus opens" +
                                      "\nFF Logs in your default browser instead" +
                                      "\nof opening the plugin window.");
             }
@@ -67,9 +68,19 @@ public class MiscTab
                     hasChanged = true;
                 }
 
-                Util.SetHoverTooltip("When the main window is open, opening a context menu" +
+                Util.DrawHelp("When the main window is open, opening a context menu" +
                                      "\nwill automatically search for the selected player." +
                                      "\nThis mode does not add a button to the context menu.");
+
+                var contextMenuPartyView = Service.Configuration.ContextMenuPartyView;
+                if (ImGui.Checkbox("Open the party view when appropriate##ContextMenuPartyView", ref contextMenuPartyView))
+                {
+                    Service.Configuration.ContextMenuPartyView = contextMenuPartyView;
+                    hasChanged = true;
+                }
+
+                Util.DrawHelp("If the context menu button is used from a party list-related window," +
+                              "\nopen the party view instead of the single view.");
             }
 
             ImGui.Unindent();

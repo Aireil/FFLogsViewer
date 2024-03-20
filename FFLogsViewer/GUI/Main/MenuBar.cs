@@ -69,6 +69,11 @@ public class MenuBar
                     {
                         Service.CharDataManager.UpdatePartyMembers();
                     }
+                    else if (Service.CharDataManager.DisplayedChar.IsInfoSet()
+                             && !Service.CharDataManager.DisplayedChar.IsDataReady)
+                    {
+                        Service.CharDataManager.DisplayedChar.FetchLogs();
+                    }
 
                     Service.MainWindow.ResetSize();
                 }

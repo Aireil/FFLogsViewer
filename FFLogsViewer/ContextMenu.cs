@@ -82,7 +82,16 @@ public class ContextMenu
         else
         {
             Service.MainWindow.Open();
-            Service.CharDataManager.DisplayedChar.FetchCharacter(playerName);
+            if (Service.Configuration.ContextMenuPartyView && IsPartyAddon(menuArgs.AddonName))
+            {
+                Service.MainWindow.IsPartyView = true;
+                Service.CharDataManager.UpdatePartyMembers();
+                Service.CharDataManager.DisplayedChar.ParseTextForChar(playerName);
+            }
+            else
+            {
+                Service.CharDataManager.DisplayedChar.FetchCharacter(playerName);
+            }
         }
     }
 
@@ -132,5 +141,15 @@ public class ContextMenu
         }
 
         return string.Empty;
+    }
+
+    private static bool IsPartyAddon(string? menuArgsAddonName)
+    {
+        return menuArgsAddonName switch
+        {
+            "PartyMemberList" => true,
+            "_PartyList" => true,
+            _ => false,
+        };
     }
 }
