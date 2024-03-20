@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.6.0:\n   Add an option to open the party view when using the context menu from a party list-related window.\n   Add Tomestone option when opening a link.\n   \"Open With\" will no longer open on private PFs.\n   Use Dalamud's context menu.\n   Some miscellaneous behind-the-scenes changes."
+    "Changelog": "- 2.1.6.1:\n   Add an option to always open the party view.\n- 2.1.6.0:\n   Add an option to open the party view when using the context menu from a party list-related window.\n   Add Tomestone option when opening a link.\n   \"Open With\" will no longer open on private PFs.\n   Use Dalamud's context menu.\n   Some miscellaneous behind-the-scenes changes."
 }
