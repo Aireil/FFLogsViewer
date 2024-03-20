@@ -12,13 +12,13 @@ public class Configuration : IPluginConfiguration
     [JsonIgnore]
     public const int CurrentConfigVersion = 1;
     public int Version { get; set; } = CurrentConfigVersion;
-    public string? ClientId { get; set; } = string.Empty;
-    public string? ClientSecret { get; set; } = string.Empty;
+    public string ClientId { get; set; } = string.Empty;
+    public string ClientSecret { get; set; } = string.Empty;
     public bool ContextMenu { get; set; } = true;
     public bool ContextMenuStreamer { get; set; }
     public bool OpenInBrowser { get; set; }
     public bool ShowTomestoneOption { get; set; } = true;
-    public string? ContextMenuButtonName { get; set; } = "Search FF Logs";
+    public string ContextMenuButtonName { get; set; } = "Search FF Logs";
     public bool IsDefaultViewParty { get; set; }
     public bool HideInCombat { get; set; }
     public bool IsDefaultLayout { get; set; } = true;
@@ -43,10 +43,6 @@ public class Configuration : IPluginConfiguration
 
     public void Initialize()
     {
-        this.ClientId ??= string.Empty;
-        this.ClientSecret ??= string.Empty;
-        this.ContextMenuButtonName ??= string.Empty;
-
         if (this.IsDefaultLayout || this.Layout.Count == 0)
         {
             this.SetDefaultLayout();

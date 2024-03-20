@@ -272,8 +272,8 @@ public class FFLogsClient
         var form = new Dictionary<string, string>
         {
             { "grant_type", grantType },
-            { "client_id", Service.Configuration.ClientId ?? string.Empty },
-            { "client_secret", Service.Configuration.ClientSecret ?? string.Empty },
+            { "client_id", Service.Configuration.ClientId },
+            { "client_secret", Service.Configuration.ClientSecret },
         };
 
         try

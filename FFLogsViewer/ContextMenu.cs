@@ -1,41 +1,33 @@
-﻿using System;
-using System.Linq;
-using Dalamud.ContextMenu;
+﻿using System.Linq;
+using Dalamud.Game.Gui.ContextMenu;
+using Dalamud.Memory;
 using FFLogsViewer.Manager;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.GeneratedSheets;
 
 namespace FFLogsViewer;
 
-public class ContextMenu : IDisposable
+public class ContextMenu
 {
-    public ContextMenu()
-    {
-        if (Service.Configuration.ContextMenu)
-        {
-            Enable();
-        }
-    }
-
     public static void Enable()
     {
-        Service.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
-        Service.ContextMenu.OnOpenGameObjectContextMenu += OnOpenContextMenu;
+        Service.ContextMenu.OnMenuOpened += OnOpenContextMenu;
     }
 
     public static void Disable()
     {
-        Service.ContextMenu.OnOpenGameObjectContextMenu -= OnOpenContextMenu;
+        Service.ContextMenu.OnMenuOpened -= OnOpenContextMenu;
     }
 
-    public void Dispose()
+    private static bool IsMenuValid(MenuArgs menuOpenedArgs)
     {
-        Disable();
-        GC.SuppressFinalize(this);
-    }
+        if (menuOpenedArgs.Target is not MenuTargetDefault menuTargetDefault)
+        {
+            return false;
+        }
 
-    private static bool IsMenuValid(BaseContextMenuArgs args)
-    {
-        switch (args.ParentAddonName)
+        switch (menuOpenedArgs.AddonName)
         {
             case null: // Nameplate/Model menu
             case "LookingForGroup":
@@ -50,23 +42,38 @@ public class ContextMenu : IDisposable
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
-            case "BlackList":
-                return args.Text != null && (Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == args.ObjectWorld)?.IsPublic ?? false);
+                return menuTargetDefault.TargetName != string.Empty
+                       && (Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == menuTargetDefault.TargetHomeWorld.Id)?.IsPublic ?? false);
 
-            default:
-                return false;
+            case "BlackList":
+                return menuTargetDefault.TargetName != string.Empty;
         }
+
+        return false;
     }
 
-    private static void SearchPlayerFromMenu(BaseContextMenuArgs args)
+    private static void SearchPlayerFromMenu(MenuArgs menuArgs)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == args.ObjectWorld);
-        if (world is not { IsPublic: true })
+        if (menuArgs.Target is not MenuTargetDefault menuTargetDefault)
         {
             return;
         }
 
-        var playerName = $"{args.Text}@{world.Name}";
+        string playerName;
+        if (menuArgs.AddonName == "BlackList")
+        {
+            playerName = GetBlacklistSelectFullName();
+        }
+        else
+        {
+            var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == menuTargetDefault.TargetHomeWorld.Id);
+            if (world is not { IsPublic: true })
+            {
+                return;
+            }
+
+            playerName = $"{menuTargetDefault.TargetName}@{world.Name}";
+        }
 
         if (Service.Configuration is { OpenInBrowser: true, ContextMenuStreamer: false })
         {
@@ -79,9 +86,9 @@ public class ContextMenu : IDisposable
         }
     }
 
-    private static void OnOpenContextMenu(GameObjectContextMenuOpenArgs args)
+    private static void OnOpenContextMenu(MenuOpenedArgs menuOpenedArgs)
     {
-        if (!Service.Interface.UiBuilder.ShouldModifyUi || !IsMenuValid(args))
+        if (!Service.Interface.UiBuilder.ShouldModifyUi || !IsMenuValid(menuOpenedArgs))
         {
             return;
         }
@@ -93,21 +100,37 @@ public class ContextMenu : IDisposable
                 return;
             }
 
-            SearchPlayerFromMenu(args);
+            SearchPlayerFromMenu(menuOpenedArgs);
         }
         else
         {
-            args.AddCustomItem(new GameObjectContextMenuItem(Service.Configuration.ContextMenuButtonName ?? "Search FF Logs", Search));
+            menuOpenedArgs.AddMenuItem(new MenuItem
+            {
+                PrefixChar = 'F',
+                Name = Service.Configuration.ContextMenuButtonName,
+                OnClicked = Search,
+            });
         }
     }
 
-    private static void Search(GameObjectContextMenuItemSelectedArgs args)
+    private static void Search(MenuItemClickedArgs menuItemClickedArgs)
     {
-        if (!IsMenuValid(args))
+        if (!IsMenuValid(menuItemClickedArgs))
         {
             return;
         }
 
-        SearchPlayerFromMenu(args);
+        SearchPlayerFromMenu(menuItemClickedArgs);
+    }
+
+    private static unsafe string GetBlacklistSelectFullName()
+    {
+        var agentBlackList = (AgentBlacklist*)Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.SocialBlacklist);
+        if (agentBlackList != null)
+        {
+            return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue;
+        }
+
+        return string.Empty;
     }
 }
