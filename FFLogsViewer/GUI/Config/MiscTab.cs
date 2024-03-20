@@ -1,5 +1,6 @@
 ﻿using System;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using ImGuiNET;
 
@@ -187,12 +188,12 @@ public class MiscTab
         try
         {
             ImGui.SetClipboardText(text);
-            Service.Interface.UiBuilder.AddNotification(text, "Copied to clipboard", NotificationType.Success);
+            Service.NotificationManager.AddNotification(new Notification { Content = $"Copied to clipboard: {text}", Type = NotificationType.Success });
         }
         catch (Exception ex)
         {
             Service.PluginLog.Error(ex, "Could not set clipboard text.");
-            Service.Interface.UiBuilder.AddNotification(text, "Could not copy to clipboard", NotificationType.Error);
+            Service.NotificationManager.AddNotification(new Notification { Title = "Could not copy to clipboard", Content = text, Type = NotificationType.Error, Minimized = false });
         }
     }
 }
