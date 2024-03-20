@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.5.3:\n   Fix an issue with job detection for current job in single view.\n- 2.1.5.2:\n   Add current job feature to the job selection (default for all or current can be set in Configuration -> Stats).\n- 2.1.5.1:\n   Attempt to fix party view shaking under certain circumstances.\n   Remove Penumbra IPC (no longer needed)."
+    "Changelog": "- 2.1.6.0:\n   Add an option to open the party view when using the context menu from a party list-related window.\n   Add Tomestone option when opening a link.\n   \"Open With\" will no longer open on private PFs.\n   Use Dalamud's context menu.\n   Some miscellaneous behind-the-scenes changes."
 }
