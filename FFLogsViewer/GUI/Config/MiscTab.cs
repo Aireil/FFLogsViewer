@@ -80,7 +80,8 @@ public class MiscTab
                 }
 
                 Util.DrawHelp("If the context menu button is used from a party list-related window," +
-                              "\nopen the party view instead of the single view.");
+                              "\nopen the party view instead of the single view." +
+                              "\nThis will still load the selected player's data in the single view.");
             }
 
             ImGui.Unindent();
