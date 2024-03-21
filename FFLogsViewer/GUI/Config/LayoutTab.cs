@@ -247,7 +247,22 @@ public class LayoutTab
             var pointsPerRequest = FFLogsClient.EstimateCurrentLayoutPoints();
 
             ImGui.SameLine();
-            ImGui.Text($"Possible requests per hour: {(Service.FFLogsClient.LimitPerHour > 0 ? Service.FFLogsClient.LimitPerHour / pointsPerRequest : "Loading...")}");
+
+            string text;
+            if (Service.FFLogsClient.HasLimitPerHourFailed)
+            {
+                text = "N/A";
+            }
+            else if (Service.FFLogsClient.LimitPerHour > 0)
+            {
+                text = (Service.FFLogsClient.LimitPerHour / pointsPerRequest).ToString();
+            }
+            else
+            {
+                text = "Loading...";
+            }
+
+            ImGui.Text($"Possible requests per hour: {text}");
             Util.DrawHelp(
                 $"Points per hour: {(Service.FFLogsClient.LimitPerHour > 0 ? Service.FFLogsClient.LimitPerHour : "Loading...")}\n" +
                 "Points are used by the FF Logs API every time you make a request.\n" +
@@ -256,6 +271,15 @@ public class LayoutTab
                 "\n" +
                 $"Points used per request: {pointsPerRequest}\n" +
                 "Every distinct zone-difficulty pair in the layout uses some points.");
+
+            if (Service.FFLogsClient.HasLimitPerHourFailed)
+            {
+                ImGui.SameLine();
+                if (ImGui.Button("Couldn't fetch points, try again?"))
+                {
+                    Service.FFLogsClient.RefreshRateLimitData(true);
+                }
+            }
         }
     }
 }

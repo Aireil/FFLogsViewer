@@ -18,12 +18,13 @@ public class FFLogsClient
 {
     public volatile bool IsTokenValid;
     public int LimitPerHour;
+    public bool HasLimitPerHourFailed => this.rateLimitDataFetchAttempts >= 3;
 
     private readonly HttpClient httpClient;
     private readonly object lastCacheRefreshLock = new();
     private readonly ConcurrentDictionary<string, dynamic?> cache = new();
     private volatile bool isRateLimitDataLoading;
-    private volatile int rateLimitDataFetchAttempts;
+    private volatile int rateLimitDataFetchAttempts = 5;
     private DateTime? lastCacheRefresh;
 
     public class Token
@@ -170,20 +171,21 @@ public class FFLogsClient
         }
     }
 
-    public void RefreshRateLimitData()
+    public void RefreshRateLimitData(bool resetFetchAttempts = false)
     {
-        if (this.isRateLimitDataLoading || (this.LimitPerHour <= 0 && this.rateLimitDataFetchAttempts >= 3))
+        if (resetFetchAttempts)
+        {
+            this.rateLimitDataFetchAttempts = 0;
+        }
+
+        if (this.isRateLimitDataLoading || (this.LimitPerHour <= 0 && this.HasLimitPerHourFailed))
         {
             return;
         }
 
         this.isRateLimitDataLoading = true;
 
-        // don't count as an attempt if the previous refresh was successful
-        if (this.LimitPerHour <= 0)
-        {
-            Interlocked.Increment(ref this.rateLimitDataFetchAttempts);
-        }
+        Interlocked.Increment(ref this.rateLimitDataFetchAttempts);
 
         this.LimitPerHour = 0;
 
@@ -201,6 +203,7 @@ public class FFLogsClient
                 else
                 {
                     this.LimitPerHour = limitPerHour.Value;
+                    this.rateLimitDataFetchAttempts = 0;
                 }
             }
             else
