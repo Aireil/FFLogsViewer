@@ -57,13 +57,13 @@ public class FFLogsClient
 
     public static int EstimateCurrentLayoutPoints()
     {
-        var zoneCount = GetZoneInfo().Count;
+        var zoneCount = GetZoneInfo().Count();
         if (zoneCount == 0)
         {
             return 1;
         }
 
-        return GetZoneInfo().Count * 5;
+        return zoneCount * 5;
     }
 
     public void ClearCache()
@@ -233,9 +233,18 @@ public class FFLogsClient
 
         var metric = Service.MainWindow.GetCurrentMetric();
         charData.LoadedMetric = metric;
-        foreach (var (id, difficulty) in GetZoneInfo())
+        foreach (var (id, difficulty, isForcingAdps) in GetZoneInfo())
         {
-            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: {metric.InternalName}");
+            query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: ");
+            if (isForcingAdps && (Service.MainWindow.OverriddenMetric == null
+                                  || Service.MainWindow.OverriddenMetric.InternalName == Service.Configuration.Metric.InternalName))
+            {
+                query.Append("dps");
+            }
+            else
+            {
+                query.Append($"{metric.InternalName}");
+            }
 
             // do not add if standard, avoid issues with alliance raids that do not support any partition
             if (Service.MainWindow.Partition.Id != -1)
@@ -293,31 +302,12 @@ public class FFLogsClient
         return null;
     }
 
-    private static List<Tuple<int, int>> GetZoneInfo()
+    private static IEnumerable<(int ZoneId, int DifficultyId, bool IsForcingADPS)> GetZoneInfo()
     {
-        var info = new List<Tuple<int, int>>();
-        foreach (var entry in Service.Configuration.Layout)
-        {
-            if (entry.Type == LayoutEntryType.Encounter)
-            {
-                var isInInfo = false;
-                foreach (var (id, difficulty) in info)
-                {
-                    if (id == entry.ZoneId && difficulty == entry.DifficultyId)
-                    {
-                        isInInfo = true;
-                        break;
-                    }
-                }
-
-                if (!isInInfo)
-                {
-                    info.Add(new Tuple<int, int>(entry.ZoneId, entry.DifficultyId));
-                }
-            }
-        }
-
-        return info;
+        return Service.Configuration.Layout
+                .Where(entry => entry.Type == LayoutEntryType.Encounter)
+                .GroupBy(entry => new { entry.ZoneId, entry.DifficultyId })
+                .Select(group => (group.Key.ZoneId, group.Key.DifficultyId, IsForcingADPS: group.Any(entry => entry.IsForcingADPS)));
     }
 
     private void CheckCache()

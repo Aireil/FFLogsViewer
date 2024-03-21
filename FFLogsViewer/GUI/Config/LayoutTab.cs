@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using FFLogsViewer.Model;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Config;
@@ -93,7 +94,7 @@ public class LayoutTab
     private static void DrawTableHeader()
     {
         var headerColor = ImGui.ColorConvertFloat4ToU32(ImGui.GetStyle().Colors[(int)ImGuiCol.TableHeaderBg]);
-        var headerNames = new[] { string.Empty, "Type", "Alias", "Expansion", "Zone", "Encounter", "Difficulty", "Swap ID/#", string.Empty };
+        var headerNames = new[] { string.Empty, "Type", "Alias", "Expansion", "Zone", "Encounter", "Difficulty", "Swap ID/#", "Force aDPS", string.Empty };
 
         foreach (var headerName in headerNames)
         {
@@ -107,7 +108,7 @@ public class LayoutTab
     {
         if (ImGui.BeginTable(
                 "##ConfigLayoutTable",
-                9,
+                10,
                 ImGuiTableFlags.Borders | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.ScrollY,
                 new Vector2(-1, 350)))
         {
@@ -143,25 +144,34 @@ public class LayoutTab
                 ImGui.PopStyleVar();
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Type.ToString());
+                Util.CenterText(layoutEntry.Type.ToString());
 
                 ImGui.TableNextColumn();
-                ImGui.TextUnformatted(layoutEntry.Alias);
+                Util.CenterText(layoutEntry.Alias);
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Expansion);
+                Util.CenterText(layoutEntry.Expansion);
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Zone);
+                Util.CenterText(layoutEntry.Zone);
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Encounter);
+                Util.CenterText(layoutEntry.Encounter);
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.Difficulty);
+                Util.CenterText(layoutEntry.Difficulty);
 
                 ImGui.TableNextColumn();
-                ImGui.Text(layoutEntry.SwapId == string.Empty ? string.Empty : $"{layoutEntry.SwapId}/{layoutEntry.SwapNumber}");
+                Util.CenterText(layoutEntry.SwapId == string.Empty ? string.Empty : $"{layoutEntry.SwapId}/{layoutEntry.SwapNumber}");
+
+                ImGui.TableNextColumn();
+                var isForcingADPSText = layoutEntry.IsForcingADPS ? "Yes" : "No";
+                if (layoutEntry.Type == LayoutEntryType.Header)
+                {
+                    isForcingADPSText = "-";
+                }
+
+                Util.CenterText(isForcingADPSText);
 
                 ImGui.TableNextColumn();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Edit))

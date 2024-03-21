@@ -16,6 +16,7 @@ public class LayoutEntry : ICloneable
     public int DifficultyId { get; set; }
     public string SwapId { get; set; } = string.Empty;
     public int SwapNumber { get; set; }
+    public bool IsForcingADPS { get; set; }
 
     public LayoutEntry()
     {
@@ -34,6 +35,7 @@ public class LayoutEntry : ICloneable
         this.DifficultyId = layoutEntry.DifficultyId;
         this.SwapId = layoutEntry.SwapId;
         this.SwapNumber = layoutEntry.SwapNumber;
+        this.IsForcingADPS = layoutEntry.IsForcingADPS;
     }
 
     public static LayoutEntry CreateEncounter(LayoutEntry? layoutEntry = null)
@@ -51,6 +53,7 @@ public class LayoutEntry : ICloneable
             DifficultyId = layoutEntry?.DifficultyId ?? 0,
             SwapId = layoutEntry?.SwapId ?? string.Empty,
             SwapNumber = layoutEntry?.SwapNumber ?? 0,
+            IsForcingADPS = layoutEntry?.IsForcingADPS ?? false,
         };
     }
 
@@ -104,6 +107,7 @@ public class LayoutEntry : ICloneable
                this.Difficulty == layoutEntry.Difficulty &&
                this.DifficultyId == layoutEntry.DifficultyId &&
                this.SwapId == layoutEntry.SwapId &&
-               this.SwapNumber == layoutEntry.SwapNumber;
+               this.SwapNumber == layoutEntry.SwapNumber &&
+               this.IsForcingADPS == layoutEntry.IsForcingADPS;
     }
 }

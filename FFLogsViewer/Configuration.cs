@@ -88,11 +88,11 @@ public class Configuration : IPluginConfiguration
         return
         [
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Anabaseios", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Abyssos", ZoneId = 54, Encounter = "Pallas Athena", EncounterId = 92, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Pallas Athena", EncounterId = 92, Difficulty = "Savage", DifficultyId = 101 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Ultimates (EW)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Unending Coil of Bahamut", EncounterId = 1060, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Weapon's Refrain", EncounterId = 1061, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU" },

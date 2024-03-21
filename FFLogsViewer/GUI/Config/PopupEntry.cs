@@ -153,6 +153,28 @@ public class PopupEntry
         Util.DrawHelp(helpMessage);
     }
 
+    private static void RefreshForceADPSStates(int zoneId, bool isForcingADPS)
+    {
+        foreach (var entry in Service.Configuration.Layout)
+        {
+            if (entry.ZoneId == zoneId)
+            {
+                entry.IsForcingADPS = isForcingADPS;
+            }
+        }
+
+        var zoneIdsWithIsForcingADPS = Service.Configuration.Layout
+                                          .GroupBy(entry => entry.ZoneId)
+                                          .Where(group => group.Any(entry => entry.IsForcingADPS))
+                                          .Select(group => group.Key)
+                                          .ToList();
+
+        foreach (var entry in Service.Configuration.Layout)
+        {
+            entry.IsForcingADPS = zoneIdsWithIsForcingADPS.Contains(entry.ZoneId);
+        }
+    }
+
     private void DrawEntryEncounter(LayoutEntry currLayoutEntry)
     {
         var expansions = Service.GameDataManager.GameData!.Data!.WorldData!.Expansions!;
@@ -169,6 +191,7 @@ public class PopupEntry
                     currLayoutEntry.EncounterId = 0;
                     currLayoutEntry.Difficulty = "-";
                     currLayoutEntry.DifficultyId = 0;
+                    currLayoutEntry.IsForcingADPS = false;
                 }
             }
 
@@ -190,6 +213,7 @@ public class PopupEntry
                         currLayoutEntry.EncounterId = 0;
                         currLayoutEntry.Difficulty = "-";
                         currLayoutEntry.DifficultyId = 0;
+                        currLayoutEntry.IsForcingADPS = false;
                     }
                 }
             }
@@ -262,6 +286,31 @@ public class PopupEntry
 
         DrawEntrySwap(currLayoutEntry);
 
+        var isForcingAdps = currLayoutEntry.IsForcingADPS;
+        if (ImGui.Checkbox("Force aDPS", ref isForcingAdps))
+        {
+            currLayoutEntry.IsForcingADPS = !currLayoutEntry.IsForcingADPS;
+        }
+
+        Util.DrawHelp($"Use aDPS instead of your default metric ({Service.Configuration.Metric.Name}) on that entire zone," +
+                      "\nthis is only useful for zones where your default metric is not available." +
+                      "\nThere will be no feedback in the main window table, headers will still show the default." +
+                      "\nIf you are unsure, leave this unchecked.");
+
+        if (currLayoutEntry.IsForcingADPS)
+        {
+            ImGui.SameLine();
+            ImGui.TextColored(ImGuiColors.DalamudRed, "-> Hover this text and read <-");
+            Util.SetHoverTooltip("Please understand the consequences of forcing aDPS:" +
+                                 "\n - It will only force when your default metric is active." +
+                                 "\n - It affects all the encounters in this zone." +
+                                 "\n - There will be NO way of telling in the main window." +
+                                 "\n - Headers will only show your default metric." +
+                                 "\n" +
+                                 "\nThis is only useful for zones where your default metric is not available." +
+                                 "\nIf you are unsure, uncheck this setting.");
+        }
+
         if (!currLayoutEntry.IsEncounterValid())
         {
             ImGui.BeginDisabled();
@@ -296,6 +345,7 @@ public class PopupEntry
                     Service.Configuration.Layout.AddRange(newEntries);
                 }
 
+                RefreshForceADPSStates(currLayoutEntry.ZoneId, currLayoutEntry.IsForcingADPS);
                 Service.Configuration.IsDefaultLayout = false;
                 Service.Configuration.Save();
                 Service.MainWindow.ResetSwapGroups();
@@ -305,6 +355,7 @@ public class PopupEntry
                 if (!Service.Configuration.Layout[this.SelectedIndex].Compare(currLayoutEntry))
                 {
                     Service.Configuration.Layout[this.SelectedIndex] = currLayoutEntry;
+                    RefreshForceADPSStates(currLayoutEntry.ZoneId, currLayoutEntry.IsForcingADPS);
                     Service.Configuration.IsDefaultLayout = false;
                     Service.Configuration.Save();
                     Service.MainWindow.ResetSwapGroups();
@@ -323,10 +374,9 @@ public class PopupEntry
 
         if (this.mode == Mode.Adding && Service.Configuration.Layout.Any(layoutEntry => currLayoutEntry.Type != LayoutEntryType.Header &&
                                                                              currLayoutEntry.Type == layoutEntry.Type &&
-                                                                             currLayoutEntry.Expansion == layoutEntry.Expansion &&
-                                                                             currLayoutEntry.Zone == layoutEntry.Zone &&
-                                                                             currLayoutEntry.Encounter == layoutEntry.Encounter &&
-                                                                             currLayoutEntry.Difficulty == layoutEntry.Difficulty))
+                                                                             currLayoutEntry.ZoneId == layoutEntry.ZoneId &&
+                                                                             currLayoutEntry.DifficultyId == layoutEntry.DifficultyId &&
+                                                                             currLayoutEntry.EncounterId == layoutEntry.EncounterId))
         {
             ImGui.SameLine();
             ImGui.Text("Note: this encounter is already in the layout.");
