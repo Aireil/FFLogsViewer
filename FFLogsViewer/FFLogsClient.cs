@@ -233,10 +233,10 @@ public class FFLogsClient
 
         var metric = Service.MainWindow.GetCurrentMetric();
         charData.LoadedMetric = metric;
-        foreach (var (id, difficulty, isForcingAdps) in GetZoneInfo())
+        foreach (var (id, difficulty, isForcingADPS) in GetZoneInfo())
         {
             query.Append($"Zone{id}diff{difficulty}: zoneRankings(zoneID: {id}, difficulty: {difficulty}, metric: ");
-            if (isForcingAdps && (Service.MainWindow.OverriddenMetric == null
+            if (isForcingADPS && (Service.MainWindow.OverriddenMetric == null
                                   || Service.MainWindow.OverriddenMetric.InternalName == Service.Configuration.Metric.InternalName))
             {
                 query.Append("dps");

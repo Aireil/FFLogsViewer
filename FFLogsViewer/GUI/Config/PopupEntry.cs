@@ -286,8 +286,8 @@ public class PopupEntry
 
         DrawEntrySwap(currLayoutEntry);
 
-        var isForcingAdps = currLayoutEntry.IsForcingADPS;
-        if (ImGui.Checkbox("Force aDPS", ref isForcingAdps))
+        var isForcingADPS = currLayoutEntry.IsForcingADPS;
+        if (ImGui.Checkbox("Force aDPS", ref isForcingADPS))
         {
             currLayoutEntry.IsForcingADPS = !currLayoutEntry.IsForcingADPS;
         }
