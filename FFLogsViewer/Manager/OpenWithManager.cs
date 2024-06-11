@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Linq;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Gui.PartyFinder.Types;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Lumina.Excel.GeneratedSheets;
 
 namespace FFLogsViewer.Manager;
 
@@ -87,8 +85,8 @@ public unsafe class OpenWithManager
             return;
         }
 
-        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
-        if (world is not { IsPublic: true })
+        var world = Util.GetWorld(worldId);
+        if (!Util.IsWorldValid(world))
         {
             return;
         }

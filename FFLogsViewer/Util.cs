@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Dalamud.Game.Text.SeStringHandling;
@@ -9,6 +10,8 @@ using Dalamud.Interface.Colors;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
+using Lumina.Excel.GeneratedSheets;
+using Action = System.Action;
 
 namespace FFLogsViewer;
 
@@ -194,7 +197,7 @@ public class Util
 
     public static void OpenFFLogsLink(CharData charData)
     {
-        OpenLink($"https://fflogs.com/character/{CharDataManager.GetRegionName(charData.WorldName)}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
+        OpenLink($"https://fflogs.com/character/{CharDataManager.GetRegionCode(charData.WorldName)}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
     }
 
     public static void OpenTomestoneLink(CharData charData)
@@ -333,5 +336,44 @@ public class Util
     public static int MathMod(int a, int b)
     {
         return (Math.Abs(a * b) + a) % b;
+    }
+
+    public static bool IsWorldValid(uint worldId)
+    {
+        return IsWorldValid(GetWorld(worldId));
+    }
+
+    public static bool IsWorldValid(World world)
+    {
+        if (world.Name.RawData.IsEmpty || GetRegionCode(world) == string.Empty)
+        {
+            return false;
+        }
+
+        return char.IsUpper((char)world.Name.RawData[0]);
+    }
+
+    public static World GetWorld(uint worldId)
+    {
+        var worldSheet = Service.DataManager.GetExcelSheet<World>()!;
+        var world = worldSheet.FirstOrDefault(x => x.RowId == worldId);
+        if (world == null)
+        {
+            return worldSheet.First();
+        }
+
+        return world;
+    }
+
+    public static string GetRegionCode(World world)
+    {
+        return world.DataCenter?.Value?.Region switch
+        {
+            1 => "JP",
+            2 => "NA",
+            3 => "EU",
+            4 => "OC",
+            _ => string.Empty,
+        };
     }
 }

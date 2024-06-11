@@ -59,7 +59,7 @@ public class CharDataManager
 
     public CharDataManager()
     {
-        var worlds = Service.DataManager.GetExcelSheet<World>()?.Where(world => world.IsPublic && world.DataCenter?.Value?.Region != 0);
+        var worlds = Service.DataManager.GetExcelSheet<World>()?.Where(Util.IsWorldValid);
         if (worlds == null)
         {
             throw new InvalidOperationException("Sheets weren't ready.");
@@ -68,22 +68,15 @@ public class CharDataManager
         this.ValidWorlds = worlds.Select(world => world.Name.RawString).ToArray();
     }
 
-    public static string? GetRegionName(string worldName)
+    public static string GetRegionCode(string worldName)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
-        if (world is not { IsPublic: true })
+        var world = Service.DataManager.GetExcelSheet<World>()!.FirstOrDefault(x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
+        if (world == null || !Util.IsWorldValid(world))
         {
-            return null;
+            return string.Empty;
         }
 
-        return world.DataCenter?.Value?.Region switch
-        {
-            1 => "JP",
-            2 => "NA",
-            3 => "EU",
-            4 => "OC",
-            _ => null,
-        };
+        return Util.GetRegionCode(world);
     }
 
     public static unsafe string? FindPlaceholder(string text)
@@ -94,10 +87,8 @@ public class CharDataManager
             if (placeholder != null && placeholder->IsCharacter())
             {
                 var character = (Character*)placeholder;
-                var world = Service.DataManager.GetExcelSheet<World>()
-                                   ?.FirstOrDefault(x => x.RowId == character->HomeWorld);
-
-                if (world is { IsPublic: true } && placeholder->Name != null)
+                var world = Util.GetWorld(character->HomeWorld);
+                if (Util.IsWorldValid(world) && placeholder->Name != null)
                 {
                     var name = $"{Util.ReadSeString(placeholder->Name)}@{world.Name}";
                     return name;

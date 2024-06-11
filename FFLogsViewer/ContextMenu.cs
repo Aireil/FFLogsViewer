@@ -1,10 +1,8 @@
-﻿using System.Linq;
-using Dalamud.Game.Gui.ContextMenu;
+﻿using Dalamud.Game.Gui.ContextMenu;
 using Dalamud.Memory;
 using FFLogsViewer.Manager;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Lumina.Excel.GeneratedSheets;
 
 namespace FFLogsViewer;
 
@@ -42,8 +40,7 @@ public class ContextMenu
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
-                return menuTargetDefault.TargetName != string.Empty
-                       && (Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == menuTargetDefault.TargetHomeWorld.Id)?.IsPublic ?? false);
+                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.Id);
 
             case "BlackList":
                 return menuTargetDefault.TargetName != string.Empty;
@@ -66,8 +63,8 @@ public class ContextMenu
         }
         else
         {
-            var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == menuTargetDefault.TargetHomeWorld.Id);
-            if (world is not { IsPublic: true })
+            var world = Util.GetWorld(menuTargetDefault.TargetHomeWorld.Id);
+            if (!Util.IsWorldValid(world))
             {
                 return;
             }

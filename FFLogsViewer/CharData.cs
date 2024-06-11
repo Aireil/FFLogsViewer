@@ -8,7 +8,6 @@ using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json.Linq;
 
 namespace FFLogsViewer;
@@ -125,8 +124,8 @@ public class CharData
             return;
         }
 
-        var regionName = CharDataManager.GetRegionName(this.WorldName);
-        if (regionName == null)
+        var regionName = CharDataManager.GetRegionCode(this.WorldName);
+        if (regionName == string.Empty)
         {
             this.CharError = CharacterError.InvalidWorld;
             return;
@@ -338,8 +337,8 @@ public class CharData
 
     public void FetchCharacter(string fullName, ushort worldId)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
-        if (world is not { IsPublic: true })
+        var world = Util.GetWorld(worldId);
+        if (!Util.IsWorldValid(worldId))
         {
             Service.PluginLog.Error($"{worldId}");
             this.CharError = CharacterError.InvalidWorld;

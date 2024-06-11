@@ -4,7 +4,6 @@ using FFLogsViewer.Model;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
-using Lumina.Excel.GeneratedSheets;
 
 namespace FFLogsViewer.Manager;
 
@@ -107,8 +106,8 @@ public class TeamManager
 
     private void AddTeamMember(string fullName, ushort worldId, uint jobId, bool isInParty)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()?.FirstOrDefault(x => x.RowId == worldId);
-        if (world is not { IsPublic: true })
+        var world = Util.GetWorld(worldId);
+        if (!Util.IsWorldValid(world))
         {
             return;
         }
