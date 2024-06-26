@@ -184,9 +184,9 @@ public unsafe class OpenWithManager
                 && Service.GameGui.GetAddonByName("BannerEditor") == nint.Zero
                 && Service.GameGui.GetAddonByName("CharaCardDesignSetting") == nint.Zero)
             {
-                // To get offsets: 6.21 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
-                var fullNamePtr = *(nint*)(*(nint*)(agentCharaCard + 40) + 88);
-                var worldId = *(ushort*)(*(nint*)(agentCharaCard + 40) + 192);
+                // To get offsets: 7.0 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
+                var fullNamePtr = *(nint*)(*(nint*)(agentCharaCard + 40) + 96);
+                var worldId = *(ushort*)(*(nint*)(agentCharaCard + 40) + 200);
 
                 this.Open(fullNamePtr, worldId);
             }
@@ -205,7 +205,7 @@ public unsafe class OpenWithManager
         {
             if (Service.Configuration.OpenWith.IsExamineEnabled)
             {
-                // To get offsets: 6.21 process inspect network packet 48 89 5C 24 ?? 56 41 56 41 57 48 83 EC 20 8B DA
+                // To get offsets: 7.0 process inspect network packet E8 ?? ?? ?? ?? 0F B6 07 48 81 C3 84 02 00 00
                 var fullNamePtr = packetData + 640;
                 var worldId = *(ushort*)(packetData + 50);
 
@@ -228,8 +228,8 @@ public unsafe class OpenWithManager
             if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
             {
                 // To get offsets: look in the function
-                var fullNamePtr = data + 42;
-                var worldId = *(ushort*)(data + 32);
+                var fullNamePtr = data + 50;
+                var worldId = *(ushort*)(data + 20);
 
                 this.Open(fullNamePtr, worldId);
             }
@@ -249,13 +249,14 @@ public unsafe class OpenWithManager
             if (Service.Configuration.OpenWith.IsPartyFinderEnabled)
             {
                 // To get offsets: 6.28, look in this function
-                var hasFailed = *(byte*)(packetData + 84) == 0;
-                var isPrivate = ((SearchAreaFlags)(*(byte*)(packetData + 83))).HasFlag(SearchAreaFlags.Private);
+                var hasFailed = *(byte*)(packetData + 92) == 0;
+                var isPrivate = ((SearchAreaFlags)(*(byte*)(packetData + 91))).HasFlag(SearchAreaFlags.Private);
                 var isJoining = this.isJoiningPartyFinderOffset != 0 && *(byte*)(someAgent + this.isJoiningPartyFinderOffset) != 0;
 
                 if (!hasFailed && !isPrivate && !isJoining)
                 {
-                    var fullName = packetData + 712;
+                    var fullName = packetData + 912;
+                    // TODO: Offset not fixed
                     var worldId = *(ushort*)(packetData + 74); // is not used in the function, just search it again if it breaks
 
                     this.Open(fullName, worldId);
