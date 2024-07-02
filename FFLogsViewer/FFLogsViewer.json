@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.6.3:\n   Fix for the new worlds, because SE is annoying and did not update them in the client.\n- 2.1.6.2:\n   Add forcing aDPS layout entry setting. This is only useful if you have encounters in your layout that do not support your default metric.\n- 2.1.6.1:\n   Add an option to always open the party view.\n- 2.1.6.0:\n   Add an option to open the party view when using the context menu from a party list-related window.\n   Add Tomestone option when opening a link.\n   \"Open With\" will no longer open on private PFs.\n   Use Dalamud's context menu.\n   Some miscellaneous behind-the-scenes changes."
+    "Changelog": "- 2.1.6.4:\n   Dawntrail update.\n   The default layout will be changed at a later date, when I'm done with the MSQ, you can change it in the settings if you want a different one now."
 }
