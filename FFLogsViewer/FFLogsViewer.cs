@@ -1,5 +1,4 @@
 ﻿using Dalamud.Interface.Windowing;
-using Dalamud.IoC;
 using Dalamud.Plugin;
 using FFLogsViewer.API;
 using FFLogsViewer.GUI.Config;
@@ -14,8 +13,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
     private readonly WindowSystem windowSystem;
     private readonly FFLogsViewerProvider ffLogsViewerProvider;
 
-    public FFLogsViewer(
-        [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
+    public FFLogsViewer(IDalamudPluginInterface pluginInterface)
     {
         pluginInterface.Create<Service>();
 

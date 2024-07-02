@@ -49,7 +49,7 @@ public class FFLogsViewerProvider
     /// </summary>
     /// <param name="pluginInterface">plugin interface.</param>
     /// <param name="api">plugin api.</param>
-    public FFLogsViewerProvider(DalamudPluginInterface pluginInterface, IFFLogsViewerAPI api)
+    public FFLogsViewerProvider(IDalamudPluginInterface pluginInterface, IFFLogsViewerAPI api)
     {
         this.API = api;
 

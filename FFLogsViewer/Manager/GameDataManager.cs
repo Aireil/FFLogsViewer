@@ -58,7 +58,6 @@ public class GameDataManager
     public volatile bool IsDataLoading;
     public volatile bool HasFailed;
     public GameData? GameData;
-    public JobIconsManager JobIconsManager = new();
 
     public static Job GetDefaultJob()
     {

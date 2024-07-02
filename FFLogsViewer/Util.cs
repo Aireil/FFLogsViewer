@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using FFLogsViewer.Manager;
@@ -240,25 +238,6 @@ public class Util
         ImGui.EndPopup();
     }
 
-    public static unsafe SeString ReadSeString(byte* ptr)
-    {
-        var offset = 0;
-        while (true)
-        {
-            var b = *(ptr + offset);
-            if (b == 0)
-            {
-                break;
-            }
-
-            offset += 1;
-        }
-
-        var bytes = new byte[offset];
-        Marshal.Copy(new nint(ptr), bytes, 0, offset);
-        return SeString.Parse(bytes);
-    }
-
     public static void UpdateDelayed(Stopwatch stopwatch, TimeSpan delayTime, Action function)
     {
         if (stopwatch.IsRunning && stopwatch.Elapsed >= delayTime)
@@ -375,5 +354,15 @@ public class Util
             4 => "OC",
             _ => string.Empty,
         };
+    }
+
+    public static uint GetJobIconId(uint jobId)
+    {
+        if (jobId is 0 or > 42)
+        {
+            return 62145; // default icon id
+        }
+
+        return 62100 + jobId;
     }
 }

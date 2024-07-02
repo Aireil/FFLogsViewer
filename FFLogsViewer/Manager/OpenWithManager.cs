@@ -121,7 +121,7 @@ public unsafe class OpenWithManager
     {
         try
         {
-            this.charaCardAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 4C 8B 74 24 ?? 48 8B 74 24 ?? 48 8B 5C 24 ?? 48 83 C4 30");
+            this.charaCardAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 48 8B 74 24 48 48 8B 5C 24 40 48 83 C4 30 5F C3 66 90");
             this.processInspectPacketAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B6 07 48 81 C3 84 02 00 00");
             this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B 78 0F 00 00 41 BE 00 00 00 E0");
             this.processPartyFinderDetailPacketAddress = Service.SigScanner.ScanText("E9 ?? ?? ?? ?? CC CC CC CC CC CC 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D AC 24");
@@ -184,7 +184,7 @@ public unsafe class OpenWithManager
                 && Service.GameGui.GetAddonByName("BannerEditor") == nint.Zero
                 && Service.GameGui.GetAddonByName("CharaCardDesignSetting") == nint.Zero)
             {
-                // To get offsets: 7.0 process chara card network packet 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
+                // To get offsets: 7.0 process chara card network packet (NOT the hooked one) 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
                 var fullNamePtr = *(nint*)(*(nint*)(agentCharaCard + 40) + 96);
                 var worldId = *(ushort*)(*(nint*)(agentCharaCard + 40) + 200);
 
@@ -229,7 +229,7 @@ public unsafe class OpenWithManager
             {
                 // To get offsets: look in the function
                 var fullNamePtr = data + 50;
-                var worldId = *(ushort*)(data + 20);
+                var worldId = *(ushort*)(data + 40);
 
                 this.Open(fullNamePtr, worldId);
             }
@@ -256,8 +256,7 @@ public unsafe class OpenWithManager
                 if (!hasFailed && !isPrivate && !isJoining)
                 {
                     var fullName = packetData + 912;
-                    // TODO: Offset not fixed
-                    var worldId = *(ushort*)(packetData + 74); // is not used in the function, just search it again if it breaks
+                    var worldId = *(ushort*)(packetData + 82); // is not used in the function, just search it again if it breaks
 
                     this.Open(fullName, worldId);
                 }
@@ -277,10 +276,10 @@ public unsafe class OpenWithManager
         {
             if (IsEnabled() && Service.Configuration.OpenWith.ShouldCloseMainWindow)
             {
-                if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "CharaCard")
-                    || (Service.Configuration.OpenWith.IsExamineEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "CharacterInspect")
-                    || (Service.Configuration.OpenWith.IsSearchInfoEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "SocialDetailB")
-                    || (Service.Configuration.OpenWith.IsPartyFinderEnabled && MemoryHelper.ReadStringNullTerminated((nint)addon->Name) == "LookingForGroupDetail"))
+                if ((Service.Configuration.OpenWith.IsAdventurerPlateEnabled && addon->NameString == "CharaCard")
+                    || (Service.Configuration.OpenWith.IsExamineEnabled && addon->NameString == "CharacterInspect")
+                    || (Service.Configuration.OpenWith.IsSearchInfoEnabled && addon->NameString == "SocialDetailB")
+                    || (Service.Configuration.OpenWith.IsPartyFinderEnabled && addon->NameString == "LookingForGroupDetail"))
                 {
                     // do not close the window if it was just opened, avoid issue of race condition with the addon closing
                     if (DateTime.Now - this.wasOpenedLast > TimeSpan.FromMilliseconds(100))

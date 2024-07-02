@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
 using FFLogsViewer.Manager;
@@ -314,15 +315,7 @@ public class Table
 
                 var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
                 Util.CenterCursor(iconSize);
-                var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
-                if (icon != null)
-                {
-                    ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
-                }
-                else
-                {
-                    ImGui.Text("(?)");
-                }
+                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
                 if (charData != null)
                 {
@@ -560,16 +553,8 @@ public class Table
                 ImGui.TableNextColumn();
                 var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
                 var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
-                var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(charData?.JobId ?? 0);
-                if (icon != null)
-                {
-                    ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
-                }
-                else
-                {
-                    ImGui.SetCursorPosY(middleCursorPosY);
-                    ImGui.Text("(?)");
-                }
+                ImGui.SameLine();
+                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosY(middleCursorPosY);

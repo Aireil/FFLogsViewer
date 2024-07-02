@@ -18,7 +18,7 @@ public class ContextMenu
         Service.ContextMenu.OnMenuOpened -= OnOpenContextMenu;
     }
 
-    private static bool IsMenuValid(MenuArgs menuOpenedArgs)
+    private static bool IsMenuValid(IMenuArgs menuOpenedArgs)
     {
         if (menuOpenedArgs.Target is not MenuTargetDefault menuTargetDefault)
         {
@@ -49,7 +49,7 @@ public class ContextMenu
         return false;
     }
 
-    private static void SearchPlayerFromMenu(MenuArgs menuArgs)
+    private static void SearchPlayerFromMenu(IMenuArgs menuArgs)
     {
         if (menuArgs.Target is not MenuTargetDefault menuTargetDefault)
         {
@@ -93,7 +93,7 @@ public class ContextMenu
         }
     }
 
-    private static void OnOpenContextMenu(MenuOpenedArgs menuOpenedArgs)
+    private static void OnOpenContextMenu(IMenuOpenedArgs menuOpenedArgs)
     {
         if (!Service.Interface.UiBuilder.ShouldModifyUi || !IsMenuValid(menuOpenedArgs))
         {
@@ -120,7 +120,7 @@ public class ContextMenu
         }
     }
 
-    private static void Search(MenuItemClickedArgs menuItemClickedArgs)
+    private static void Search(IMenuItemClickedArgs menuItemClickedArgs)
     {
         if (!IsMenuValid(menuItemClickedArgs))
         {
@@ -132,7 +132,7 @@ public class ContextMenu
 
     private static unsafe string GetBlacklistSelectFullName()
     {
-        var agentBlackList = (AgentBlacklist*)Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.SocialBlacklist);
+        var agentBlackList = (AgentBlacklist*)Framework.Instance()->GetUIModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Blacklist);
         if (agentBlackList != null)
         {
             return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue;

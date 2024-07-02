@@ -83,14 +83,14 @@ public class CharDataManager
     {
         try
         {
-            var placeholder = Framework.Instance()->GetUiModule()->GetPronounModule()->ResolvePlaceholder(text, 0, 0);
+            var placeholder = Framework.Instance()->GetUIModule()->GetPronounModule()->ResolvePlaceholder(text, 0, 0);
             if (placeholder != null && placeholder->IsCharacter())
             {
                 var character = (Character*)placeholder;
                 var world = Util.GetWorld(character->HomeWorld);
                 if (Util.IsWorldValid(world) && placeholder->Name != null)
                 {
-                    var name = $"{Util.ReadSeString(placeholder->Name)}@{world.Name}";
+                    var name = $"{placeholder->NameString}@{world.Name}";
                     return name;
                 }
             }

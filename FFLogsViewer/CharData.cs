@@ -73,7 +73,7 @@ public class CharData
         this.WorldName = worldName;
     }
 
-    public bool SetInfo(PlayerCharacter playerCharacter)
+    public bool SetInfo(IPlayerCharacter playerCharacter)
     {
         if (playerCharacter.HomeWorld.GameData?.Name == null)
         {
@@ -96,7 +96,7 @@ public class CharData
     public void FetchTargetChar()
     {
         var target = Service.TargetManager.Target;
-        if (target is PlayerCharacter targetCharacter && target.ObjectKind != ObjectKind.Companion)
+        if (target is IPlayerCharacter targetCharacter && target.ObjectKind != ObjectKind.Companion)
         {
             if (this.SetInfo(targetCharacter))
             {
@@ -368,15 +368,12 @@ public class CharData
         for (var i = 0; i < 200; i += 2)
         {
             var obj = Service.ObjectTable[i];
-            if (obj != null)
+            if (obj is IPlayerCharacter playerCharacter
+                && playerCharacter.Name.TextValue == fullName
+                && playerCharacter.HomeWorld.GameData?.Name.RawString == this.WorldName)
             {
-                if (obj is PlayerCharacter playerCharacter
-                    && playerCharacter.Name.TextValue == fullName
-                    && playerCharacter.HomeWorld.GameData?.Name.RawString == this.WorldName)
-                {
-                    this.JobId = playerCharacter.ClassJob.Id;
-                    return;
-                }
+                this.JobId = playerCharacter.ClassJob.Id;
+                return;
             }
         }
 

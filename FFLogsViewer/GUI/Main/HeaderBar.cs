@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using ImGuiNET;
 
@@ -214,17 +215,8 @@ public class HeaderBar
                         Service.CharDataManager.DisplayedChar.FetchCharacter($"{partyMember.FirstName} {partyMember.LastName}@{partyMember.World}");
                     }
 
-                    var icon = Service.GameDataManager.JobIconsManager.GetJobIcon(partyMember.JobId);
-                    if (icon != null)
-                    {
-                        ImGui.SameLine();
-                        ImGui.Image(icon.ImGuiHandle, new Vector2(iconSize));
-                    }
-                    else
-                    {
-                        ImGui.SetCursorPosY(middleCursorPosY);
-                        ImGui.Text("(?)");
-                    }
+                    ImGui.SameLine();
+                    ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(partyMember.JobId))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
                     ImGui.TableNextColumn();
 
