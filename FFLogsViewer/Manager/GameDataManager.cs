@@ -44,6 +44,7 @@ public class GameDataManager
         new Job { Name = "Monk", Abbreviation = "MNK", Id = 20, Color = new Vector4(214, 156, 0, 255) / 255 },
         new Job { Name = "Ninja", Abbreviation = "NIN", Id = 30, Color = new Vector4(175, 25, 100, 255) / 255 },
         new Job { Name = "Paladin", Abbreviation = "PLD", Id = 19, Color = new Vector4(168, 210, 230, 255) / 255 },
+        new Job { Name = "Pictomancer", Abbreviation = "PCT", Id = 42, Color = new Vector4(252, 146, 225, 255) / 255 },
         new Job { Name = "Red Mage", Abbreviation = "RDM", Id = 35, Color = new Vector4(232, 123, 123, 255) / 255 },
         new Job { Name = "Reaper", Abbreviation = "RPR", Id = 39, Color = new Vector4(150, 90, 144, 255) / 255 },
         new Job { Name = "Sage", Abbreviation = "SGE", Id = 40, Color = new Vector4(128, 160, 240, 255) / 255 },
@@ -52,6 +53,7 @@ public class GameDataManager
         new Job { Name = "Summoner", Abbreviation = "SMN", Id = 27, Color = new Vector4(45, 155, 120, 255) / 255 },
         new Job { Name = "Warrior", Abbreviation = "WAR", Id = 21, Color = new Vector4(207, 38, 33, 255) / 255 },
         new Job { Name = "White Mage", Abbreviation = "WHM", Id = 24, Color = new Vector4(255, 240, 220, 255) / 255 },
+        new Job { Name = "Viper", Abbreviation = "VPR", Id = 41, Color = new Vector4(16, 130, 16, 255) / 255 },
     ];
 
     public volatile bool IsDataReady;
