@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.6.4:\n   Dawntrail update.\n   The default layout will be changed at a later date, when I'm done with the MSQ, you can change it in the settings if you want a different one now."
+    "Changelog": "- 2.1.7.1:\n   Update default layout for DT.\n   Add support for PCT and VPR.\n- 2.1.7.0:\n   Dawntrail update."
 }
