@@ -183,14 +183,17 @@ public class LayoutTab
 
                 Util.SetHoverTooltip("Edit");
 
+                ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
+
                 ImGui.SameLine();
-                ImGui.SetCursorPosX(ImGui.GetCursorPosX() - ImGui.GetStyle().ItemSpacing.X + 2);
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
                 {
                     this.popupEntry.SelectedIndex = i + 1;
                     this.popupEntry.SwitchMode(PopupEntry.Mode.Adding);
                     this.shouldPopupOpen = true;
                 }
+
+                ImGui.PopStyleVar();
 
                 Util.SetHoverTooltip("Add below");
 

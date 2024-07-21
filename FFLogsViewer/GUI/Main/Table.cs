@@ -313,7 +313,7 @@ public class Table
 
                 ImGui.TableNextColumn();
 
-                var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
+                var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                 Util.CenterCursor(iconSize);
                 ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
@@ -409,9 +409,10 @@ public class Table
     {
         ImGui.SameLine();
         var metricAbbreviation = Util.GetMetricAbbreviation(Service.CharDataManager.PartyMembers.FirstOrDefault());
-        ImGui.SetNextItemWidth(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.GetFinalAlias(metricAbbreviation)).X).Max()
-                               + (30 * ImGuiHelpers.GlobalScale)
-                               + ImGui.CalcTextSize(" (★)").X);
+        var comboSize = Util.Round(Service.Configuration.Stats.Where(stat => stat.IsEnabled).Select(metric => ImGui.CalcTextSize(metric.GetFinalAlias(metricAbbreviation)).X).Max()
+                        + (30 * ImGuiHelpers.GlobalScale)
+                        + ImGui.CalcTextSize(" (★)").X);
+        ImGui.SetNextItemWidth(comboSize);
 
         var comboPreview = this.CurrentStat.GetFinalAlias(metricAbbreviation);
         if (Service.Configuration.DefaultStatTypePartyView == this.CurrentStat.Type)
@@ -455,9 +456,10 @@ public class Table
         }
 
         ImGui.SameLine();
-        ImGui.SetNextItemWidth(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max()
-                                                                            + (30 * ImGuiHelpers.GlobalScale)
-                                                                            + ImGui.CalcTextSize(" (★)").X);
+        var comboSize = Util.Round(Service.Configuration.Layout.Select(entry => ImGui.CalcTextSize(entry.Alias != string.Empty ? entry.Alias : entry.Encounter).X).Max()
+                        + (30 * ImGuiHelpers.GlobalScale)
+                        + ImGui.CalcTextSize(" (★)").X);
+        ImGui.SetNextItemWidth(comboSize);
         if (ImGui.BeginCombo("##StatLayoutCombo", encounterAbbreviation, ImGuiComboFlags.HeightLargest))
         {
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
@@ -495,14 +497,16 @@ public class Table
 
     private void DrawPartyViewArrows()
     {
+        var arrowSize = Util.Round(3 * ImGuiHelpers.GlobalScale);
+
         ImGui.SameLine();
-        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowLeft, new Vector2(arrowSize)))
         {
             this.ShiftCurrentLayout(-1);
         }
 
         ImGui.SameLine();
-        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(3 * ImGuiHelpers.GlobalScale)))
+        if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowRight, new Vector2(arrowSize)))
         {
             this.ShiftCurrentLayout(1);
         }
@@ -551,7 +555,7 @@ public class Table
                 }
 
                 ImGui.TableNextColumn();
-                var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
+                var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                 var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
                 ImGui.SameLine();
                 ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));

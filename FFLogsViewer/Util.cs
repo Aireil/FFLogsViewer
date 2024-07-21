@@ -87,7 +87,7 @@ public class Util
 
     public static void CenterCursor(float width)
     {
-        var offset = (ImGui.GetContentRegionAvail().X - width) / 2;
+        var offset = Round((ImGui.GetContentRegionAvail().X - width) / 2);
         ImGui.SetCursorPosX(ImGui.GetCursorPosX() + offset);
     }
 
@@ -364,5 +364,10 @@ public class Util
         }
 
         return 62100 + jobId;
+    }
+
+    public static float Round(float value)
+    {
+        return (float)Math.Round(value);
     }
 }

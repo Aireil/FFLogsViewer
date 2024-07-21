@@ -41,7 +41,7 @@ public class HeaderBar
             this.ResetSizeCount--;
         }
 
-        var calcInputSize = (contentRegionAvailWidth - (ImGui.GetStyle().ItemSpacing.X * 2) - buttonsWidth) / 3;
+        var calcInputSize = Util.Round((contentRegionAvailWidth - (ImGui.GetStyle().ItemSpacing.X * 2) - buttonsWidth) / 3);
 
         ImGui.SetNextItemWidth(calcInputSize);
         ImGui.InputTextWithHint("##FirstName", "First Name", ref Service.CharDataManager.DisplayedChar.FirstName, 15, ImGuiInputTextFlags.CharsNoBlank);
@@ -162,7 +162,7 @@ public class HeaderBar
             (ImGui.GetStyle().ItemSpacing.X * 4) + // between items
             (ImGui.GetStyle().FramePadding.X * 8); // around buttons, 2 per
         ImGui.PopFont();
-        return buttonsWidth;
+        return Util.Round(buttonsWidth);
     }
 
     private static float GetMinInputWidth()
@@ -180,7 +180,7 @@ public class HeaderBar
 
     private static float GetMinWindowSize()
     {
-        return ((GetMinInputWidth() + (ImGui.GetStyle().ItemSpacing.X * 2)) * 3) + GetButtonsWidth();
+        return Util.Round(((GetMinInputWidth() + (ImGui.GetStyle().ItemSpacing.X * 2)) * 3) + GetButtonsWidth());
     }
 
     private void DrawPartyMembersPopup()
@@ -207,7 +207,7 @@ public class HeaderBar
                     ImGui.TableNextColumn();
 
                     var partyMember = partyList[i];
-                    var iconSize = (float)Math.Round(25 * ImGuiHelpers.GlobalScale); // round because of shaking issues
+                    var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                     var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
 
                     if (ImGui.Selectable($"##PartyListSel{i}", false, ImGuiSelectableFlags.SpanAllColumns, new Vector2(0, iconSize)))

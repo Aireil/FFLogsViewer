@@ -13,7 +13,7 @@ public class StatsTab
     public static void Draw()
     {
         var hasChanged = false;
-        var comboSize = GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale);
+        var comboSize = Util.Round(GameDataManager.AvailableMetrics.Select(metric => ImGui.CalcTextSize(metric.Name).X).Max() + (30 * ImGuiHelpers.GlobalScale));
         ImGui.SetNextItemWidth(comboSize);
         if (ImGui.BeginCombo("Default Job", GameDataManager.GetDefaultJob().Name))
         {
@@ -78,7 +78,7 @@ public class StatsTab
 
             DrawTableHeader();
 
-            var minAliasSize = Service.Configuration.Stats.Select(stat => ImGui.CalcTextSize(stat.Alias).X).Prepend(ImGui.CalcTextSize("Alias").X).Max() + 10;
+            var minAliasSize = Util.Round(Service.Configuration.Stats.Select(stat => ImGui.CalcTextSize(stat.Alias).X).Prepend(ImGui.CalcTextSize("Alias").X).Max() + 10);
             for (var i = 0; i < Service.Configuration.Stats.Count; i++)
             {
                 ImGui.PushID($"##ConfigStatsTable{i}");

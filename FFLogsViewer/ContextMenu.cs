@@ -25,6 +25,7 @@ public class ContextMenu
             return false;
         }
 
+        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
         switch (menuOpenedArgs.AddonName)
         {
             case null: // Nameplate/Model menu
