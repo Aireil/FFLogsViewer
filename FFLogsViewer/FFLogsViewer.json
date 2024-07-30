@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "- 2.1.7.2:\n   Update default layout with normal as a swapped.\n   Hopefully fix shaking issues that may happen on tables.\n- 2.1.7.1:\n   Update default layout for DT.\n   Add support for PCT and VPR.\n- 2.1.7.0:\n   Dawntrail update."
+    "Changelog": "- 2.1.7.3:\n   Update default layout with savage.\n- 2.1.7.2:\n   Update default layout with normal as a swapped.\n   Hopefully fix shaking issues that may happen on tables.\n- 2.1.7.1:\n   Update default layout for DT.\n   Add support for PCT and VPR.\n- 2.1.7.0:\n   Dawntrail update."
 }
