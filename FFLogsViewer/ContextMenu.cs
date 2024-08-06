@@ -2,6 +2,7 @@
 using Dalamud.Memory;
 using FFLogsViewer.Manager;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace FFLogsViewer;
@@ -44,6 +45,7 @@ public class ContextMenu
                 return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.Id);
 
             case "BlackList":
+            case "MuteList":
                 return menuTargetDefault.TargetName != string.Empty;
         }
 
@@ -61,6 +63,10 @@ public class ContextMenu
         if (menuArgs.AddonName == "BlackList")
         {
             playerName = GetBlacklistSelectFullName();
+        }
+        else if (menuArgs.AddonName == "MuteList")
+        {
+            playerName = GetMuteListSelectFullName();
         }
         else
         {
@@ -136,7 +142,19 @@ public class ContextMenu
         var agentBlackList = (AgentBlacklist*)Framework.Instance()->GetUIModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Blacklist);
         if (agentBlackList != null)
         {
-            return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue;
+            //return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue; use when CS updated
+            return MemoryHelper.ReadSeStringNullTerminated(*(nint*)((nint)agentBlackList + 0xA8)).TextValue;
+        }
+
+        return string.Empty;
+    }
+
+    private static unsafe string GetMuteListSelectFullName()
+    {
+        var agentMuteList = Framework.Instance()->GetUIModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Mutelist);
+        if (agentMuteList != null)
+        {
+            return MemoryHelper.ReadSeStringNullTerminated(*(nint*)((nint)agentMuteList + 0x68)).TextValue; // should create the agent in CS later
         }
 
         return string.Empty;
