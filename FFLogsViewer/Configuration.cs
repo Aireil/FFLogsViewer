@@ -111,8 +111,8 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "Dragonsong's Reprise", EncounterId = 1076, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "The Omega Protocol", EncounterId = 1077, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Trial 1", EncounterId = 1071, Difficulty = "Normal", DifficultyId = 100 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Trial 2", EncounterId = 1072, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Valigarmanda", EncounterId = 1071, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Zoraal Ja", EncounterId = 1072, Difficulty = "Normal", DifficultyId = 100 },
         ];
     }
 
