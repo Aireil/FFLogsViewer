@@ -59,7 +59,7 @@ jobs:
       with:
         repository: ${{ env.PERSONAL_PLUGIN_REPO }}
         token: ${{ secrets.PAT }}
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4.1.7
       with:
         name: PluginRepoZip
         path: plugins/${{ env.INTERNAL_NAME }}
