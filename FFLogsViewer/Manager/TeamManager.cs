@@ -67,7 +67,6 @@ public class TeamManager
 
         for (var i = 0; i < group.MemberCount; i++)
         {
-            Service.PluginLog.Error($"{group.MemberCount} {i}");  // TODO
             var hudPartyMember = partyMemberList[i];
             var hudPartyMemberNameRaw = hudPartyMember.Name;
             if (hudPartyMemberNameRaw != null)

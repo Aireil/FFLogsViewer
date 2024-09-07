@@ -2,7 +2,6 @@
 using Dalamud.Memory;
 using FFLogsViewer.Manager;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
 namespace FFLogsViewer;
@@ -142,8 +141,7 @@ public class ContextMenu
         var agentBlackList = (AgentBlacklist*)Framework.Instance()->GetUIModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Blacklist);
         if (agentBlackList != null)
         {
-            //return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue; use when CS updated
-            return MemoryHelper.ReadSeStringNullTerminated(*(nint*)((nint)agentBlackList + 0xA8)).TextValue;
+            return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue;
         }
 
         return string.Empty;
