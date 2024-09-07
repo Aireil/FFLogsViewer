@@ -557,7 +557,6 @@ public class Table
                 ImGui.TableNextColumn();
                 var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                 var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
-                ImGui.SameLine();
                 ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
                 ImGui.SameLine();
