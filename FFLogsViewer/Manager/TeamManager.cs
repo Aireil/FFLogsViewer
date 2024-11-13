@@ -45,8 +45,8 @@ public class TeamManager
         if (this.TeamList.Count == 0 && Service.ClientState.LocalPlayer != null)
         {
             var selfName = Service.ClientState.LocalPlayer.Name.TextValue;
-            var selfWorldId = Service.ClientState.LocalPlayer.HomeWorld.Id;
-            var selfJobId = Service.ClientState.LocalPlayer.ClassJob.Id;
+            var selfWorldId = Service.ClientState.LocalPlayer.HomeWorld.RowId;
+            var selfJobId = Service.ClientState.LocalPlayer.ClassJob.RowId;
             this.AddTeamMember(selfName, (ushort)selfWorldId, selfJobId, true);
         }
     }
@@ -124,6 +124,6 @@ public class TeamManager
             return;
         }
 
-        this.TeamList.Add(new TeamMember { FirstName = splitName[0], LastName = splitName[1], World = world.Name, JobId = jobId, IsInParty = isInParty });
+        this.TeamList.Add(new TeamMember { FirstName = splitName[0], LastName = splitName[1], World = world.Name.ToString(), JobId = jobId, IsInParty = isInParty });
     }
 }

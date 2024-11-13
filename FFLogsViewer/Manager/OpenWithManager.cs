@@ -99,7 +99,7 @@ public unsafe class OpenWithManager
 
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
             && Service.ClientState.LocalPlayer?.Name.TextValue == fullName
-            && Service.ClientState.LocalPlayer?.HomeWorld.Id == worldId)
+            && Service.ClientState.LocalPlayer?.HomeWorld.RowId == worldId)
         {
             return;
         }

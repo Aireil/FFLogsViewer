@@ -41,7 +41,7 @@ public class ContextMenu
             case "CrossWorldLinkshell":
             case "ContentMemberList": // Eureka/Bozja/...
             case "BeginnerChatList":
-                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.Id);
+                return menuTargetDefault.TargetName != string.Empty && Util.IsWorldValid(menuTargetDefault.TargetHomeWorld.RowId);
 
             case "BlackList":
             case "MuteList":
@@ -69,7 +69,7 @@ public class ContextMenu
         }
         else
         {
-            var world = Util.GetWorld(menuTargetDefault.TargetHomeWorld.Id);
+            var world = Util.GetWorld(menuTargetDefault.TargetHomeWorld.RowId);
             if (!Util.IsWorldValid(world))
             {
                 return;

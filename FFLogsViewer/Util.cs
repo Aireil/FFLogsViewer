@@ -8,7 +8,7 @@ using Dalamud.Interface.Colors;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Action = System.Action;
 
 namespace FFLogsViewer;
@@ -324,19 +324,18 @@ public class Util
 
     public static bool IsWorldValid(World world)
     {
-        if (world.Name.RawData.IsEmpty || GetRegionCode(world) == string.Empty)
+        if (world.Name.IsEmpty || GetRegionCode(world) == string.Empty)
         {
             return false;
         }
 
-        return char.IsUpper((char)world.Name.RawData[0]);
+        return char.IsUpper(world.Name.ToString()[0]);
     }
 
     public static World GetWorld(uint worldId)
     {
-        var worldSheet = Service.DataManager.GetExcelSheet<World>()!;
-        var world = worldSheet.FirstOrDefault(x => x.RowId == worldId);
-        if (world == null)
+        var worldSheet = Service.DataManager.GetExcelSheet<World>();
+        if (worldSheet.TryGetRow(worldId, out var world))
         {
             return worldSheet.First();
         }
@@ -346,7 +345,7 @@ public class Util
 
     public static string GetRegionCode(World world)
     {
-        return world.DataCenter?.Value?.Region switch
+        return world.DataCenter.ValueNullable?.Region switch
         {
             1 => "JP",
             2 => "NA",
@@ -369,5 +368,34 @@ public class Util
     public static float Round(float value)
     {
         return (float)Math.Round(value);
+    }
+
+    public static bool TryGetFirst<T>(IEnumerable<T> values, out T result) where T : struct
+    {
+        using var e = values.GetEnumerator();
+        if (e.MoveNext())
+        {
+            result = e.Current;
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    public static bool TryGetFirst<T>(IEnumerable<T> values, Predicate<T> predicate, out T result) where T : struct
+    {
+        using var e = values.GetEnumerator();
+        while (e.MoveNext())
+        {
+            if (predicate(e.Current))
+            {
+                result = e.Current;
+                return true;
+            }
+        }
+
+        result = default;
+        return false;
     }
 }

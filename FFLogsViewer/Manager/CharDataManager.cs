@@ -4,7 +4,7 @@ using System.Linq;
 using FFLogsViewer.Model;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace FFLogsViewer.Manager;
 
@@ -23,7 +23,7 @@ public class CharDataManager
         if (!Service.Configuration.Style.IsLocalPlayerInPartyView)
         {
             var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
-                                                             && member.World == localPLayer.HomeWorld.GameData?.Name.RawString);
+                                                             && member.World == localPLayer.HomeWorld.ValueNullable?.Name);
             if (index >= 0)
             {
                 currPartyMembers.RemoveAt(index);
@@ -59,19 +59,24 @@ public class CharDataManager
 
     public CharDataManager()
     {
-        var worlds = Service.DataManager.GetExcelSheet<World>()?.Where(Util.IsWorldValid);
+        var worlds = Service.DataManager.GetExcelSheet<World>().Where(Util.IsWorldValid);
         if (worlds == null)
         {
             throw new InvalidOperationException("Sheets weren't ready.");
         }
 
-        this.ValidWorlds = worlds.Select(world => world.Name.RawString).ToArray();
+        this.ValidWorlds = worlds.Select(world => world.Name.ToString()).ToArray();
     }
 
     public static string GetRegionCode(string worldName)
     {
-        var world = Service.DataManager.GetExcelSheet<World>()!.FirstOrDefault(x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase));
-        if (world == null || !Util.IsWorldValid(world))
+        var worldSheet = Service.DataManager.GetExcelSheet<World>();
+
+        if (!Util.TryGetFirst(
+                worldSheet,
+                x => x.Name.ToString().Equals(worldName, StringComparison.InvariantCultureIgnoreCase),
+                out var world)
+            || !Util.IsWorldValid(world))
         {
             return string.Empty;
         }
