@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Memory;
 using FFLogsViewer.Model;
@@ -60,14 +61,14 @@ public class TeamManager
         }
     }
 
-    private unsafe void AddMembersFromGroupManager(GroupManager.Group group)
+    private unsafe void AddMembersFromPartyHud(GroupManager.Group group)
     {
-        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMembers;
+        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMembers.ToArray();
         var groupManagerIndexLeft = Enumerable.Range(0, group.MemberCount).ToList();
 
         for (var i = 0; i < group.MemberCount; i++)
         {
-            var hudPartyMember = partyMemberList[i];
+            var hudPartyMember = partyMemberList.First(member => member.Index == i);
             var hudPartyMemberNameRaw = hudPartyMember.Name;
             if (hudPartyMemberNameRaw != null)
             {
@@ -91,6 +92,27 @@ public class TeamManager
                             break;
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private unsafe void AddMembersFromGroupManager(GroupManager.Group group)
+    {
+        try
+        {
+            this.AddMembersFromPartyHud(group);
+        }
+        catch (Exception e)
+        {
+            Service.PluginLog.Error($"Falling back to group manager order, exception while trying to get party members from HUD: {e.Message}");
+
+            for (var i = 0; i < group.MemberCount; i++)
+            {
+                var partyMember = group.GetPartyMemberByIndex(i);
+                if (partyMember != null)
+                {
+                    this.AddTeamMember(partyMember->NameString, partyMember->HomeWorld, partyMember->ClassJob, true);
                 }
             }
         }
