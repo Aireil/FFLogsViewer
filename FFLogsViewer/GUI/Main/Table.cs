@@ -326,11 +326,11 @@ public class Table
                         jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.LoadedJobId)?.Color ?? jobColor;
                     }
 
-                    ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
+                    using var color = ImRaii.PushColor(ImGuiCol.Text, jobColor);
                     Util.CenterSelectableWithError(charData.Abbreviation + $"##Selectable{i}", charData);
                     Util.LinkOpenOrPopup(charData);
 
-                    ImGui.PopStyleColor();
+                    color.Pop();
 
                     if (charData.CharError == null)
                     {
@@ -570,11 +570,11 @@ public class Table
                         jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == charData.LoadedJobId)?.Color ?? jobColor;
                     }
 
-                    ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
+                    using var color = ImRaii.PushColor(ImGuiCol.Text, jobColor);
                     Util.SelectableWithError($"{charData.FirstName} {charData.LastName}##Selectable{i}", charData);
                     Util.LinkOpenOrPopup(charData);
 
-                    ImGui.PopStyleColor();
+                    color.Pop();
 
                     if (charData.CharError == null)
                     {
@@ -673,16 +673,17 @@ public class Table
 
     private void DrawEncounterName(LayoutEntry entry, string encounterName, string hoverMessage, int row)
     {
+        ImRaii.Color color = new();
         if (!hoverMessage.IsNullOrEmpty())
         {
-            ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+            color.Push(ImGuiCol.Text, ImGuiColors.DalamudGrey);
         }
 
         this.DrawSwapAlias(entry, encounterName, row);
 
         if (!hoverMessage.IsNullOrEmpty())
         {
-            ImGui.PopStyleColor();
+            color.Pop();
             Util.SetHoverTooltip(hoverMessage);
         }
     }

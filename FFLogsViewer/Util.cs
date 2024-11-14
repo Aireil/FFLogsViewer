@@ -19,16 +19,17 @@ public class Util
     public static bool DrawButtonIcon(FontAwesomeIcon icon, Vector2? size = null)
     {
         using var font = ImRaii.PushFont(UiBuilder.IconFont);
+        using ImRaii.Style style = new();
         if (size != null)
         {
-            ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, size.Value);
+            style.Push(ImGuiStyleVar.FramePadding, size.Value);
         }
 
         var ret = ImGui.Button(icon.ToIconString());
 
         if (size != null)
         {
-            ImGui.PopStyleVar();
+            style.Pop();
         }
 
         font.Pop();
@@ -38,9 +39,9 @@ public class Util
 
     public static bool DrawDisabledButton(string label, bool isDisabled)
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.Alpha, isDisabled ? 0.5f : 1.0f);
+        using var style = ImRaii.PushStyle(ImGuiStyleVar.Alpha, isDisabled ? 0.5f : 1.0f);
         var ret = ImGui.Button(label);
-        ImGui.PopStyleVar();
+        style.Pop();
 
         return ret;
     }
@@ -97,14 +98,14 @@ public class Util
         CenterCursor(ImGui.CalcTextSize(text, true).X);
     }
 
-    public static void CenterText(string text, Vector4? color = null)
+    public static void CenterText(string text, Vector4? textColor = null)
     {
         CenterCursor(text);
 
-        color ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
-        ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
+        textColor ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
+        using var color = ImRaii.PushColor(ImGuiCol.Text, textColor.Value);
         ImGui.TextUnformatted(text);
-        ImGui.PopStyleColor();
+        color.Pop();
     }
 
     public static void CenterError(CharData charData)
@@ -140,26 +141,26 @@ public class Util
         }
     }
 
-    public static bool CenterSelectable(string text, Vector4? color = null)
+    public static bool CenterSelectable(string text, Vector4? textColor = null)
     {
         CenterCursor(text);
 
-        color ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
-        ImGui.PushStyleColor(ImGuiCol.Text, color.Value);
+        textColor ??= ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
+        using var color = ImRaii.PushColor(ImGuiCol.Text, textColor.Value);
         var ret = ImGui.Selectable(text, false, ImGuiSelectableFlags.None, ImGui.CalcTextSize(text, true));
-        ImGui.PopStyleColor();
+        color.Pop();
 
         return ret;
     }
 
     public static void SelectableWithError(string text, CharData charData)
     {
-        var color = charData.CharError != null
+        var textColor = charData.CharError != null
                         ? GetErrorColor(charData)
                         : ImGui.ColorConvertU32ToFloat4(ImGui.GetColorU32(ImGuiCol.Text));
-        ImGui.PushStyleColor(ImGuiCol.Text, color);
+        using var color = ImRaii.PushColor(ImGuiCol.Text, textColor);
         ImGui.Selectable(text);
-        ImGui.PopStyleColor();
+        color.Pop();
         if (charData.CharError != null)
         {
             SetHoverTooltip(GetErrorMessage(charData));

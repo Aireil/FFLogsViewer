@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
 using FFLogsViewer.Model;
 using ImGuiNET;
 
@@ -118,7 +119,7 @@ public class LayoutTab
 
             for (var i = 0; i < Service.Configuration.Layout.Count; i++)
             {
-                ImGui.PushID($"##ConfigLayoutTableEntry{i}");
+                using var id = ImRaii.PushId($"##ConfigLayoutTableEntry{i}");
 
                 var layoutEntry = Service.Configuration.Layout[i];
                 ImGui.TableNextRow();
@@ -131,7 +132,7 @@ public class LayoutTab
                     Service.Configuration.Save();
                 }
 
-                ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
+                using var style = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
 
                 ImGui.SameLine();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowDown, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
@@ -141,7 +142,7 @@ public class LayoutTab
                     Service.Configuration.Save();
                 }
 
-                ImGui.PopStyleVar();
+                style.Pop();
 
                 ImGui.TableNextColumn();
                 Util.CenterText(layoutEntry.Type.ToString());
@@ -183,7 +184,7 @@ public class LayoutTab
 
                 Util.SetHoverTooltip("Edit");
 
-                ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
+                style.Push(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
 
                 ImGui.SameLine();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.Plus))
@@ -193,11 +194,11 @@ public class LayoutTab
                     this.shouldPopupOpen = true;
                 }
 
-                ImGui.PopStyleVar();
+                style.Pop();
 
                 Util.SetHoverTooltip("Add below");
 
-                ImGui.PopID();
+                id.Pop();
             }
 
             ImGui.EndTable();

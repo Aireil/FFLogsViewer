@@ -18,7 +18,9 @@ public class HeaderBar
 
     public void Draw()
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4 * ImGuiHelpers.GlobalScale, ImGui.GetStyle().ItemSpacing.Y));
+        using var style = ImRaii.PushStyle(
+            ImGuiStyleVar.ItemSpacing,
+            new Vector2(4 * ImGuiHelpers.GlobalScale, ImGui.GetStyle().ItemSpacing.Y));
 
         var buttonsWidth = GetButtonsWidth();
         var minWindowSize = GetMinWindowSize();
@@ -89,7 +91,7 @@ public class HeaderBar
 
         this.DrawPartyMembersPopup();
 
-        ImGui.PopStyleVar();
+        style.Pop();
 
         ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 2);
 
@@ -98,13 +100,13 @@ public class HeaderBar
             var message = FFLogsClient.IsConfigSet()
                               ? "API client not valid, click to open settings."
                               : "API client not setup, click to open settings.";
-            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+            using var color = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
             if (Util.CenterSelectable(message))
             {
                 Service.ConfigWindow.IsOpen = true;
             }
 
-            ImGui.PopStyleColor();
+            color.Pop();
 
             return;
         }

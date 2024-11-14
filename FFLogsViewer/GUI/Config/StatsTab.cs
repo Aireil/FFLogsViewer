@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
@@ -81,7 +82,7 @@ public class StatsTab
             var minAliasSize = Util.Round(Service.Configuration.Stats.Select(stat => ImGui.CalcTextSize(stat.Alias).X).Prepend(ImGui.CalcTextSize("Alias").X).Max() + 10);
             for (var i = 0; i < Service.Configuration.Stats.Count; i++)
             {
-                ImGui.PushID($"##ConfigStatsTable{i}");
+                using var id = ImRaii.PushId($"##ConfigStatsTable{i}");
 
                 var stat = Service.Configuration.Stats[i];
                 ImGui.TableNextRow();
@@ -93,7 +94,7 @@ public class StatsTab
                     hasChanged = true;
                 }
 
-                ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
+                using var style = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(2, 0));
 
                 ImGui.SameLine();
                 if (Util.DrawButtonIcon(FontAwesomeIcon.ArrowDown, new Vector2(2, ImGui.GetStyle().FramePadding.Y)))
@@ -102,7 +103,7 @@ public class StatsTab
                     hasChanged = true;
                 }
 
-                ImGui.PopStyleVar();
+                style.Pop();
 
                 ImGui.TableNextColumn();
                 ImGui.SetNextItemWidth(minAliasSize);
@@ -125,7 +126,7 @@ public class StatsTab
                     hasChanged = true;
                 }
 
-                ImGui.PopID();
+                id.Pop();
             }
 
             ImGui.EndTable();

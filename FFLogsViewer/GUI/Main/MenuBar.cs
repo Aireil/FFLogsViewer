@@ -15,7 +15,9 @@ public class MenuBar
 {
     public static void Draw()
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(6 * ImGuiHelpers.GlobalScale, ImGui.GetStyle().ItemSpacing.Y));
+        using var style = ImRaii.PushStyle(
+            ImGuiStyleVar.ItemSpacing,
+            new Vector2(6 * ImGuiHelpers.GlobalScale, ImGui.GetStyle().ItemSpacing.Y));
 
         if (ImGui.BeginMenuBar())
         {
@@ -101,25 +103,25 @@ public class MenuBar
                 jobColor = GameDataManager.Jobs.FirstOrDefault(job => job.Id == Service.CharDataManager.DisplayedChar.LoadedJobId)?.Color ?? jobColor;
             }
 
-            ImGui.PushStyleColor(ImGuiCol.Text, jobColor);
+            using var color = ImRaii.PushColor(ImGuiCol.Text, jobColor);
             if (ImGui.BeginMenu(Service.MainWindow.Job.Abbreviation))
             {
                 foreach (var job in GameDataManager.Jobs)
                 {
-                    ImGui.PushStyleColor(ImGuiCol.Text, job.Color);
+                    color.Push(ImGuiCol.Text, job.Color);
                     if (ImGui.MenuItem(job.Name))
                     {
                         Service.MainWindow.Job = job;
                         hasTmpSettingChanged = true;
                     }
 
-                    ImGui.PopStyleColor();
+                    color.Pop();
                 }
 
                 ImGui.EndMenu();
             }
 
-            ImGui.PopStyleColor();
+            color.Pop();
 
             if (ImGui.BeginMenu(Service.MainWindow.GetCurrentMetric().Abbreviation))
             {
@@ -175,7 +177,7 @@ public class MenuBar
             var isButtonHidden = Service.Configuration.IsUpdateDismissed2100 || (!ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0);
             if (isButtonHidden)
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, Vector4.Zero);
+                color.Push(ImGuiCol.Text, Vector4.Zero);
             }
 
             font.Push(UiBuilder.IconFont);
@@ -190,7 +192,7 @@ public class MenuBar
 
             if (isButtonHidden)
             {
-                ImGui.PopStyleColor();
+                color.Pop();
             }
 
             Util.SetHoverTooltip("Update message");
@@ -245,7 +247,7 @@ public class MenuBar
             ImGui.EndMenuBar();
         }
 
-        ImGui.PopStyleVar();
+        style.Pop();
     }
 
     public static void DrawHistoryPopup()

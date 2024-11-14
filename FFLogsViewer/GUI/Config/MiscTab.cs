@@ -1,6 +1,7 @@
 ﻿using System;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Config;
@@ -144,9 +145,9 @@ public class MiscTab
             ImGui.TextColored(ImGuiColors.DalamudRed, "This client is NOT valid.");
             if (FFLogsClient.IsConfigSet())
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudRed);
+                using var color = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudRed);
                 ImGui.TextWrapped("If you are certain that the API client is valid, this may indicate that FF Logs is unreachable.\nMake sure you can open it in your browser before trying again.");
-                ImGui.PopStyleColor();
+                color.Pop();
                 if (ImGui.Button("Open FF Logs"))
                 {
                     Util.OpenLink("https://www.fflogs.com/");
