@@ -113,6 +113,7 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Valigarmanda", EncounterId = 1071, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Zoraal Ja", EncounterId = 1072, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Queen Eternal", EncounterId = 1078, Difficulty = "Normal", DifficultyId = 100 },
         ];
     }
 
