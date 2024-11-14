@@ -2,11 +2,11 @@ name: Build
 
 # Put your personal access token in a repository secret named PAT for cross-repository access
 
-on: 
+on:
   workflow_dispatch:
   push:
     branches:
-    - master
+      - master
 
 env:
   PUBLIC_NAME: FFLogsViewer
@@ -18,54 +18,83 @@ env:
 
 jobs:
   build:
-    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(stg):')}}
+    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(')}}
     runs-on: windows-2022
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1.0.2
-    - name: Download Dalamud
-      if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') }}
-      run: |
-        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
-        Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
-    - name: Download Dalamud Staging
-      if: ${{ contains(toJSON(github.event.commits.*.message), 'build(stg):') }}
-      run: |
-          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Extract Branch
+        id: extract_branch
+        run: |
+          $branch_name = 'master'
+          $commit_messages = @'
+          ${{ toJSON(github.event.commits) }}
+          '@
+          
+          $commit_messages = $commit_messages | ConvertFrom-Json
+          
+          foreach ($commit in $commit_messages) {
+              if ($commit.message -match 'build\(([^)]+)\):') {
+                  $branch_name = $matches[1]
+                  break
+              }
+          }
+
+          echo "branch_name=$branch_name" >> $env:GITHUB_OUTPUT
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Download Dalamud
+        run: |
+          $branch_name = '${{ steps.extract_branch.outputs.branch_name }}'
+
+          if ($branch_name -eq 'master') {
+            $url = 'https://goatcorp.github.io/dalamud-distrib/latest.zip'
+          } else {
+            $url = "https://goatcorp.github.io/dalamud-distrib/$branch_name/latest.zip"
+          }
+          
+          Invoke-WebRequest -Uri $url -OutFile latest.zip
           Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
-    - name: Build
-      run: |
-        dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
-        dotnet build --configuration Release
-    - name: Test
-      run: |
-        dotnet test --no-restore --verbosity normal
-    - uses: actions/upload-artifact@v4
-      with:
-        name: PluginRepoZip
-        path: ${{ env.RELEASE_DIR }}
-        if-no-files-found: error
+
+      - name: Build
+        run: |
+          dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
+          dotnet build --configuration Release
+
+      - name: Test
+        run: |
+          dotnet test --no-restore --verbosity normal
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PluginRepoZip
+          path: ${{ env.RELEASE_DIR }}
+          if-no-files-found: error
+
 
   deploy:
     needs: build
-    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(stg):')}}
+    if: ${{ contains(toJSON(github.event.commits.*.message), 'build:') || contains(toJSON(github.event.commits.*.message), 'build(')}}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: ${{ env.PERSONAL_PLUGIN_REPO }}
-        token: ${{ secrets.PAT }}
-    - uses: actions/download-artifact@v4.1.7
-      with:
-        name: PluginRepoZip
-        path: plugins/${{ env.INTERNAL_NAME }}
-    - uses: EndBug/add-and-commit@v7
-      with:
-        add: --all
-        author_name: GitHub Action
-        author_email: github-actions[bot]@users.noreply.github.com
-        message: Update ${{ env.INTERNAL_NAME }}
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ env.PERSONAL_PLUGIN_REPO }}
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/download-artifact@v4.1.7
+        with:
+          name: PluginRepoZip
+          path: plugins/${{ env.INTERNAL_NAME }}
+
+      - uses: EndBug/add-and-commit@v7
+        with:
+          add: --all
+          author_name: GitHub Action
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: Update ${{ env.INTERNAL_NAME }}

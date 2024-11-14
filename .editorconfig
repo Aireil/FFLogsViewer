@@ -7,9 +7,7 @@ charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 
-# 4 space indentation
 indent_style = space
-indent_size = 4
 
 # disable redundant style warnings
 
