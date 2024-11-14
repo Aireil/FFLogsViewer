@@ -5,6 +5,7 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using FFLogsViewer.Manager;
 using ImGuiNET;
 
@@ -19,7 +20,7 @@ public class MenuBar
         if (ImGui.BeginMenuBar())
         {
             string clearHoverTooltip;
-            ImGui.PushFont(UiBuilder.IconFont);
+            using var font = ImRaii.PushFont(UiBuilder.IconFont);
             if (Service.Configuration.IsCachingEnabled && Service.KeyState[VirtualKey.CONTROL])
             {
                 if (ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
@@ -46,20 +47,20 @@ public class MenuBar
                 }
             }
 
-            ImGui.PopFont();
+            font.Pop();
             Util.SetHoverTooltip(clearHoverTooltip);
 
-            ImGui.PushFont(UiBuilder.IconFont);
+            font.Push(UiBuilder.IconFont);
             if (ImGui.MenuItem(FontAwesomeIcon.Cog.ToIconString()))
             {
                 Service.ConfigWindow.Toggle();
             }
 
-            ImGui.PopFont();
+            font.Pop();
             Util.SetHoverTooltip("Configuration");
 
             var swapViewIcon = Service.MainWindow.IsPartyView ? FontAwesomeIcon.User : FontAwesomeIcon.Users;
-            ImGui.PushFont(UiBuilder.IconFont);
+            font.Push(UiBuilder.IconFont);
             if (ImGui.MenuItem(swapViewIcon.ToIconString()))
             {
                 if (Service.FFLogsClient.IsTokenValid)
@@ -78,16 +79,16 @@ public class MenuBar
                 }
             }
 
-            ImGui.PopFont();
+            font.Pop();
             Util.SetHoverTooltip(Service.MainWindow.IsPartyView ? "Swap to single view" : "Swap to party view");
 
-            ImGui.PushFont(UiBuilder.IconFont);
+            font.Push(UiBuilder.IconFont);
             if (ImGui.MenuItem(FontAwesomeIcon.History.ToIconString()))
             {
                 ImGui.OpenPopup("##History");
             }
 
-            ImGui.PopFont();
+            font.Pop();
             Util.SetHoverTooltip("History");
 
             DrawHistoryPopup();
@@ -177,7 +178,7 @@ public class MenuBar
                 ImGui.PushStyleColor(ImGuiCol.Text, Vector4.Zero);
             }
 
-            ImGui.PushFont(UiBuilder.IconFont);
+            font.Push(UiBuilder.IconFont);
 
             ImGui.SameLine();
             if (ImGui.MenuItem(FontAwesomeIcon.InfoCircle.ToIconString()))
@@ -185,7 +186,7 @@ public class MenuBar
                 ImGui.OpenPopup("##UpdateMessage");
             }
 
-            ImGui.PopFont();
+            font.Pop();
 
             if (isButtonHidden)
             {
@@ -199,10 +200,10 @@ public class MenuBar
                 ImGui.Text("New feature:");
                 ImGui.Text("- Party view:");
 
-                ImGui.PushFont(UiBuilder.IconFont);
+                font.Push(UiBuilder.IconFont);
                 ImGui.SameLine();
                 ImGui.Text(FontAwesomeIcon.Users.ToIconString());
-                ImGui.PopFont();
+                font.Pop();
 
                 ImGui.Text("   Using the 3rd button on this line, you will switch the main window to party view.\n" +
                            "   This view allows you to easily see the logs of your current party.\n" +
@@ -212,10 +213,10 @@ public class MenuBar
                 ImGui.Text("Misc changes:");
                 ImGui.Text("- Cache:");
 
-                ImGui.PushFont(UiBuilder.IconFont);
+                font.Push(UiBuilder.IconFont);
                 ImGui.SameLine();
                 ImGui.Text(FontAwesomeIcon.Trash.ToIconString());
-                ImGui.PopFont();
+                font.Pop();
 
                 ImGui.Text("   Requests are now cached.\n" +
                            "   The cache is cleared every hour and the 4th button on this line allows you to clear it manually.\n" +

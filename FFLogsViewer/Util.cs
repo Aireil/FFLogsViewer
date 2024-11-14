@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
 using ImGuiNET;
@@ -17,7 +18,7 @@ public class Util
 {
     public static bool DrawButtonIcon(FontAwesomeIcon icon, Vector2? size = null)
     {
-        ImGui.PushFont(UiBuilder.IconFont);
+        using var font = ImRaii.PushFont(UiBuilder.IconFont);
         if (size != null)
         {
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, size.Value);
@@ -30,7 +31,7 @@ public class Util
             ImGui.PopStyleVar();
         }
 
-        ImGui.PopFont();
+        font.Pop();
 
         return ret;
     }

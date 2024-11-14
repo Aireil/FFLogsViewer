@@ -5,6 +5,7 @@ using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Main;
@@ -153,7 +154,7 @@ public class HeaderBar
 
     private static float GetButtonsWidth()
     {
-        ImGui.PushFont(UiBuilder.IconFont);
+        using var font = ImRaii.PushFont(UiBuilder.IconFont);
         var buttonsWidth =
             ImGui.CalcTextSize(FontAwesomeIcon.Search.ToIconString()).X +
             ImGui.CalcTextSize(FontAwesomeIcon.Crosshairs.ToIconString()).X +
@@ -161,7 +162,7 @@ public class HeaderBar
             ImGui.CalcTextSize(FontAwesomeIcon.UsersCog.ToIconString()).X +
             (ImGui.GetStyle().ItemSpacing.X * 4) + // between items
             (ImGui.GetStyle().FramePadding.X * 8); // around buttons, 2 per
-        ImGui.PopFont();
+        font.Pop();
         return Util.Round(buttonsWidth);
     }
 

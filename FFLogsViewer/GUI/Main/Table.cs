@@ -6,6 +6,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
@@ -221,10 +222,10 @@ public class Table
         if (Service.CharDataManager.PartyMembers.Count == 0)
         {
             ImGui.Text("Use");
-            ImGui.PushFont(UiBuilder.IconFont);
+            using var font = ImRaii.PushFont(UiBuilder.IconFont);
             ImGui.SameLine();
             ImGui.Text(FontAwesomeIcon.Redo.ToIconString());
-            ImGui.PopFont();
+            font.Pop();
             ImGui.SameLine();
             ImGui.Text("to refresh the party state.");
         }
