@@ -335,7 +335,7 @@ public class Util
     public static World GetWorld(uint worldId)
     {
         var worldSheet = Service.DataManager.GetExcelSheet<World>();
-        if (worldSheet.TryGetRow(worldId, out var world))
+        if (!worldSheet.TryGetRow(worldId, out var world))
         {
             return worldSheet.First();
         }
