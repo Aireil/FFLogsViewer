@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "-2.1.7.7\n   Fix broken stat layout in party view\n-2.1.7.5\n   Update extremes names\n   Fix context menu not working in blacklist and mute list"
+    "Changelog": "-2.2.0.0\n   API 11 + 7.1 update.\n   Update the default layout.\n   Add some background improvements."
 }
