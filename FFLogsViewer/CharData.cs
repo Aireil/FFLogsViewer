@@ -204,7 +204,7 @@ public class CharData
             var properties = character.Properties();
             foreach (var prop in properties)
             {
-                if (prop.Name != "hidden")
+                if (prop.Value != null && prop.Name != "hidden")
                 {
                     this.ParseZone(prop.Value);
                 }

@@ -103,10 +103,13 @@ public class Table
                 hoverMessage = "No data available.\n" +
                                "\n" +
                                "This error is expected when the encounter is a recent addition to the layout or is not yet listed on FF Logs.\n" +
-                               "If neither of these is the case, please " +
+                               "It can also be caused by an issue with FF Logs API, please check if the zone is visible on the character's page on FF Logs' website." +
+                               "\n\n" +
+                               "If you see it properly on the website, please " +
                                (Service.Configuration.IsDefaultLayout
                                     ? "report the issue on GitHub."
-                                    : "try adding the encounter again.");
+                                    : "try adding the encounter again.")
+                               ;
             }
         }
         else if (encounter is { IsLockedIn: false })
