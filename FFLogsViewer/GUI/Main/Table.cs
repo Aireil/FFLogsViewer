@@ -250,7 +250,7 @@ public class Table
 
         if (Util.DrawButtonIcon(FontAwesomeIcon.Redo))
         {
-            Service.CharDataManager.UpdatePartyMembers();
+            Service.CharDataManager.UpdatePartyMembers(false);
         }
 
         Util.SetHoverTooltip("Refresh party state");
@@ -298,26 +298,37 @@ public class Table
 
         this.DrawEncounterHeader();
 
+        var nbColumns = Service.Configuration.Style.IsLocalPlayerInPartyView || Service.CharDataManager.IsCurrPartyAnAlliance ? 9 : 8;
+        var nbChars = nbColumns - 1;
+
         if (ImGui.BeginTable(
                 "##MainWindowTablePartyViewEncounterLayout",
-                Service.Configuration.Style.IsLocalPlayerInPartyView ? 9 : 8,
+                nbColumns,
                 Service.Configuration.Style.MainTableFlags))
         {
             ImGui.TableNextColumn();
 
-            var separatorY = ImGui.GetCursorPosY();
-            if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
+            var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
+
+            if (Service.TeamManager.HasAllianceMembers)
             {
-                ImGui.Separator();
+                var posY = ImGui.GetCursorPosY() + (ImGui.GetStyle().ItemSpacing.Y + iconSize);
+                ImGui.SetCursorPosY(posY);
+
+                //  == mouse character from game's font
+                if (ImGui.Selectable("Alliance swap ##PartyViewAllianceSwapEncounterLayout"))
+                {
+                    Service.CharDataManager.SwapAlliance();
+                }
             }
 
-            for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
+            var firstLineAfterNamesCursorPosY = 0.0f;
+            for (var i = 0; i < nbChars; i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
 
                 ImGui.TableNextColumn();
 
-                var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                 Util.CenterCursor(iconSize);
                 ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
 
@@ -345,10 +356,18 @@ public class Table
                     Util.CenterText("-");
                 }
 
-                ImGui.SetCursorPosY(separatorY);
-                if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
+                firstLineAfterNamesCursorPosY = ImGui.GetCursorPosY();
+            }
+
+            if (Service.Configuration.Style.IsHeaderSeparatorDrawn && displayedEntries[0].Type != LayoutEntryType.Header)
+            {
+                ImGui.TableNextRow();
+                ImGui.TableNextColumn();
+                for (var i = 0; i < nbColumns; i++)
                 {
+                    ImGui.SetCursorPosY(firstLineAfterNamesCursorPosY);
                     ImGui.Separator();
+                    ImGui.TableNextColumn();
                 }
             }
 
@@ -363,7 +382,7 @@ public class Table
                 {
                     this.DrawStatAlias(entry, row);
 
-                    for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
+                    for (var i = 0; i < nbChars; i++)
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -374,7 +393,7 @@ public class Table
                 {
                     this.DrawEncounterName(entry, entry.Alias == string.Empty ? entry.Encounter : entry.Alias, string.Empty, row);
 
-                    for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
+                    for (var i = 0; i < nbChars; i++)
                     {
                         ImGui.TableNextColumn();
                         var charData = i < currentParty.Count ? currentParty[i] : null;
@@ -531,6 +550,13 @@ public class Table
             ImGui.TableNextColumn();
 
             var separatorY = ImGui.GetCursorPosY() + ImGui.GetFontSize() + ImGui.GetStyle().ItemSpacing.Y;
+
+            //  == mouse character from game's font
+            if (Service.TeamManager.HasAllianceMembers && ImGui.Selectable("Alliance swap ##PartyViewAllianceSwapStatLayout"))
+            {
+                Service.CharDataManager.SwapAlliance();
+            }
+
             ImGui.SetCursorPosY(separatorY);
             if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
             {
@@ -549,7 +575,8 @@ public class Table
                 }
             }
 
-            for (var i = 0; i < (Service.Configuration.Style.IsLocalPlayerInPartyView ? 8 : 7); i++)
+            var nbChars = Service.Configuration.Style.IsLocalPlayerInPartyView || Service.CharDataManager.IsCurrPartyAnAlliance ? 8 : 7;
+            for (var i = 0; i < nbChars; i++)
             {
                 var charData = i < currentParty.Count ? currentParty[i] : null;
 

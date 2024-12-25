@@ -12,15 +12,35 @@ public class CharDataManager
 {
     public CharData DisplayedChar = new();
     public List<CharData> PartyMembers = [];
+    public bool IsCurrPartyAnAlliance;
     public string[] ValidWorlds;
 
-    public void UpdatePartyMembers(bool onlyFetchNewMembers = false)
+    private uint? currentAllianceIndex;
+
+    public void UpdatePartyMembers(bool forceLocalPlayerParty = true)
     {
+        if (forceLocalPlayerParty)
+        {
+            this.currentAllianceIndex = null;
+        }
+
         Service.TeamManager.UpdateTeamList();
         var localPLayer = Service.ClientState.LocalPlayer;
-        var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.IsInParty).ToList();
+        var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.AllianceIndex == this.currentAllianceIndex).ToList();
+        this.IsCurrPartyAnAlliance = this.currentAllianceIndex != null;
 
-        if (!Service.Configuration.Style.IsLocalPlayerInPartyView)
+        // the alliance is empty, force local player party
+        if (this.IsCurrPartyAnAlliance && currPartyMembers.Count == 0)
+        {
+            this.currentAllianceIndex = null; // not needed, but just in case, careful when touching the code in this method /!\
+
+            // ReSharper disable once TailRecursiveCall
+            // ReSharper disable once RedundantArgumentDefaultValue
+            this.UpdatePartyMembers(true);
+            return;
+        }
+
+        if (!Service.Configuration.Style.IsLocalPlayerInPartyView && !this.IsCurrPartyAnAlliance)
         {
             var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
                                                              && member.World == localPLayer.HomeWorld.ValueNullable?.Name);
@@ -54,7 +74,7 @@ public class CharDataManager
                                 member.LastName == charData.LastName &&
                                 member.World == charData.WorldName)).ToList();
 
-        this.FetchLogs(onlyFetchNewMembers);
+        this.FetchLogs();
     }
 
     public CharDataManager()
@@ -118,17 +138,16 @@ public class CharDataManager
         }
     }
 
-    public void FetchLogs(bool onlyFetchNewMembers = false)
+    public void FetchLogs()
     {
         if (Service.MainWindow.IsPartyView)
         {
             foreach (var partyMember in this.PartyMembers)
             {
-                if (partyMember.IsInfoSet() && (!onlyFetchNewMembers
-                                                || (!partyMember.IsDataReady
-                                                    && (partyMember.CharError == null
-                                                        || (partyMember.CharError != CharacterError.CharacterNotFoundFFLogs
-                                                            && partyMember.CharError != CharacterError.HiddenLogs)))))
+                if (partyMember.IsInfoSet() && !partyMember.IsDataReady
+                                            && (partyMember.CharError == null
+                                                || (partyMember.CharError != CharacterError.CharacterNotFoundFFLogs
+                                                    && partyMember.CharError != CharacterError.HiddenLogs)))
                 {
                     partyMember.FetchLogs();
                 }
@@ -153,5 +172,11 @@ public class CharDataManager
         {
             this.DisplayedChar = new CharData();
         }
+    }
+
+    public void SwapAlliance()
+    {
+        this.currentAllianceIndex = Service.TeamManager.GetNextAllianceIndex(this.currentAllianceIndex);
+        this.UpdatePartyMembers(false);
     }
 }

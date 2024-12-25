@@ -167,7 +167,11 @@ public class StyleTab
 
         ImGui.Indent();
 
-        hasStyleChanged |= ImGui.Checkbox("Include yourself in the party view", ref style.IsLocalPlayerInPartyView);
+        if (ImGui.Checkbox("Include yourself in the party view", ref style.IsLocalPlayerInPartyView))
+        {
+            Service.CharDataManager.UpdatePartyMembers();
+            hasStyleChanged = true;
+        }
 
         ImGui.Unindent();
         if (hasStyleChanged)

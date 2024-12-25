@@ -200,16 +200,27 @@ public class HeaderBar
         {
             if (ImGui.BeginTable("##PartyListTable", 3, ImGuiTableFlags.RowBg))
             {
+                uint? currentAllianceIndex = null;
                 for (var i = 0; i < partyList.Count; i++)
                 {
+                    var partyMember = partyList[i];
+
                     if (i != 0)
                     {
                         ImGui.TableNextRow();
+
+                        // mark the separation between alliances
+                        if (partyMember.AllianceIndex != currentAllianceIndex)
+                        {
+                            ImGui.TableNextRow();
+                            ImGui.TableNextRow();
+                        }
+
+                        currentAllianceIndex = partyMember.AllianceIndex;
                     }
 
                     ImGui.TableNextColumn();
 
-                    var partyMember = partyList[i];
                     var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                     var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
 
