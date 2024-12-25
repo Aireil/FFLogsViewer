@@ -88,7 +88,7 @@ public class TeamManager
 
     private unsafe void AddMembersFromPartyHud(GroupManager.Group group)
     {
-        var partyMemberList = AgentModule.Instance()->GetAgentHUD()->PartyMembers.ToArray();
+        var partyMemberList = AgentHUD.Instance()->PartyMembers.ToArray();
         var groupManagerIndexLeft = Enumerable.Range(0, group.MemberCount).ToList();
 
         for (var i = 0; i < group.MemberCount; i++)
@@ -144,14 +144,23 @@ public class TeamManager
 
         for (var groupIndex = 0; groupIndex < 5; groupIndex++)
         {
+            List<nint> allianceMembersPtr = [];
             for (var memberIndex = 0; memberIndex < 8; memberIndex++)
             {
                 var allianceMember = group.GetAllianceMemberByGroupAndIndex(groupIndex, memberIndex);
                 if (allianceMember != null)
                 {
-                    this.AddTeamMember(allianceMember->NameString, allianceMember->HomeWorld, allianceMember->ClassJob, (uint)groupIndex);
+                    allianceMembersPtr.Add((nint)allianceMember);
                     this.HasAllianceMembers = true;
                 }
+            }
+
+            // sort using the HUD agent
+            foreach (var allianceMemberPtr in allianceMembersPtr.OrderBy(
+                         ptr => AgentHUD.Instance()->RaidMemberIds.IndexOf(((PartyMember*)ptr)->EntityId)))
+            {
+                var allianceMember = (PartyMember*)allianceMemberPtr;
+                this.AddTeamMember(allianceMember->NameString, allianceMember->HomeWorld, allianceMember->ClassJob, (uint)groupIndex);
             }
         }
     }

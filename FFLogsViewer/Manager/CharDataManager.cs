@@ -167,6 +167,8 @@ public class CharDataManager
         if (Service.MainWindow.IsPartyView)
         {
             this.PartyMembers.Clear();
+            this.currentAllianceIndex = null;
+            this.IsCurrPartyAnAlliance = false;
         }
         else
         {
