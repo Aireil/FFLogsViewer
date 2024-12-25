@@ -40,7 +40,6 @@ public class TeamManager
                     }
 
                     this.AddMembersFromCRGroup(cwProxy->CrossRealmGroups[i], (uint)i);
-                    this.HasAllianceMembers = true;
                 }
             }
         }
@@ -79,6 +78,11 @@ public class TeamManager
         {
             var groupMember = crossRealmGroup.GroupMembers[i];
             this.AddTeamMember(groupMember.NameString, (ushort)groupMember.HomeWorld, groupMember.ClassJobId, groupIndex);
+
+            if (groupIndex != null)
+            {
+                this.HasAllianceMembers = true;
+            }
         }
     }
 
