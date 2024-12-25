@@ -87,17 +87,11 @@ public class Configuration : IPluginConfiguration
     {
         return
         [
-            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "ACC L-H", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "DT sav", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Black Cat", EncounterId = 93, Difficulty = "Normal", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Honey B. Lovely", EncounterId = 94, Difficulty = "Normal", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Brute Bomber", EncounterId = 95, Difficulty = "Normal", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Wicked Thunder", EncounterId = 96, Difficulty = "Normal", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Anabaseios", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "DT sav", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Kokytos", EncounterId = 88, Difficulty = "Savage", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Pandæmonium", EncounterId = 89, Difficulty = "Savage", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Themis", EncounterId = 90, Difficulty = "Savage", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Athena", EncounterId = 91, Difficulty = "Savage", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Anabaseios", ZoneId = 54, Encounter = "Pallas Athena", EncounterId = 92, Difficulty = "Savage", DifficultyId = 101, SwapId = "DT sav", SwapNumber = 1 },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "ACC L-H", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Black Cat", EncounterId = 93, Difficulty = "Normal", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Honey B. Lovely", EncounterId = 94, Difficulty = "Normal", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Brute Bomber", EncounterId = 95, Difficulty = "Normal", DifficultyId = 101 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Wicked Thunder", EncounterId = 96, Difficulty = "Normal", DifficultyId = 101 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Ultimates (DT)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "DT ult", SwapNumber = 0 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "The Unending Coil of Bahamut", EncounterId = 1073, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB", SwapId = "DT ult", SwapNumber = 0 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "The Weapon's Refrain", EncounterId = 1074, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU", SwapId = "DT ult", SwapNumber = 0 },
@@ -111,10 +105,12 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Ultimates (Legacy)", ZoneId = 43, Encounter = "The Epic of Alexander", EncounterId = 1062, Difficulty = "Normal", DifficultyId = 100, Alias = "TEA", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Dragonsong's Reprise", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "The Omega Protocol", ZoneId = 53, Encounter = "The Omega Protocol", EncounterId = 1068, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP", SwapId = "DT ult", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Trials (Extreme)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Extremes", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Valigarmanda", EncounterId = 1071, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Zoraal Ja", EncounterId = 1072, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Extreme)", ZoneId = 58, Encounter = "Queen Eternal", EncounterId = 1078, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Chaotic", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Difficulty = "Normal", DifficultyId = 100 },
         ];
     }
 
