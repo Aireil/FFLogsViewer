@@ -12,5 +12,5 @@
   "Tags": [
     "FFLogs"
   ],
-    "Changelog": "-2.2.1.0\n    Add alliance swapping to the party view.\n    Add Chaotic to the default layout.\n    Some other small fixes.\n-2.2.0.2\n    Handle FF Logs API issues more gracefully.\n-2.2.0.1\n    Add FRU to the default layout.\n-2.2.0.0\n   API 11 + 7.1 update.\n   Update the default layout.\n   Add some background improvements."
+    "Changelog": "-2.2.1.1\n    Fix clear cache button in party view.\n-2.2.1.0\n    Add alliance swapping to the party view.\n    Add Chaotic to the default layout.\n    Some other small fixes.\n-2.2.0.2\n    Handle FF Logs API issues more gracefully.\n-2.2.0.1\n    Add FRU to the default layout.\n-2.2.0.0\n   API 11 + 7.1 update.\n   Update the default layout.\n   Add some background improvements."
 }
