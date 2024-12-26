@@ -138,14 +138,14 @@ public class CharDataManager
         }
     }
 
-    public void FetchLogs()
+    public void FetchLogs(bool ignoreErrors = false)
     {
         if (Service.MainWindow.IsPartyView)
         {
             foreach (var partyMember in this.PartyMembers)
             {
-                if (partyMember.IsInfoSet() && !partyMember.IsDataReady
-                                            && (partyMember.CharError == null
+                if (partyMember.IsInfoSet() && (ignoreErrors
+                                                || partyMember.CharError == null
                                                 || (partyMember.CharError != CharacterError.CharacterNotFoundFFLogs
                                                     && partyMember.CharError != CharacterError.HiddenLogs)))
                 {

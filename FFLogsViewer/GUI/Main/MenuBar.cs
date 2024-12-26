@@ -28,7 +28,7 @@ public class MenuBar
                 if (ImGui.MenuItem(FontAwesomeIcon.Trash.ToIconString()))
                 {
                     Service.FFLogsClient.ClearCache();
-                    Service.CharDataManager.FetchLogs();
+                    Service.CharDataManager.FetchLogs(true);
                     Service.MainWindow.ResetSize();
                 }
 
