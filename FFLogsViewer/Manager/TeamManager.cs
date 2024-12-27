@@ -77,6 +77,17 @@ public class TeamManager
         for (var i = 0; i < crossRealmGroup.GroupMemberCount; i++)
         {
             var groupMember = crossRealmGroup.GroupMembers[i];
+            if (groupMember.HomeWorld == -1 || groupMember.NameString == string.Empty)
+            {
+                continue;
+            }
+
+            if (!Util.IsWorldValid((uint)groupMember.HomeWorld))
+            {
+                Service.PluginLog.Error($"Invalid world ID in cross world group: {groupMember.NameString} - {groupMember.HomeWorld}");
+                continue;
+            }
+
             this.AddTeamMember(groupMember.NameString, (ushort)groupMember.HomeWorld, groupMember.ClassJobId, groupIndex);
 
             if (groupIndex != null)
@@ -148,11 +159,19 @@ public class TeamManager
             for (var memberIndex = 0; memberIndex < 8; memberIndex++)
             {
                 var allianceMember = group.GetAllianceMemberByGroupAndIndex(groupIndex, memberIndex);
-                if (allianceMember != null)
+                if (allianceMember == null || allianceMember->HomeWorld == 65535 || allianceMember->NameString == string.Empty)
                 {
-                    allianceMembersPtr.Add((nint)allianceMember);
-                    this.HasAllianceMembers = true;
+                    continue;
                 }
+
+                if (!Util.IsWorldValid(allianceMember->HomeWorld))
+                {
+                    Service.PluginLog.Error($"Invalid world ID in group manager for alliance member: {allianceMember->NameString} - {allianceMember->HomeWorld}");
+                    continue;
+                }
+
+                allianceMembersPtr.Add((nint)allianceMember);
+                this.HasAllianceMembers = true;
             }
 
             // sort using the HUD agent
