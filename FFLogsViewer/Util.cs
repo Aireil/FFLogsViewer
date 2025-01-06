@@ -167,9 +167,9 @@ public class Util
         }
     }
 
-    public static void SetHoverTooltip(string tooltip)
+    public static void SetHoverTooltip(string tooltip, bool allowWhenDisabled = false)
     {
-        if (ImGui.IsItemHovered())
+        if (ImGui.IsItemHovered(allowWhenDisabled ? ImGuiHoveredFlags.AllowWhenDisabled : ImGuiHoveredFlags.None))
         {
             ImGui.BeginTooltip();
             ImGui.TextUnformatted(tooltip);

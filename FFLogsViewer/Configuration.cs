@@ -36,7 +36,7 @@ public class Configuration : IPluginConfiguration
     public Metric Metric { get; set; } = new() { Name = "rDPS", InternalName = "rdps" };
     public Style Style { get; set; } = new();
     public OpenWith OpenWith { get; set; } = new();
-    public bool IsUpdateDismissed2100 { get; set; } = true;
+    public bool IsUpdateDismissed2213 { get; set; }
 
     public void Save()
     {

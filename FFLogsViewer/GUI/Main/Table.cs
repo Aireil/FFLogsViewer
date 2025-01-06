@@ -202,6 +202,24 @@ public class Table
         }
     }
 
+    private static void DrawAllianceSwapButton()
+    {
+        ImGui.BeginDisabled(!Service.TeamManager.HasAllianceMembers);
+
+        //  == mouse character from game's font
+        if (ImGui.Selectable("Alliance swap ##PartyViewAllianceSwap"))
+        {
+            Service.CharDataManager.SwapAlliance();
+        }
+
+        ImGui.EndDisabled();
+
+        if (!Service.TeamManager.HasAllianceMembers)
+        {
+            Util.SetHoverTooltip("Not in an alliance", true);
+        }
+    }
+
     private static void DrawHeaderSeparator()
     {
         if (Service.Configuration.Style.IsHeaderSeparatorDrawn)
@@ -310,17 +328,10 @@ public class Table
 
             var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
 
-            if (Service.TeamManager.HasAllianceMembers)
-            {
-                var posY = ImGui.GetCursorPosY() + (ImGui.GetStyle().ItemSpacing.Y + iconSize);
-                ImGui.SetCursorPosY(posY);
+            var posY = ImGui.GetCursorPosY() + (ImGui.GetStyle().ItemSpacing.Y + iconSize);
+            ImGui.SetCursorPosY(posY);
 
-                //  == mouse character from game's font
-                if (ImGui.Selectable("Alliance swap ##PartyViewAllianceSwapEncounterLayout"))
-                {
-                    Service.CharDataManager.SwapAlliance();
-                }
-            }
+            DrawAllianceSwapButton();
 
             var firstLineAfterNamesCursorPosY = 0.0f;
             for (var i = 0; i < nbChars; i++)
@@ -551,11 +562,7 @@ public class Table
 
             var separatorY = ImGui.GetCursorPosY() + ImGui.GetFontSize() + ImGui.GetStyle().ItemSpacing.Y;
 
-            //  == mouse character from game's font
-            if (Service.TeamManager.HasAllianceMembers && ImGui.Selectable("Alliance swap ##PartyViewAllianceSwapStatLayout"))
-            {
-                Service.CharDataManager.SwapAlliance();
-            }
+            DrawAllianceSwapButton();
 
             ImGui.SetCursorPosY(separatorY);
             if (Service.Configuration.Style.IsHeaderSeparatorDrawn)

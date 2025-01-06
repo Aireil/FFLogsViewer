@@ -174,7 +174,7 @@ public class MenuBar
                 Service.CharDataManager.FetchLogs();
             }
 
-            var isButtonHidden = Service.Configuration.IsUpdateDismissed2100 || (!ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0);
+            var isButtonHidden = Service.Configuration.IsUpdateDismissed2213 || (!ImGui.IsPopupOpen("##UpdateMessage") && DateTime.Now.Second % 2 == 0);
             if (isButtonHidden)
             {
                 color.Push(ImGuiCol.Text, Vector4.Zero);
@@ -195,51 +195,56 @@ public class MenuBar
                 color.Pop();
             }
 
-            Util.SetHoverTooltip("Update message");
+            Util.SetHoverTooltip("Update message, click to open");
 
             if (ImGui.BeginPopup("##UpdateMessage", ImGuiWindowFlags.NoMove))
             {
-                ImGui.Text("New feature:");
-                ImGui.Text("- Party view:");
+                ImGui.Text("Small late feature notice, because it seems like some missed it:");
+                ImGui.Text("- Alliance swap:");
+
+                ImGui.Text("   You can swap the displayed alliance in the party view.\n" +
+                               "   The button will now always be displayed.");
+
+                ImGui.NewLine();
+
+                ImGui.Text("Reminder on existing feature:");
+                ImGui.Text("- Party view stat layout:");
 
                 font.Push(UiBuilder.IconFont);
                 ImGui.SameLine();
-                ImGui.Text(FontAwesomeIcon.Users.ToIconString());
+                ImGui.Text(FontAwesomeIcon.ExchangeAlt.ToIconString());
                 font.Pop();
 
-                ImGui.Text("   Using the 3rd button on this line, you will switch the main window to party view.\n" +
-                           "   This view allows you to easily see the logs of your current party.\n" +
-                           "   Two layouts are available:\n" +
-                           "      - Encounter layout: one stat => all encounters\n" +
-                           "      - Stat layout: one encounter => all stats\n");
-                ImGui.Text("Misc changes:");
-                ImGui.Text("- Cache:");
+                ImGui.Text("   The stat layout in the party view allows to see all stats for a specific encounter.");
+                ImGui.Text("   You can also use the button with this icon to set the default encounter used in that layout (e.g., the new Chaotic): ");
 
                 font.Push(UiBuilder.IconFont);
                 ImGui.SameLine();
-                ImGui.Text(FontAwesomeIcon.Trash.ToIconString());
+                ImGui.Text(FontAwesomeIcon.Star.ToIconString());
                 font.Pop();
 
-                ImGui.Text("   Requests are now cached.\n" +
-                           "   The cache is cleared every hour and the 4th button on this line allows you to clear it manually.\n" +
-                           "   You can disable this in the settings if you wish to.");
-                ImGui.Text("- New style setting to abbreviate job names");
-                ImGui.Text("\nIf you encounter any problem or if you have a suggestion, feel free to open an issue on the GitHub:");
+                ImGui.Text("   Fun fact, that button also works in the encounter layout to choose the default stats!");
+
+                ImGui.NewLine();
+
+                ImGui.Text("If you encounter any problem or if you have a suggestion, feel free to open an issue on the GitHub:");
 
                 if (ImGui.Button("Open the GitHub repo"))
                 {
                     Util.OpenLink("https://github.com/Aireil/FFLogsViewer");
                 }
 
-                if (ImGui.Button("Hide##UpdateMessage"))
+                ImGui.SameLine();
+                ImGui.TextColored(ImGuiColors.DalamudGrey, "I do enjoy GitHub stars if you want to give one to the repo, thank you! :)");
+
+                ImGui.NewLine();
+
+                if (ImGui.Button("Dismiss and hide##UpdateMessage"))
                 {
-                    Service.Configuration.IsUpdateDismissed2100 = true;
+                    Service.Configuration.IsUpdateDismissed2213 = true;
                     Service.Configuration.Save();
                     ImGui.CloseCurrentPopup();
                 }
-
-                ImGui.SameLine();
-                ImGui.TextColored(ImGuiColors.DalamudGrey, "Click on the same spot to open this again.");
 
                 ImGui.EndPopup();
             }
