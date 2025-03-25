@@ -113,7 +113,7 @@ public class CharDataManager
             {
                 var character = (Character*)placeholder;
                 var world = Util.GetWorld(character->HomeWorld);
-                if (Util.IsWorldValid(world) && placeholder->Name != null)
+                if (Util.IsWorldValid(world) && !placeholder->Name.IsEmpty)
                 {
                     var name = $"{placeholder->NameString}@{world.Name}";
                     return name;
