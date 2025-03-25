@@ -106,9 +106,9 @@ public class TeamManager
         {
             var hudPartyMember = partyMemberList.First(member => member.Index == i);
             var hudPartyMemberNameRaw = hudPartyMember.Name;
-            if (hudPartyMemberNameRaw != null)
+            if (hudPartyMemberNameRaw.Value != null)
             {
-                var hudPartyMemberName = MemoryHelper.ReadSeStringNullTerminated((nint)hudPartyMemberNameRaw).TextValue;
+                var hudPartyMemberName = MemoryHelper.ReadSeStringNullTerminated((nint)hudPartyMemberNameRaw.Value).TextValue;
                 for (var j = 0; j < group.MemberCount; j++)
                 {
                     // handle duplicate names from different worlds
