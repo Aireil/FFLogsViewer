@@ -12,7 +12,7 @@ env:
   PUBLIC_NAME: FFLogsViewer
   SOLUTION_NAME: FFLogsViewer
   INTERNAL_NAME: FFLogsViewer
-  RELEASE_DIR: FFLogsViewer\bin\Release\FFLogsViewer
+  RELEASE_DIR: FFLogsViewer\bin\x64\Release\FFLogsViewer
   PERSONAL_PLUGIN_REPO: Aireil/MyDalamudPlugins
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
