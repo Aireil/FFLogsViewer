@@ -46,6 +46,10 @@ public class MainWindow : Window
         }
 
         this.IsOpen = true;
+
+        // OnOpen only triggers at the end of the current frame or on the next frame, this is thus needed
+        // in the case you want it to be updated right away.
+        this.OnOpen();
     }
 
     public override void OnOpen()

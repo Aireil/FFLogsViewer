@@ -58,7 +58,7 @@ public sealed class FFLogsViewer : IDalamudPlugin
 
     private static void OpenMainUi()
     {
-        Service.MainWindow.IsOpen = true;
+        Service.MainWindow.Open();
     }
 
     private static void OpenConfigUi()
