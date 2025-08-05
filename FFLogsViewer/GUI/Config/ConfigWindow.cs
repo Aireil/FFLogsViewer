@@ -1,5 +1,5 @@
-﻿using Dalamud.Interface.Windowing;
-using ImGuiNET;
+﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Windowing;
 
 namespace FFLogsViewer.GUI.Config;
 

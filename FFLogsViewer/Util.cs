@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
-using ImGuiNET;
 using Lumina.Excel.Sheets;
+
 using Action = System.Action;
 
 namespace FFLogsViewer;

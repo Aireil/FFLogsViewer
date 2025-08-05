@@ -1,8 +1,8 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Windowing;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
-using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Main;
 

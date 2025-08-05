@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Dalamud.Game.ClientState.Keys;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace FFLogsViewer.GUI.Config;
 

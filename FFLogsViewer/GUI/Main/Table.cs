@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Textures;
@@ -10,7 +12,6 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
-using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Main;
 

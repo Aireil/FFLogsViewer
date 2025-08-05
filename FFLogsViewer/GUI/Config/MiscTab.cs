@@ -1,8 +1,9 @@
 ﻿using System;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 
 namespace FFLogsViewer.GUI.Config;
 

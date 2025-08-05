@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using FFLogsViewer.Model;
-using ImGuiNET;
+
 using Encounter = FFLogsViewer.Model.GameData.Encounter;
 
 namespace FFLogsViewer.GUI.Config;

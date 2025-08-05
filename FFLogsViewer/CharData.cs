@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFLogsViewer.Manager;
 using FFLogsViewer.Model;
-using ImGuiNET;
 using Newtonsoft.Json.Linq;
 
 namespace FFLogsViewer;
