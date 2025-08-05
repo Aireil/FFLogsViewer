@@ -27,7 +27,7 @@ public class TeamManager
         else
         {
             var cwProxy = InfoProxyCrossRealm.Instance();
-            if (cwProxy->IsInCrossRealmParty != 0)
+            if (cwProxy->IsInCrossRealmParty)
             {
                 var localIndex = cwProxy->LocalPlayerGroupIndex;
                 this.AddMembersFromCRGroup(cwProxy->CrossRealmGroups[localIndex]);

@@ -231,7 +231,7 @@ public class HeaderBar
                     }
 
                     ImGui.SameLine();
-                    ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(partyMember.JobId))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
+                    ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(partyMember.JobId))).GetWrapOrEmpty().Handle, new Vector2(iconSize));
 
                     ImGui.TableNextColumn();
 

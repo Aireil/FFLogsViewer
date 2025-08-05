@@ -342,7 +342,7 @@ public class Table
                 ImGui.TableNextColumn();
 
                 Util.CenterCursor(iconSize);
-                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
+                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().Handle, new Vector2(iconSize));
 
                 if (charData != null)
                 {
@@ -596,7 +596,7 @@ public class Table
                 ImGui.TableNextColumn();
                 var iconSize = Util.Round(25 * ImGuiHelpers.GlobalScale);
                 var middleCursorPosY = ImGui.GetCursorPosY() + (iconSize / 2) - (ImGui.GetFontSize() / 2);
-                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().ImGuiHandle, new Vector2(iconSize));
+                ImGui.Image(Service.TextureProvider.GetFromGameIcon(new GameIconLookup(Util.GetJobIconId(charData?.JobId ?? 0))).GetWrapOrEmpty().Handle, new Vector2(iconSize));
 
                 ImGui.SameLine();
                 ImGui.SetCursorPosY(middleCursorPosY);
