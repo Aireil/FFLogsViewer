@@ -111,10 +111,8 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "Dragonsong's Reprise", ZoneId = 45, Encounter = "Dragonsong's Reprise", EncounterId = 1065, Difficulty = "Normal", DifficultyId = 100, Alias = "DSR", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Endwalker", Zone = "The Omega Protocol", ZoneId = 53, Encounter = "The Omega Protocol", EncounterId = 1068, Difficulty = "Normal", DifficultyId = 100, Alias = "TOP", SwapId = "DT ult", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Extremes", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials I (Extreme)", ZoneId = 58, Encounter = "Valigarmanda", EncounterId = 1071, Difficulty = "Normal", DifficultyId = 100 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials I (Extreme)", ZoneId = 58, Encounter = "Zoraal Ja", EncounterId = 1072, Difficulty = "Normal", DifficultyId = 100 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials I (Extreme)", ZoneId = 58, Encounter = "Queen Eternal", EncounterId = 1078, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Zelenia", EncounterId = 1080, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Necron", EncounterId = 1081, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Chaotic", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Difficulty = "Normal", DifficultyId = 100 },
         ];
