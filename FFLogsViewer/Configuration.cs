@@ -113,6 +113,7 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Extremes", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Zelenia", EncounterId = 1080, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Necron", EncounterId = 1081, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Arkveld", EncounterId = 1082, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Chaotic", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Difficulty = "Normal", DifficultyId = 100 },
         ];
