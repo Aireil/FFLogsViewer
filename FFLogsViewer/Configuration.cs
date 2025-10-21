@@ -88,15 +88,15 @@ public class Configuration : IPluginConfiguration
         return
         [
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "ACC C", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "7.2", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Dancing Green", EncounterId = 97, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Sugar Riot", EncounterId = 98, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Brute Abombinator", EncounterId = 99, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Howling Blade", EncounterId = 100, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Dancing Green", EncounterId = 97, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Sugar Riot", EncounterId = 98, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Brute Abombinator", EncounterId = 99, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Cruiserweight", ZoneId = 68, Encounter = "Howling Blade", EncounterId = 100, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 0 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "ACC L-H", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "7.2", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Black Cat", EncounterId = 93, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Honey B. Lovely", EncounterId = 94, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Brute Bomber", EncounterId = 95, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Wicked Thunder", EncounterId = 96, Difficulty = "Normal", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Black Cat", EncounterId = 93, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Honey B. Lovely", EncounterId = 94, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Brute Bomber", EncounterId = 95, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "ACC Light-heavyweight", ZoneId = 62, Encounter = "Wicked Thunder", EncounterId = 96, Difficulty = "Savage", DifficultyId = 101, SwapId = "7.2", SwapNumber = 1 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Ultimates (DT)", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-", SwapId = "DT ult", SwapNumber = 0 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "The Unending Coil of Bahamut", EncounterId = 1073, Difficulty = "Normal", DifficultyId = 100, Alias = "UCoB", SwapId = "DT ult", SwapNumber = 0 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Ultimates (Legacy)", ZoneId = 59, Encounter = "The Weapon's Refrain", EncounterId = 1074, Difficulty = "Normal", DifficultyId = 100, Alias = "UwU", SwapId = "DT ult", SwapNumber = 0 },
@@ -114,8 +114,10 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Zelenia", EncounterId = 1080, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Necron", EncounterId = 1081, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials II (Extreme)", ZoneId = 67, Encounter = "Arkveld", EncounterId = 1082, Difficulty = "Normal", DifficultyId = 100 },
-            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Chaotic", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Others", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Alias = "CoD (Chaotic)", Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Unreal)", ZoneId = 64, Encounter = "Seiryu", EncounterId = 3011, Alias = "Seiryu (Unreal)", Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Deep Dungeons", ZoneId = 71, Encounter = "Eminent Grief", EncounterId = 4548, Alias = "Quantum (40)", Difficulty = "Savage", DifficultyId = 101 },
         ];
     }
 
