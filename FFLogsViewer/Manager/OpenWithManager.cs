@@ -3,6 +3,7 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFLogsViewer.Manager;
@@ -26,7 +27,7 @@ public unsafe class OpenWithManager
     private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, nint packetData);
     private Hook<ProcessInspectPacketDelegate>? processInspectPacketHook;
 
-    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, nint data, long a3, void* a4);
+    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
 
     private delegate void* ProcessPartyFinderDetailPacketDelegate(nint someAgent, AgentLookingForGroup.Detailed* data);
@@ -225,18 +226,17 @@ public unsafe class OpenWithManager
         return this.processInspectPacketHook!.Original(someAgent, a2, packetData);
     }
 
-    private void* SocialDetailAtkCreationDetour(void* someAgent, nint data, long a3, void* a4)
+    private void* SocialDetailAtkCreationDetour(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4)
     {
         try
         {
             // a3 != 0 => editing
             if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
             {
-                // To get offsets: look in the function
-                var fullNamePtr = data + 50;
-                var worldId = *(ushort*)(data + 40);
+                var fullName = data->NameString;
+                var worldId = data->HomeWorld;
 
-                this.Open(fullNamePtr, worldId);
+                this.Open(fullName, worldId);
             }
         }
         catch (Exception ex)
