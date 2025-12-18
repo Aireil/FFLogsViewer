@@ -1,8 +1,8 @@
 ﻿using System;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Gui.PartyFinder.Types;
 using Dalamud.Hooking;
 using Dalamud.Memory;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace FFLogsViewer.Manager;
@@ -29,7 +29,7 @@ public unsafe class OpenWithManager
     private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, nint data, long a3, void* a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
 
-    private delegate void* ProcessPartyFinderDetailPacketDelegate(nint someAgent, nint packetData);
+    private delegate void* ProcessPartyFinderDetailPacketDelegate(nint someAgent, AgentLookingForGroup.Detailed* data);
     private Hook<ProcessPartyFinderDetailPacketDelegate>? processPartyFinderDetailPacketHook;
 
     private delegate void AtkUnitBaseFinalizeDelegate(AtkUnitBase* addon);
@@ -247,21 +247,20 @@ public unsafe class OpenWithManager
         return this.socialDetailAtkCreationHook!.Original(someAgent, data, a3, a4);
     }
 
-    private void* ProcessPartyFinderDetailPacketDetour(nint someAgent, nint packetData)
+    private void* ProcessPartyFinderDetailPacketDetour(nint someAgent, AgentLookingForGroup.Detailed* data)
     {
         try
         {
             if (Service.Configuration.OpenWith.IsPartyFinderEnabled)
             {
-                // To get offsets: 6.28, look in this function
-                var hasFailed = *(byte*)(packetData + 92) == 0;
-                var isPrivate = ((SearchAreaFlags)(*(byte*)(packetData + 91))).HasFlag(SearchAreaFlags.Private);
+                var hasFailed = data->LastPatchHotfixTimestamp == 0; // previously 92/0x5C was checked, but that's not documented in CS yet. this works as a replacement.
+                var isPrivate = data->JoinConditionFlags.HasFlag(AgentLookingForGroup.JoinCondition.PrivateParty);
                 var isJoining = this.isJoiningPartyFinderOffset != 0 && *(byte*)(someAgent + this.isJoiningPartyFinderOffset) != 0;
 
                 if (!hasFailed && !isPrivate && !isJoining)
                 {
-                    var fullName = packetData + 912;
-                    var worldId = *(ushort*)(packetData + 82); // is not used in the function, just search it again if it breaks
+                    var fullName = data->LeaderString;
+                    var worldId = data->HomeWorld; // is not used in the function, just search it again if it breaks
 
                     this.Open(fullName, worldId);
                 }
@@ -272,7 +271,7 @@ public unsafe class OpenWithManager
             Service.PluginLog.Error(ex, "Exception in ProcessPartyFinderDetailPacketDetour.");
         }
 
-        return this.processPartyFinderDetailPacketHook!.Original(someAgent, packetData);
+        return this.processPartyFinderDetailPacketHook!.Original(someAgent, data);
     }
 
     private void AktUnitBaseFinalizeDetour(AtkUnitBase* addon)
