@@ -98,8 +98,8 @@ public unsafe class OpenWithManager
         }
 
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
-            && Service.ClientState.LocalPlayer?.Name.TextValue == fullName
-            && Service.ClientState.LocalPlayer?.HomeWorld.RowId == worldId)
+            && Service.PlayerState.CharacterName == fullName
+            && Service.PlayerState.HomeWorld.RowId == worldId)
         {
             return;
         }
@@ -123,7 +123,7 @@ public unsafe class OpenWithManager
         {
             this.charaCardAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 48 8B 74 24 48 48 8B 5C 24 40 48 83 C4 30 5F C3 66 90");
             this.processInspectPacketAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B6 07 84 C0 74 11");
-            this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B 78 0F 00 00 BF 00 00 00 E0");
+            this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B ?? 0F 00 00 BF 00 00 00 E0");
             this.processPartyFinderDetailPacketAddress = Service.SigScanner.ScanText("E9 ?? ?? ?? ?? CC CC CC CC CC CC 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D AC 24");
             this.atkUnitBaseFinalizeAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 45 33 C9 8D 57 01 41 B8");
 

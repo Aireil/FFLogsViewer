@@ -26,7 +26,7 @@ internal class Service
 
     [PluginService] internal static IDalamudPluginInterface Interface { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
-    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+    [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
