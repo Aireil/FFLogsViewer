@@ -21,7 +21,7 @@ public unsafe class OpenWithManager
     private nint processPartyFinderDetailPacketAddress;
     private nint atkUnitBaseFinalizeAddress;
 
-    private delegate void* CharaCardAtkCreationDelegate(nint agentCharaCard);
+    private delegate void* CharaCardAtkCreationDelegate(AgentCharaCard* agentCharaCard);
     private Hook<CharaCardAtkCreationDelegate>? charaCardAtkCreationHook;
 
     private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, nint packetData);
@@ -182,7 +182,7 @@ public unsafe class OpenWithManager
         this.HasBeenEnabled = true;
     }
 
-    private void* CharaCardAtkCreationDetour(nint agentCharaCard)
+    private void* CharaCardAtkCreationDetour(AgentCharaCard* agentCharaCard)
     {
         try
         {
@@ -190,11 +190,10 @@ public unsafe class OpenWithManager
                 && Service.GameGui.GetAddonByName("BannerEditor") == nint.Zero
                 && Service.GameGui.GetAddonByName("CharaCardDesignSetting") == nint.Zero)
             {
-                // To get offsets: 7.0 process chara card network packet (NOT the hooked one) 40 55 53 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 83 79 ?? ?? 48 8B DA
-                var fullNamePtr = *(nint*)(*(nint*)(agentCharaCard + 40) + 96);
-                var worldId = *(ushort*)(*(nint*)(agentCharaCard + 40) + 200);
+                var fullName = agentCharaCard->Data->Name.ToString();
+                var worldId = agentCharaCard->Data->WorldId;
 
-                this.Open(fullNamePtr, worldId);
+                this.Open(fullName, worldId);
             }
         }
         catch (Exception ex)
