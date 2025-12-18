@@ -97,6 +97,11 @@ public unsafe class OpenWithManager
             return;
         }
 
+        this.Open(fullName, worldId);
+    }
+
+    private void Open(string fullName, ushort worldId)
+    {
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
             && Service.PlayerState.CharacterName == fullName
             && Service.PlayerState.HomeWorld.RowId == worldId)
