@@ -276,14 +276,14 @@ public class CharData
         }
         else if (words.Length >= 2)
         {
-            if (Service.ClientState.LocalPlayer?.HomeWorld.ValueNullable == null)
+            if (Service.PlayerState.HomeWorld.ValueNullable == null)
             {
                 return false;
             }
 
             character.FirstName = words[0];
             character.LastName = words[1];
-            character.WorldName = Service.ClientState.LocalPlayer.HomeWorld.Value.Name.ToString();
+            character.WorldName = Service.PlayerState.HomeWorld.Value.Name.ToString();
         }
         else
         {

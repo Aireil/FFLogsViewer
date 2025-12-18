@@ -25,7 +25,7 @@ public class CharDataManager
         }
 
         Service.TeamManager.UpdateTeamList();
-        var localPLayer = Service.ClientState.LocalPlayer;
+        var localPLayer = Service.PlayerState;
         var currPartyMembers = Service.TeamManager.TeamList.Where(teamMember => teamMember.AllianceIndex == this.currentAllianceIndex).ToList();
         this.IsCurrPartyAnAlliance = this.currentAllianceIndex != null;
 
@@ -42,7 +42,7 @@ public class CharDataManager
 
         if (!Service.Configuration.Style.IsLocalPlayerInPartyView && !this.IsCurrPartyAnAlliance)
         {
-            var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.Name.TextValue
+            var index = currPartyMembers.FindIndex(member => $"{member.FirstName} {member.LastName}" == localPLayer?.CharacterName
                                                              && member.World == localPLayer.HomeWorld.ValueNullable?.Name);
             if (index >= 0)
             {

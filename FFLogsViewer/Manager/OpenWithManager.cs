@@ -98,8 +98,8 @@ public unsafe class OpenWithManager
         }
 
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
-            && Service.ClientState.LocalPlayer?.Name.TextValue == fullName
-            && Service.ClientState.LocalPlayer?.HomeWorld.RowId == worldId)
+            && Service.PlayerState.CharacterName == fullName
+            && Service.PlayerState.HomeWorld.RowId == worldId)
         {
             return;
         }
