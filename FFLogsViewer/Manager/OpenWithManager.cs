@@ -80,28 +80,6 @@ public unsafe class OpenWithManager
         return true;
     }
 
-    private void Open(nint fullNamePtr, ushort worldId)
-    {
-        if (!IsEnabled())
-        {
-            return;
-        }
-
-        var world = Util.GetWorld(worldId);
-        if (!Util.IsWorldValid(world))
-        {
-            return;
-        }
-
-        var fullName = MemoryHelper.ReadStringNullTerminated(fullNamePtr);
-        if (fullName == string.Empty)
-        {
-            return;
-        }
-
-        this.Open(fullName, worldId);
-    }
-
     private void Open(string fullName, ushort worldId)
     {
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
