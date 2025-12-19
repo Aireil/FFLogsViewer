@@ -117,7 +117,7 @@ public class Configuration : IPluginConfiguration
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials III (Extreme)", ZoneId = 72, Encounter = "Doomtrain", EncounterId = 1083, Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Header, Alias = "Others", Expansion = "-", Zone = "-", Encounter = "-", Difficulty = "-" },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Alliance Raids (Chaotic)", ZoneId = 66, Encounter = "Cloud of Darkness", EncounterId = 2061, Alias = "CoD (Chaotic)", Difficulty = "Normal", DifficultyId = 100 },
-            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Unreal)", ZoneId = 64, Encounter = "Seiryu", EncounterId = 3011, Alias = "Seiryu (Unreal)", Difficulty = "Normal", DifficultyId = 100 },
+            new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Trials (Unreal)", ZoneId = 64, Encounter = "Tsukuyomi", EncounterId = 3012, Alias = "Tsukuyomi (Unreal)", Difficulty = "Normal", DifficultyId = 100 },
             new LayoutEntry { Type = LayoutEntryType.Encounter, Expansion = "Dawntrail", Zone = "Deep Dungeons", ZoneId = 71, Encounter = "Eminent Grief", EncounterId = 4548, Alias = "Quantum (40)", Difficulty = "Savage", DifficultyId = 101 },
         ];
     }
