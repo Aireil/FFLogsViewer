@@ -82,6 +82,22 @@ public unsafe class OpenWithManager
 
     private void Open(string fullName, ushort worldId)
     {
+        if (!IsEnabled())
+        {
+            return;
+        }
+
+        var world = Util.GetWorld(worldId);
+        if (!Util.IsWorldValid(world))
+        {
+            return;
+        }
+
+        if (fullName == string.Empty)
+        {
+            return;
+        }
+
         if (Service.Configuration.OpenWith.ShouldIgnoreSelf
             && Service.PlayerState.CharacterName == fullName
             && Service.PlayerState.HomeWorld.RowId == worldId)
