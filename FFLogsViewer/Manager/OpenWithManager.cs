@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Hooking;
 using Dalamud.Memory;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -24,7 +25,7 @@ public unsafe class OpenWithManager
     private delegate void* CharaCardAtkCreationDelegate(AgentCharaCard* agentCharaCard);
     private Hook<CharaCardAtkCreationDelegate>? charaCardAtkCreationHook;
 
-    private delegate void* ProcessInspectPacketDelegate(void* someAgent, void* a2, nint packetData);
+    private delegate void* ProcessInspectPacketDelegate(Inspect* inspect, void* a2, nint packetData);
     private Hook<ProcessInspectPacketDelegate>? processInspectPacketHook;
 
     private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4);
@@ -204,17 +205,19 @@ public unsafe class OpenWithManager
         return this.charaCardAtkCreationHook!.Original(agentCharaCard);
     }
 
-    private void* ProcessInspectPacketDetour(void* someAgent, void* a2, nint packetData)
+    private void* ProcessInspectPacketDetour(Inspect* inspect, void* a2, nint packetData)
     {
+        // execute the original function first so the values get assigned in inspect
+        var original = this.processInspectPacketHook!.Original(inspect, a2, packetData);
+
         try
         {
             if (Service.Configuration.OpenWith.IsExamineEnabled)
             {
-                // To get offsets: 7.1 process inspect network packet E8 ?? ?? ?? ?? 0F B6 07 84 C0 74 11
-                var fullNamePtr = packetData + 640;
-                var worldId = *(ushort*)(packetData + 50);
+                var fullName = inspect->NameString;
+                var worldId = (ushort)inspect->WorldId;
 
-                this.Open(fullNamePtr, worldId);
+                this.Open(fullName, worldId);
             }
         }
         catch (Exception ex)
@@ -222,7 +225,7 @@ public unsafe class OpenWithManager
             Service.PluginLog.Error(ex, "Exception in ProcessInspectPacketDetour.");
         }
 
-        return this.processInspectPacketHook!.Original(someAgent, a2, packetData);
+        return original;
     }
 
     private void* SocialDetailAtkCreationDetour(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4)
