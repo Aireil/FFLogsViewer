@@ -204,7 +204,7 @@ public class Util
 
     public static void OpenTomestoneLink(CharData charData)
     {
-        OpenLink($"https://tomestone.gg/character-name/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
+        OpenLink($"https://tomestone.gg/character/{CharDataManager.GetRegionCode(charData.WorldName)}/{charData.WorldName}/{charData.FirstName} {charData.LastName}");
     }
 
     public static void OpenLink(string link)
