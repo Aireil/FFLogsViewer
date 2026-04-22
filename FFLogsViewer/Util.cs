@@ -351,10 +351,10 @@ public class Util
     {
         return world.DataCenter.ValueNullable?.Region switch
         {
-            1 => "JP",
-            2 => "NA",
-            3 => "EU",
-            4 => "OC",
+            1 => "jp",
+            2 => "na",
+            3 => "eu",
+            4 => "oc",
             _ => string.Empty,
         };
     }
