@@ -163,9 +163,9 @@ public class MiscTab
             ImGui.Text(forbiddenExplanation);
             if (ImGui.Button("Copy the explanation##TokenForbiddenMessage"))
             {
-
                 CopyToClipboard(forbiddenExplanation);
             }
+
             ImGui.Text("------------------------------------------");
 
             if (ImGui.Button("Try again##TokenForbiddenRetry"))
