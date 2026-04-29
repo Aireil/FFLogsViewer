@@ -363,7 +363,7 @@ public class Util
     {
         if (jobId is 0 or > 42)
         {
-            return 62145; // default icon id
+            return 62146; // default icon id
         }
 
         return 62100 + jobId;
