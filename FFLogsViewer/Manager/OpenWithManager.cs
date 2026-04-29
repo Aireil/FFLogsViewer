@@ -29,10 +29,10 @@ public unsafe class OpenWithManager
     private delegate void* ProcessInspectPacketDelegate(Inspect* inspect, void* a2, nint packetData);
     private Hook<ProcessInspectPacketDelegate>? processInspectPacketHook;
 
-    private delegate void* SocialDetailAtkCreationDelegate(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4);
+    private delegate void SocialDetailAtkCreationDelegate(void* someAgent, InfoProxyCommonList.CharacterData* data, InfoProxyDetail.DetailUpdateData* updateData, int a4);
     private Hook<SocialDetailAtkCreationDelegate>? socialDetailAtkCreationHook;
 
-    private delegate void* ProcessPartyFinderDetailPacketDelegate(nint someAgent, AgentLookingForGroup.Detailed* data);
+    private delegate void ProcessPartyFinderDetailPacketDelegate(AgentLookingForGroup* agent, AgentLookingForGroup.Detailed* data);
     private Hook<ProcessPartyFinderDetailPacketDelegate>? processPartyFinderDetailPacketHook;
 
     public OpenWithManager()
@@ -122,7 +122,11 @@ public unsafe class OpenWithManager
         {
             this.charaCardAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 48 8B 74 24 48 48 8B 5C 24 40 48 83 C4 30 5F C3 90");
             this.processInspectPacketAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? 0F B6 07 84 C0 74 11");
+
+            // Client::UI::Agent:AgentDetail.OpenForCharacterData
             this.socialDetailAtkCreationAddress = Service.SigScanner.ScanText("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 8B ?? 0F 00 00 BF 00 00 00 E0");
+
+            // Client::UI::AgentLookingForGroup.PopulateListingData
             this.processPartyFinderDetailPacketAddress = Service.SigScanner.ScanText("E9 ?? ?? ?? ?? CC CC CC CC CC CC 48 89 5C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 55 48 8D AC 24");
 
             try
@@ -205,7 +209,7 @@ public unsafe class OpenWithManager
             if (Service.Configuration.OpenWith.IsExamineEnabled)
             {
                 var fullName = inspect->NameString;
-                var worldId = (ushort)inspect->WorldId;
+                var worldId = inspect->WorldId;
 
                 this.Open(fullName, worldId);
             }
@@ -218,12 +222,12 @@ public unsafe class OpenWithManager
         return original;
     }
 
-    private void* SocialDetailAtkCreationDetour(void* someAgent, InfoProxyCommonList.CharacterData* data, long a3, void* a4)
+    private void SocialDetailAtkCreationDetour(void* someAgent, InfoProxyCommonList.CharacterData* data, InfoProxyDetail.DetailUpdateData* updateData, int a4)
     {
         try
         {
             // a3 != 0 => editing
-            if (Service.Configuration.OpenWith.IsSearchInfoEnabled && a3 == 0)
+            if (Service.Configuration.OpenWith.IsSearchInfoEnabled && updateData == null)
             {
                 var fullName = data->NameString;
                 var worldId = data->HomeWorld;
@@ -236,10 +240,10 @@ public unsafe class OpenWithManager
             Service.PluginLog.Error(ex, "Exception in SocialDetailAtkCreationDetour.");
         }
 
-        return this.socialDetailAtkCreationHook!.Original(someAgent, data, a3, a4);
+        this.socialDetailAtkCreationHook!.Original(someAgent, data, updateData, a4);
     }
 
-    private void* ProcessPartyFinderDetailPacketDetour(nint someAgent, AgentLookingForGroup.Detailed* data)
+    private void ProcessPartyFinderDetailPacketDetour(AgentLookingForGroup* agent, AgentLookingForGroup.Detailed* data)
     {
         try
         {
@@ -247,7 +251,7 @@ public unsafe class OpenWithManager
             {
                 var hasFailed = data->LastPatchHotfixTimestamp == 0; // previously 92/0x5C was checked, but that's not documented in CS yet. this works as a replacement.
                 var isPrivate = data->JoinConditionFlags.HasFlag(AgentLookingForGroup.JoinCondition.PrivateParty);
-                var isJoining = this.isJoiningPartyFinderOffset != 0 && *(byte*)(someAgent + this.isJoiningPartyFinderOffset) != 0;
+                var isJoining = this.isJoiningPartyFinderOffset != 0 && *(byte*)(agent + this.isJoiningPartyFinderOffset) != 0;
 
                 if (!hasFailed && !isPrivate && !isJoining)
                 {
@@ -263,7 +267,7 @@ public unsafe class OpenWithManager
             Service.PluginLog.Error(ex, "Exception in ProcessPartyFinderDetailPacketDetour.");
         }
 
-        return this.processPartyFinderDetailPacketHook!.Original(someAgent, data);
+        this.processPartyFinderDetailPacketHook!.Original(agent, data);
     }
 
     private void OnPreFinalize(AddonEvent type, AddonArgs args)
