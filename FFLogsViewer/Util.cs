@@ -21,7 +21,7 @@ public class Util
     public static bool DrawButtonIcon(FontAwesomeIcon icon, Vector2? size = null)
     {
         using var font = ImRaii.PushFont(UiBuilder.IconFont);
-        using ImRaii.Style style = new();
+        using ImRaii.StyleDisposable style = new();
         if (size != null)
         {
             style.Push(ImGuiStyleVar.FramePadding, size.Value);
@@ -349,7 +349,7 @@ public class Util
 
     public static string GetRegionCode(World world)
     {
-        return world.DataCenter.ValueNullable?.Region switch
+        return world.DataCenter.ValueNullable?.Region.RowId switch
         {
             1 => "jp",
             2 => "na",

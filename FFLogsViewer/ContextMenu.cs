@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.Gui.ContextMenu;
 using Dalamud.Memory;
+using Dalamud.Utility;
 using FFLogsViewer.Manager;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
@@ -140,7 +141,7 @@ public class ContextMenu
         var agentBlackList = AgentBlacklist.Instance();
         if (agentBlackList != null)
         {
-            return MemoryHelper.ReadSeString(&agentBlackList->SelectedPlayerFullName).TextValue;
+            return agentBlackList->SelectedPlayerFullName.ExtractText();
         }
 
         return string.Empty;
@@ -151,7 +152,7 @@ public class ContextMenu
         var agentMuteList = AgentMutelist.Instance();
         if (agentMuteList != null)
         {
-            return MemoryHelper.ReadSeString(&agentMuteList->SelectedPlayerFullName).TextValue;
+            return agentMuteList->SelectedPlayerFullName.ExtractText();
         }
 
         return string.Empty;

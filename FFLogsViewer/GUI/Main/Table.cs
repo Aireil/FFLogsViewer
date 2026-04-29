@@ -711,7 +711,7 @@ public class Table
 
     private void DrawEncounterName(LayoutEntry entry, string encounterName, string hoverMessage, int row)
     {
-        ImRaii.Color color = new();
+        ImRaii.ColorDisposable color = new();
         if (!hoverMessage.IsNullOrEmpty())
         {
             color.Push(ImGuiCol.Text, ImGuiColors.DalamudGrey);
