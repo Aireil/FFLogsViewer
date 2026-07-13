@@ -63,7 +63,7 @@ jobs:
 
       - name: Build
         run: |
-          dotnet restore -r win ${{ env.SOLUTION_NAME }}.sln
+          dotnet restore -r win ${{ env.SOLUTION_NAME }}.slnx
           dotnet build --configuration Release
 
       - name: Test
